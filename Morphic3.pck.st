@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3485] on 1 November 2018 at 10:11:40 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3665] on 19 March 2019 at 10:03:08 am'!
 'Description Please enter a description for this package '!
-!provides: 'Morphic3' 1 54!
+!provides: 'Morphic3' 1 55!
 !requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'Morphic3-Kernel'!
 SystemOrganization addCategory: #'Morphic3-SVG'!
 SystemOrganization addCategory: #'Morphic3-SVG shapes'!
@@ -563,6 +563,10 @@ c into: self runningWorld.
 ].
 Display forceToScreen.!
 
+!SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
+name
+	^name! !
+
 !StrokeFont methodsFor: 'accessing' stamp: 'jmv 4/15/2014 12:02'!
 ascent
 	"Answer the receiver's maximum extent of characters above the baseline."
@@ -1075,13 +1079,13 @@ svgName
 
 	^self subclassResponsibility! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:04:57'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:15'!
 examples
 "
 SVGElementMorph examples
 "
 | m base |
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 #('lion' 'lionx' 'tiger1' 'magician' 'beer' 'butterfly' 'picasso' 'Phone' 'baby' 'longhorn' 'cowboy' 'dancer' 'b8' 'clinton' 'pixelCoverageSucks') do: [ :fn |
 Transcript clear.
 "["
@@ -1101,14 +1105,14 @@ Transcript clear.
 ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:05:13'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:21'!
 examplesBeer
 "
 SVGElementMorph examplesBeer
 "
 | m base |
 Transcript clear.
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 "["
 [
 [
@@ -1123,14 +1127,14 @@ base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
 ] on: SVGError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:05:42'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:25'!
 examplesLion
 "
 SVGElementMorph examplesLion
 "
 | m base |
 Transcript clear.
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 "["
 [
 [
@@ -1146,14 +1150,14 @@ base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
 ] on: SVGError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:05:59'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:27'!
 examplesMagician
 "
 SVGElementMorph examplesMagician
 "
 | m base |
 Transcript clear.
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 "["
 [
 [
@@ -1168,14 +1172,14 @@ base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
 ] on: SVGError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:06:38'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:30'!
 examplesTiger
 "
 SVGElementMorph examplesTiger
 "
 | m base |
 Transcript clear.
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 "["
 [
 [
@@ -1202,13 +1206,13 @@ base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
 ] on: SVGError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 11/1/2018 10:09:09'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/19/2019 09:59:33'!
 phoneExample
 "
 SVGElementMorph phoneExample
 "
 | m base |
-base _ 'Cuis-Smalltalk-Dev/Packages/Morphic3/SVGSamples/'.
+base _ 'VectorGraphics/SVGSamples/'.
 Transcript clear.
 "["
 [
@@ -18334,10 +18338,6 @@ averageColor
 	s _ self stops.
 	averageColor _ (s collect: [ :c | c color / s size ]) sum.
 	^ averageColor! !
-
-!SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
-name
-	^name! !
 
 !SVGGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
 stops
