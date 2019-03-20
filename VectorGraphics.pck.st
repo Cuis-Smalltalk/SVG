@@ -1,33 +1,33 @@
 'From Cuis 5.0 of 7 November 2016 [latest update: #3665] on 19 March 2019 at 10:03:08 am'!
 'Description Please enter a description for this package '!
-!provides: 'Morphic3' 1 55!
+!provides: 'VectorGraphics' 1 56!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'Morphic3-Kernel'!
-SystemOrganization addCategory: #'Morphic3-SVG'!
-SystemOrganization addCategory: #'Morphic3-SVG shapes'!
-SystemOrganization addCategory: #'Morphic3-SVG path commands'!
-SystemOrganization addCategory: #'Morphic3-Experiments'!
+SystemOrganization addCategory: #'VectorGraphics-SVG'!
+SystemOrganization addCategory: #'VectorGraphics-SVG shapes'!
+SystemOrganization addCategory: #'VectorGraphics-SVG path commands'!
+SystemOrganization addCategory: #'VectorGraphics-Experiments'!
 
 
-!classDefinition: #SVGError category: #'Morphic3-SVG'!
+!classDefinition: #SVGError category: #'VectorGraphics-SVG'!
 Error subclass: #SVGError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGError class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGError class' category: #'VectorGraphics-SVG'!
 SVGError class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGWarning category: #'Morphic3-SVG'!
+!classDefinition: #SVGWarning category: #'VectorGraphics-SVG'!
 Warning subclass: #SVGWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGWarning class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGWarning class' category: #'VectorGraphics-SVG'!
 SVGWarning class
 	instanceVariableNames: ''!
 
@@ -41,133 +41,133 @@ AbstractFont subclass: #StrokeFont
 StrokeFont class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGElementMorph category: #'Morphic3-SVG'!
+!classDefinition: #SVGElementMorph category: #'VectorGraphics-SVG'!
 Morph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGElementMorph class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGElementMorph class' category: #'VectorGraphics-SVG'!
 SVGElementMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGroupMorph category: #'Morphic3-SVG'!
+!classDefinition: #SVGGroupMorph category: #'VectorGraphics-SVG'!
 SVGElementMorph subclass: #SVGGroupMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGGroupMorph class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGGroupMorph class' category: #'VectorGraphics-SVG'!
 SVGGroupMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGMainMorph category: #'Morphic3-SVG'!
+!classDefinition: #SVGMainMorph category: #'VectorGraphics-SVG'!
 SVGGroupMorph subclass: #SVGMainMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGMainMorph class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGMainMorph class' category: #'VectorGraphics-SVG'!
 SVGMainMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGCircle category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGCircle category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGCircle
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGCircle class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGCircle class' category: #'VectorGraphics-SVG shapes'!
 SVGCircle class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGEllipse category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGEllipse category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGEllipse
 	instanceVariableNames: 'cx cy rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGEllipse class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGEllipse class' category: #'VectorGraphics-SVG shapes'!
 SVGEllipse class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLine category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGLine category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGLine
 	instanceVariableNames: 'x1 y1 x2 y2'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGLine class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGLine class' category: #'VectorGraphics-SVG shapes'!
 SVGLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPath category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGPath category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGPath
 	instanceVariableNames: 'commands'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGPath class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGPath class' category: #'VectorGraphics-SVG shapes'!
 SVGPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolyLine category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGPolyLine category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGPolyLine
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGPolyLine class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGPolyLine class' category: #'VectorGraphics-SVG shapes'!
 SVGPolyLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolygon category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGPolygon category: #'VectorGraphics-SVG shapes'!
 SVGPolyLine subclass: #SVGPolygon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGPolygon class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGPolygon class' category: #'VectorGraphics-SVG shapes'!
 SVGPolygon class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRect category: #'Morphic3-SVG shapes'!
+!classDefinition: #SVGRect category: #'VectorGraphics-SVG shapes'!
 SVGElementMorph subclass: #SVGRect
 	instanceVariableNames: 'xMin xMax yMin yMax rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG shapes'!
-!classDefinition: 'SVGRect class' category: #'Morphic3-SVG shapes'!
+	category: 'VectorGraphics-SVG shapes'!
+!classDefinition: 'SVGRect class' category: #'VectorGraphics-SVG shapes'!
 SVGRect class
 	instanceVariableNames: ''!
 
-!classDefinition: #M3Exp01Morph category: #'Morphic3-Experiments'!
+!classDefinition: #M3Exp01Morph category: #'VectorGraphics-Experiments'!
 Morph subclass: #M3Exp01Morph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Experiments'!
-!classDefinition: 'M3Exp01Morph class' category: #'Morphic3-Experiments'!
+	category: 'VectorGraphics-Experiments'!
+!classDefinition: 'M3Exp01Morph class' category: #'VectorGraphics-Experiments'!
 M3Exp01Morph class
 	instanceVariableNames: ''!
 
-!classDefinition: #M3Exp02Morph category: #'Morphic3-Experiments'!
+!classDefinition: #M3Exp02Morph category: #'VectorGraphics-Experiments'!
 Morph subclass: #M3Exp02Morph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Experiments'!
-!classDefinition: 'M3Exp02Morph class' category: #'Morphic3-Experiments'!
+	category: 'VectorGraphics-Experiments'!
+!classDefinition: 'M3Exp02Morph class' category: #'VectorGraphics-Experiments'!
 M3Exp02Morph class
 	instanceVariableNames: ''!
 
-!classDefinition: #M3Exp03Morph category: #'Morphic3-Experiments'!
+!classDefinition: #M3Exp03Morph category: #'VectorGraphics-Experiments'!
 Morph subclass: #M3Exp03Morph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Experiments'!
-!classDefinition: 'M3Exp03Morph class' category: #'Morphic3-Experiments'!
+	category: 'VectorGraphics-Experiments'!
+!classDefinition: 'M3Exp03Morph class' category: #'VectorGraphics-Experiments'!
 M3Exp03Morph class
 	instanceVariableNames: ''!
 
@@ -231,183 +231,183 @@ VectorFontRenderer subclass: #TechnicalFontRenderer
 TechnicalFontRenderer class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefElement category: #'Morphic3-SVG'!
+!classDefinition: #SVGDefElement category: #'VectorGraphics-SVG'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGDefElement class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGDefElement class' category: #'VectorGraphics-SVG'!
 SVGDefElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradient category: #'Morphic3-SVG'!
+!classDefinition: #SVGGradient category: #'VectorGraphics-SVG'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGGradient class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGGradient class' category: #'VectorGraphics-SVG'!
 SVGGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLinearGradient category: #'Morphic3-SVG'!
+!classDefinition: #SVGLinearGradient category: #'VectorGraphics-SVG'!
 SVGGradient subclass: #SVGLinearGradient
 	instanceVariableNames: 'vectorX1 vectorY1 vectorX2 vectorY2'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGLinearGradient class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGLinearGradient class' category: #'VectorGraphics-SVG'!
 SVGLinearGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRadialGradient category: #'Morphic3-SVG'!
+!classDefinition: #SVGRadialGradient category: #'VectorGraphics-SVG'!
 SVGGradient subclass: #SVGRadialGradient
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGRadialGradient class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGRadialGradient class' category: #'VectorGraphics-SVG'!
 SVGRadialGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradientStop category: #'Morphic3-SVG'!
+!classDefinition: #SVGGradientStop category: #'VectorGraphics-SVG'!
 SVGDefElement subclass: #SVGGradientStop
 	instanceVariableNames: 'offset color'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGGradientStop class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGGradientStop class' category: #'VectorGraphics-SVG'!
 SVGGradientStop class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefs category: #'Morphic3-SVG'!
+!classDefinition: #SVGDefs category: #'VectorGraphics-SVG'!
 Object subclass: #SVGDefs
 	instanceVariableNames: 'defs'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGDefs class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGDefs class' category: #'VectorGraphics-SVG'!
 SVGDefs class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGTransform category: #'Morphic3-SVG'!
+!classDefinition: #SVGTransform category: #'VectorGraphics-SVG'!
 Object subclass: #SVGTransform
 	instanceVariableNames: 'a'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG'!
-!classDefinition: 'SVGTransform class' category: #'Morphic3-SVG'!
+	category: 'VectorGraphics-SVG'!
+!classDefinition: 'SVGTransform class' category: #'VectorGraphics-SVG'!
 SVGTransform class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathCommand category: #'VectorGraphics-SVG path commands'!
 Object subclass: #SVGPathCommand
 	instanceVariableNames: 'coordinatesAreRelative'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathArcCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathArcCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathArcCommand
 	instanceVariableNames: 'rs xAxisRotations toPoints doLargerArcs useIncreasingAngless'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathArcCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathArcCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathArcCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathCloseCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathCloseCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathCloseCommand
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathCloseCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathCloseCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathCloseCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathCurveToCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathCurveToCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathCurveToCommand
 	instanceVariableNames: 'toPoints control1Points control2Points'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathCurveToCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathCurveToCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathCurveToCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathCurveToSmoothCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathCurveToSmoothCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathCurveToSmoothCommand
 	instanceVariableNames: 'toPoints control2Points'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathCurveToSmoothCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathCurveToSmoothCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathCurveToSmoothCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathLineToCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathLineToCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathLineToCommand
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathLineToCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathLineToCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathLineToCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathLineToHCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathLineToHCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathLineToHCommand
 	instanceVariableNames: 'xs'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathLineToHCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathLineToHCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathLineToHCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathLineToVCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathLineToVCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathLineToVCommand
 	instanceVariableNames: 'ys'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathLineToVCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathLineToVCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathLineToVCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathMoveToCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathMoveToCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathMoveToCommand
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathMoveToCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathMoveToCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathMoveToCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathQuadraticCurveToCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathQuadraticCurveToCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathQuadraticCurveToCommand
 	instanceVariableNames: 'toPoints controlPoints'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathQuadraticCurveToCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathQuadraticCurveToCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathQuadraticCurveToCommand class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPathQuadraticCurveToSmoothCommand category: #'Morphic3-SVG path commands'!
+!classDefinition: #SVGPathQuadraticCurveToSmoothCommand category: #'VectorGraphics-SVG path commands'!
 SVGPathCommand subclass: #SVGPathQuadraticCurveToSmoothCommand
 	instanceVariableNames: 'toPoints'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-SVG path commands'!
-!classDefinition: 'SVGPathQuadraticCurveToSmoothCommand class' category: #'Morphic3-SVG path commands'!
+	category: 'VectorGraphics-SVG path commands'!
+!classDefinition: 'SVGPathQuadraticCurveToSmoothCommand class' category: #'VectorGraphics-SVG path commands'!
 SVGPathQuadraticCurveToSmoothCommand class
 	instanceVariableNames: ''!
 
@@ -524,12 +524,12 @@ e _ CodeGeneratingVectorEngine onForm: f.
 c instVarNamed: 'engine' put: e.
 r _ rcls new vectorGraphicsEngine: e.
 c into: self runningWorld.
-"0 to: 255 do: [ :charCode |"
-"#(100) do: [ :charCode |"
-0 to: 255 do: [ :charCode |
-	e charCode: charCode selectorPrefix: selectorPrefix.
+"0 to: 255 do: [ :cc |"
+"#(100) do: [ :cc |"
+0 to: 255 do: [ :cc |
+	e charCode: cc selectorPrefix: selectorPrefix.
 	e fillColor: Color green do: [
-		e drawCharCode: charCode italics: italics renderer: r canvas: c ].
+		e drawCharCode: cc italics: italics renderer: r ].
 	e storeCode.
 	e storeCodeIn: r class category: methodCategory
 ].
@@ -552,12 +552,12 @@ e _ CodeGeneratingVectorEngine onForm: f.
 c instVarNamed: 'engine' put: e.
 r _ rcls new vectorGraphicsEngine: e.
 c into: self runningWorld.
-"0 to: 255 do: [ :charCode |"
-"#(100) do: [ :charCode |"
-0 to: 255 do: [ :charCode |
-	e charCode: charCode selectorPrefix: selectorPrefix.
+"0 to: 255 do: [ :cc |"
+"#(100) do: [ :cc |"
+0 to: 255 do: [ :cc |
+	e charCode: cc selectorPrefix: selectorPrefix.
 	e strokeWidth: 0.1 color: Color green do: [
-		e drawCharCode: charCode italics: italics renderer: r canvas: c ].
+		e drawCharCode: cc italics: italics renderer: r ].
 	e storeCode.
 	e storeCodeIn: r class category: methodCategory
 ].
@@ -4952,8 +4952,8 @@ basicQuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 	self halt! !
 
 !CodeGeneratingVectorEngine methodsFor: 'private' stamp: 'jmv 8/17/2018 15:45:34'!
-drawCharCode: charCode italics: doItalics renderer: aVectorFontRenderer
-	aVectorFontRenderer drawCharCode: charCode atX: 0 y: 0 pointSize: 1.0 italics: doItalics! !
+drawCharCode: aCharCode italics: doItalics renderer: aVectorFontRenderer
+	aVectorFontRenderer drawCharCode: aCharCode atX: 0 y: 0 pointSize: 1.0 italics: doItalics! !
 
 !VectorFontRenderer methodsFor: 'accessing' stamp: 'jmv 1/4/2018 15:57:50'!
 vectorGraphicsEngine: aVectorGraphicsEngine
