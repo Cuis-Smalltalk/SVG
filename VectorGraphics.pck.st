@@ -4,7 +4,7 @@
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
-SystemOrganization addCategory: #'Morphic3-Kernel'!
+SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
 SystemOrganization addCategory: #'VectorGraphics-SVG shapes'!
 SystemOrganization addCategory: #'VectorGraphics-SVG path commands'!
@@ -31,13 +31,13 @@ Warning subclass: #SVGWarning
 SVGWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #StrokeFont category: #'Morphic3-Kernel'!
+!classDefinition: #StrokeFont category: #'VectorGraphics-Kernel'!
 AbstractFont subclass: #StrokeFont
 	instanceVariableNames: 'name emphasis baseFont derivativeFonts pointSize characterToGlyphMap'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'StrokeFont class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'StrokeFont class' category: #'VectorGraphics-Kernel'!
 StrokeFont class
 	instanceVariableNames: ''!
 
@@ -171,63 +171,63 @@ Morph subclass: #M3Exp03Morph
 M3Exp03Morph class
 	instanceVariableNames: ''!
 
-!classDefinition: #VectorCanvas category: #'Morphic3-Kernel'!
+!classDefinition: #VectorCanvas category: #'VectorGraphics-Kernel'!
 MorphicCanvas subclass: #VectorCanvas
 	instanceVariableNames: 'engine'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'VectorCanvas class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'VectorCanvas class' category: #'VectorGraphics-Kernel'!
 VectorCanvas class
 	instanceVariableNames: ''!
 
-!classDefinition: #VectorEngine category: #'Morphic3-Kernel'!
+!classDefinition: #VectorEngine category: #'VectorGraphics-Kernel'!
 Object subclass: #VectorEngine
 	instanceVariableNames: 'targetForm targetWidth targetHeight antiAliasingWidth subPixelDelta strokeWidth strokeAlpha strokeRed strokeGreen strokeBlue fillAlpha fillRed fillGreen fillBlue doStroke doFill clipLeft clipTop clipRight clipBottom currentMorph currentOwnerIfClips boundsLeft boundsTop boundsRight boundsBottom morphAtPixel morphBoundsLeft morphBoundsRight morphBoundsTop morphBoundsBottom mask edgeCountPerPixel hopsPerPixel auxBitBlt firstX firstY currentX currentY trajectoryPoints fragmentStartIndexes geometryTransformation lastClientX lastClientY lastControlX lastControlY'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'VectorEngine class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'VectorEngine class' category: #'VectorGraphics-Kernel'!
 VectorEngine class
 	instanceVariableNames: ''!
 
-!classDefinition: #CodeGeneratingVectorEngine category: #'Morphic3-Kernel'!
+!classDefinition: #CodeGeneratingVectorEngine category: #'VectorGraphics-Kernel'!
 VectorEngine subclass: #CodeGeneratingVectorEngine
 	instanceVariableNames: 'ignoreFirstMoveTo charCode code didStuff digits'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'CodeGeneratingVectorEngine class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'CodeGeneratingVectorEngine class' category: #'VectorGraphics-Kernel'!
 CodeGeneratingVectorEngine class
 	instanceVariableNames: ''!
 
-!classDefinition: #VectorFontRenderer category: #'Morphic3-Kernel'!
+!classDefinition: #VectorFontRenderer category: #'VectorGraphics-Kernel'!
 Object subclass: #VectorFontRenderer
 	instanceVariableNames: 'vectorGraphicsEngine'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'VectorFontRenderer class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'VectorFontRenderer class' category: #'VectorGraphics-Kernel'!
 VectorFontRenderer class
 	instanceVariableNames: ''!
 
-!classDefinition: #BitstreamVeraRenderer category: #'Morphic3-Kernel'!
+!classDefinition: #BitstreamVeraRenderer category: #'VectorGraphics-Kernel'!
 VectorFontRenderer subclass: #BitstreamVeraRenderer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'BitstreamVeraRenderer class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'BitstreamVeraRenderer class' category: #'VectorGraphics-Kernel'!
 BitstreamVeraRenderer class
 	instanceVariableNames: ''!
 
-!classDefinition: #TechnicalFontRenderer category: #'Morphic3-Kernel'!
+!classDefinition: #TechnicalFontRenderer category: #'VectorGraphics-Kernel'!
 VectorFontRenderer subclass: #TechnicalFontRenderer
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Morphic3-Kernel'!
-!classDefinition: 'TechnicalFontRenderer class' category: #'Morphic3-Kernel'!
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'TechnicalFontRenderer class' category: #'VectorGraphics-Kernel'!
 TechnicalFontRenderer class
 	instanceVariableNames: ''!
 
@@ -18992,7 +18992,7 @@ svgName
 
 	^$T! !
 
-!Color methodsFor: '*Morphic3' stamp: 'jmv 1/21/2015 12:48'!
+!Color methodsFor: '*VectorGraphics' stamp: 'jmv 1/21/2015 12:48'!
 externalizedWith: aMorphicLocation
 
 	^self! !
