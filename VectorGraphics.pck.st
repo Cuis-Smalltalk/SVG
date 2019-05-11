@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3739] on 10 May 2019 at 10:20:32 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3741] on 11 May 2019 at 7:21:36 pm'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 62!
+!provides: 'VectorGraphics' 1 63!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
@@ -34,7 +34,7 @@ SVGWarning class
 
 !classDefinition: #TrueTypeFont category: #'VectorGraphics-TrueType'!
 AbstractFont subclass: #TrueTypeFont
-	instanceVariableNames: 'ttFontDescription pointSize emphasis glyphForms family baseFont derivativeFonts'
+	instanceVariableNames: 'ttFontDescription pointSize emphasis replacedGlyphs glyphForms family baseFont derivativeFonts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -665,6 +665,11 @@ Instance variables:
 !TTPoint commentStamp: '<historical>' prior: 0!
 A representation of a TrueType point which includes a 'type' flag defining whether this point is an 'on' or an 'off' curve point.!
 
+!TrueTypeFont methodsFor: 'copying' stamp: 'jmv 5/11/2019 18:04:40'!
+postCopy
+	super postCopy.
+	replacedGlyphs _ replacedGlyphs copy! !
+
 !TTContourConstruction methodsFor: 'printing'!
 printOn: aStream
 
@@ -719,16 +724,20 @@ name
 addDerivativeFont: aTrueTypeFont
 	derivativeFonts at: aTrueTypeFont emphasis put: aTrueTypeFont! !
 
-!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 5/7/2019 09:42:36'!
-baseFont: aTrueTypeFont
-	baseFont _ aTrueTypeFont ! !
+!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 5/11/2019 17:13:08'!
+baseFont: aStrikeFont
 
-!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 5/7/2019 09:41:10'!
+	baseFont _ aStrikeFont.
+	baseFont ifNotNil: [
+		derivativeFonts _ nil ]! !
+
+!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 5/11/2019 17:24:15'!
 family: aTrueTypeFontFamily ttFontDescription: aTTFontDescription pointSize: aNumber
 	ttFontDescription _ aTTFontDescription.
 	emphasis _ aTTFontDescription emphasis.
 	pointSize _ aNumber.
 	glyphForms _ Array new: 256.
+	replacedGlyphs _ Dictionary new.
 	family _ aTrueTypeFontFamily.
 	baseFont _ nil.
 	derivativeFonts _ emphasis = 0 ifTrue: [Dictionary new].! !
@@ -753,16 +762,6 @@ cachedFormDepth
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:36:44'!
 descent
 ^ttFontDescription descent negated * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
-
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/7/2019 08:45:26'!
-emphasis
-	^ emphasis! !
-
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/7/2019 10:16:07'!
-emphasized: code
-derivativeFonts ifNotNil: [
-	^derivativeFonts at: code ifAbsent: [ self ]].
-^ self! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/4/2019 15:26:55'!
 familyName
@@ -812,6 +811,10 @@ on: aGrafPort displayString: aString from: firstIndex to: lastIndex at: p color:
 
 ! !
 
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/11/2019 17:10:59'!
+isBaseFont
+	^baseFont isNil! !
+
 !TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/4/2019 15:28:52'!
 isBold
 	^self emphasis allMask: 1! !
@@ -820,16 +823,137 @@ isBold
 isItalic
 	^self emphasis allMask: 2! !
 
-!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/9/2019 08:58:52'!
-glyphAt: aCharacter
+!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/11/2019 18:32:36'!
+basicGlyphAt: aCharacter
 
 	| index |
 	index _ aCharacter numericValue + 1.
 	^ (glyphForms at: index) ifNil: [
 		| glyph |
-		glyph _ ttFontDescription formGlyphFor: aCharacter pixelSize: pointSize.
+		glyph _ (ttFontDescription formGlyphFor: aCharacter pixelSize: pointSize) ifNil: [#absentGlyph].
 		glyphForms at: index put: glyph.
 		glyph ]! !
+
+!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/11/2019 18:34:25'!
+glyphAt: aCharacter
+	| answer |
+	replacedGlyphs at: aCharacter ifPresent: [ :actualCharacter |
+		answer _ self basicGlyphAt: actualCharacter.
+		answer == #absentGlyph ifFalse: [ ^ answer ]].
+	answer _ self basicGlyphAt: aCharacter.
+	answer == #absentGlyph ifFalse: [ ^ answer ].
+	^ self basicGlyphAt: Character null! !
+
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/7/2019 08:45:26'!
+emphasis
+	^ emphasis! !
+
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/11/2019 17:13:37'!
+emphasis: code 
+	"Set the integer code for emphasis. See senders."
+
+	emphasis _ code! !
+
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/11/2019 17:47:37'!
+emphasized: code
+	"Answer a copy of the receiver with emphasis set to include code."
+	| derivative addedEmphasis derivedFrom |
+	self isBaseFont ifFalse: [ ^self baseFont emphasized: (code bitOr: emphasis) ].
+	code = 0 ifTrue: [ ^ self ].
+
+	derivativeFonts ifNil: [ derivativeFonts _ Dictionary new ].
+	derivative _ derivativeFonts at: code ifPresent: [ :der | ^ der ].		"Already have this style"
+
+	"Dont have it -- derive from another with one with less emphasis"
+	addedEmphasis _ 1 bitShift: code highBit - 1.
+	derivedFrom _ self emphasized: code - addedEmphasis.
+
+	"Order is Bold(B), Italic(i), Underlined(U), StruckThrough(X), Superscript(Sup), Subscript(Sub), WithST80Glyphs(ST80)"
+	derivative _ addedEmphasis caseOf: {
+		[ 1 ] -> [ derivedFrom syntheticBold ].
+		[ 2 ] -> [ derivedFrom syntheticItalic ].
+		[ 4 ] -> [ derivedFrom syntheticUnderlined ].
+		[ 8 ] -> [ derivedFrom syntheticStruckThrough ].
+		[ 16 ] -> [ derivedFrom syntheticSuperscript ].
+		[ 32 ] -> [ derivedFrom syntheticSubscript ].
+		[ 64 ] -> [ derivedFrom syntheticST80Glyphs ] }.
+	"If synthetic derivative is not available, just use whatever we have."
+	derivative ifNil: [ ^ self ].
+
+	derivative baseFont: self.
+	derivative emphasis: code.
+	derivativeFonts at: code put: derivative.
+	^ derivative! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:47:03'!
+syntheticBold
+	"Build and answer a derivative that is Bold."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:59'!
+syntheticItalic
+	"Build and answer a derivative that is Italic."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:30:36'!
+syntheticST80Glyphs
+	"Build and answer a derivative that includes ST-80 glyphs:
+	a left arrow instead of the underscore, and an up arrow instead of the caret."
+
+	| derivative |
+	derivative _ self copy.
+	derivative perform: Preferences assignmentGlyphSelector.
+	^ derivative! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:55'!
+syntheticStruckThrough
+	"Build and answer a derivative that is StruckThrough."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:52'!
+syntheticSubscript
+	"Build and answer a derivative that is Subscript."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:49'!
+syntheticSuperscript
+	"Build and answer a derivative that is Superscript."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:47'!
+syntheticUnderlined
+	"Build and answer a derivative that is Underlined."
+
+	"Not for now"
+	^ nil! !
+
+!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:31:56'!
+useLeftArrow
+	replacedGlyphs at: $_ put: Character arrowLeft.
+	replacedGlyphs at: $^ put: Character arrowUp.! !
+
+!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:32:07'!
+useRightArrow
+	replacedGlyphs at: $_ put: Character arrowRight.
+	replacedGlyphs at: $^ put: Character arrowUp.! !
+
+!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:18:55'!
+useShortUnderscore! !
+
+!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:32:45'!
+useUnderscore
+	replacedGlyphs removeKey: $_.
+	replacedGlyphs removeKey: $^.! !
 
 !TrueTypeFont class methodsFor: 'instance creation' stamp: 'jmv 5/7/2019 09:25:01'!
 family: aTrueTypeFontFamily ttFontDescription: aTTFontDescription pointSize: aNumber
@@ -5155,11 +5279,15 @@ on: points
 
 	^self new points: points! !
 
-!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 5/7/2019 19:59:22'!
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 5/11/2019 18:26:56'!
 at: aCharOrInteger
-	| codePoint |
+	| codePoint answer |
 	codePoint _ aCharOrInteger isNumber ifTrue: [aCharOrInteger] ifFalse: [aCharOrInteger codePoint].
-	^glyphTable at: codePoint + 1! !
+	answer _ glyphTable at: codePoint + 1.
+	"If not included, don't answer fallback but nil."
+	(codePoint ~= 0 and: [ answer == (glyphTable at: 1) ])
+		ifTrue: [ ^ nil ].
+	^ answer! !
 
 !TTFontDescription methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:08'!
 at: index put: value
@@ -5311,16 +5439,16 @@ emphasis
 	('*Italic*' match: subfamilyName) ifTrue: [ emphasis := emphasis bitOr: 2 ].
 	^ emphasis! !
 
-!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/9/2019 08:55:35'!
+!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/11/2019 19:20:48'!
 formGlyphFor: aCharacter pixelSize: pixelSize
 	| glyph toPixelsScale glyphOffsetFromFormLeft formWidth glyphOffsetFromFormTop formHeight scaledGlyphBoundsBottom scaledGlyphBoundsLeft scaledGlyphBoundsRight scaledGlyphBoundsTop leftPixelOffset unPixelDeMasParaAAjmvX unPixelDeMasParaAAjmvY offsetVerticalParaQueY0caigaEnHalfPixel topPixelOffset form canvas |
 	unPixelDeMasParaAAjmvX _ 1.
 	unPixelDeMasParaAAjmvY _ 1.
 	offsetVerticalParaQueY0caigaEnHalfPixel _ 0.5.
-	glyph _ self at: aCharacter.
-	self revisar. "Ok?"
-	aCharacter isSeparator ifTrue: [
-		glyph _ self at: Character space ].
+	glyph _ aCharacter isSeparator
+		ifFalse: [self at: aCharacter]
+		ifTrue: [self at: Character space ].
+	glyph ifNil: [ ^ nil ].
 	toPixelsScale _ pixelSize * 1.0 / self letterMTopSideBearing.
 
 	scaledGlyphBoundsLeft _ glyph bounds left * toPixelsScale.
@@ -5354,13 +5482,8 @@ glyphOffsetFromFormTop _ glyphOffsetFromFormTop ceiling.
 	canvas _ VectorCanvas onForm: form.
 	canvas engine geometryTransformation: (AffineTransformation withRadians: 0 scale: toPixelsScale 
 		position: glyphOffsetFromFormLeft negated@glyphOffsetFromFormTop) withYAxisNegated.
-	canvas fillColor: Color black do: [ :engine |
-		glyph contoursDo: [ :contour |
-			contour isEmpty ifFalse: [
-				contour initialMoveToCommand runOn: canvas .
-				contour pathCommand runOn: canvas ].
-		].
-	].
+	canvas fillColor: Color black do: [
+		glyph drawGlyphOn: canvas ].
 	^FormGlyph
 		form: form
 		leftOffset: leftPixelOffset
@@ -5398,16 +5521,6 @@ initialize
 	TTFontDescription  initialize
 	"
 	Descriptions _ nil! !
-
-!TTCFontDescription methodsFor: 'accessing' stamp: 'jmv 5/9/2019 08:54:44'!
-at: aCharOrInteger
-	| codePoint |
-	codePoint _ aCharOrInteger isNumber ifTrue: [ aCharOrInteger ] ifFalse: [ aCharOrInteger codePoint ].
-	self revisar. "Hack for Smalltalk glyphs. Something better is needed!!!!!!"
-	aCharOrInteger = $_ ifTrue: [codePoint _ 8592].
-	aCharOrInteger = $^ ifTrue: [codePoint _ 8593].
-	^ glyphs at: codePoint + 1
-! !
 
 !TTCFontDescription methodsFor: 'accessing' stamp: 'yo 11/14/2002 18:28'!
 size
@@ -6272,10 +6385,6 @@ contours
 contours: aCollection
 	contours := aCollection asArray.! !
 
-!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/7/2019 18:51:26'!
-contoursDo: aBlock
-	contours do: aBlock! !
-
 !TTGlyph methodsFor: 'accessing'!
 glyphIndex
 	^glyphIndex! !
@@ -6355,6 +6464,13 @@ updateRightSideBearing
 	"@@: Is the following really correct?!!?!!"
 	rightSideBearing := advanceWidth - leftSideBearing - bounds corner x + bounds origin x! !
 
+!TTGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:54:15'!
+drawGlyphOn: aVectorCanvas
+	contours do: [ :contour |
+		contour isEmpty ifFalse: [
+			contour initialMoveToCommand runOn: aVectorCanvas .
+			contour pathCommand runOn: aVectorCanvas ]].! !
+
 !TTCompositeGlyph methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:21'!
 addGlyph: aGlyph transformation: aMatrix
 	glyphs := glyphs copyWith: (aMatrix -> aGlyph)! !
@@ -6370,11 +6486,6 @@ basicGlyphs: colOfAssocs
 
 	glyphs := colOfAssocs
 ! !
-
-!TTCompositeGlyph methodsFor: 'accessing' stamp: 'jmv 5/9/2019 08:56:40'!
-contoursDo: aBlock
-	self revisar. "Must take into account included displacement!!"
-	glyphs do: [ :assoc | assoc value contoursDo: aBlock ]! !
 
 !TTCompositeGlyph methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:20'!
 glyphs
@@ -6393,6 +6504,14 @@ isComposite
 flipAroundY
 	bounds := (bounds origin x @ bounds corner y negated) corner:
 				(bounds corner x @ bounds origin y negated).! !
+
+!TTCompositeGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:59:35'!
+drawGlyphOn: aVectorCanvas
+	| initialGeometry |
+	initialGeometry _ aVectorCanvas engine geometryTransformation.
+	glyphs do: [ :each |
+		aVectorCanvas engine geometryTransformation: (initialGeometry composedWith: each key).
+		each value drawGlyphOn: aVectorCanvas ]! !
 
 !TTKernPair methodsFor: 'accessing'!
 left
@@ -7164,10 +7283,10 @@ externalizedWith: aMorphicLocation
 
 	^self! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/5/2019 16:34:35'!
+!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/11/2019 19:18:48'!
 basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont
 	"Answer last affected pixel position"
-	| fdestX char glyph ascii maxHeight |
+	| fdestX char glyph maxHeight |
 
 	destY _ aPoint y.
 	fdestX _ aPoint x.
@@ -7176,13 +7295,11 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFo
 		char _ aString at: charIndex.
 		glyph _ aTrueTypeFont glyphAt: char.
 		destX _ (fdestX + glyph leftOffset) rounded.
+		self revisar.
 		destY _ aPoint y +aTrueTypeFont pointSize "+ 4" - glyph topOffset.    "parece que me quedo mal el signo de topOffset... en fin"    "Sumar no 4, sino 1/2 del interline-height"
 		sourceForm _ glyph form.
 		height _ sourceForm height.
 		width _ sourceForm width.
-		false ifTrue: [ "util? para que anden las flechitas... quizas mejor hacer de otra manera. usando las entradas del array de glyphs"
-			ascii _ (aString at: charIndex) numericValue.
-			glyph _ aTrueTypeFont characterToGlyphMap at: ascii + 1 ].
 		self copyBits.
 		fdestX _ fdestX + "width + aTrueTypeFont baseKern"glyph advanceWidth.
 		maxHeight _ maxHeight max: height.
