@@ -1,6 +1,6 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3741] on 11 May 2019 at 7:21:36 pm'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3741] on 13 May 2019 at 9:06:04 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 63!
+!provides: 'VectorGraphics' 1 64!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
@@ -494,21 +494,11 @@ SVGPathQuadraticCurveToSmoothCommand class
 
 
 !TrueTypeFont commentStamp: '<historical>' prior: 0!
-AbstractFont availableFonts at: 'Xper' put: (
-	Dictionary newFrom: {AbstractFont default pointSize -> (TrueTypeFont fallback: AbstractFont default) })
+TrueType fonts are the most widely used format for pixel independent vector Fonts.
 
-AbstractFont default: (TrueTypeFont fallback: (AbstractFont default "familyName: Preferences defaultFontFamily pointSize: 22")).
-AbstractFont availableFonts keysAndValuesDo: [ :k :v |
-	v keysAndValuesDo:[ :k2 :v2 |
-		v at: k2 put: (TrueTypeFont fallback: v2) ]]
+In Cuis what is usually called TrueType Font is represented by TTFontDescription and TTCFontDescription.
 
-
-AbstractFont default: AbstractFont default fallback.
-AbstractFont availableFonts keysAndValuesDo: [ :k :v |
-	v keysAndValuesDo:[ :k2 :v2 |
-		v at: k2 put: v2 fallback ]]
-
-"Y despues ir i seleccionar preferencias / font size"!
+TrueTypeFonts, being part of the traditional AbstractFont hierarchy, adds a specific pointSize, and is the object used in texts.!
 
 !SVGElementMorph commentStamp: 'jmv 5/2/2011 09:46' prior: 0!
 See class methods in 'examples' category!
@@ -669,6 +659,16 @@ A representation of a TrueType point which includes a 'type' flag defining wheth
 postCopy
 	super postCopy.
 	replacedGlyphs _ replacedGlyphs copy! !
+
+!TrueTypeFont methodsFor: 'printing' stamp: 'KenD 5/13/2019 09:03:06'!
+printOn: aStream
+	aStream
+		nextPutAll: 'TrueTypeFont(''';
+		nextPutAll: self familyName;
+		nextPutAll: ''' ';
+		space;
+		print: self pointSize;
+		nextPut: $)! !
 
 !TTContourConstruction methodsFor: 'printing'!
 printOn: aStream
