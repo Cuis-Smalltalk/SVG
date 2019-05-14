@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3741] on 13 May 2019 at 9:06:04 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3745] on 14 May 2019 at 9:32:52 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 64!
+!provides: 'VectorGraphics' 1 65!
 !requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -670,6 +670,10 @@ printOn: aStream
 		print: self pointSize;
 		nextPut: $)! !
 
+!FormGlyph methodsFor: 'copying' stamp: 'jmv 5/11/2019 21:32:14'!
+postCopy
+	form _ form copy! !
+
 !TTContourConstruction methodsFor: 'printing'!
 printOn: aStream
 
@@ -823,14 +827,37 @@ isBold
 isItalic
 	^self emphasis allMask: 2! !
 
-!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/11/2019 18:32:36'!
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/13/2019 23:37:58'!
+isStruckThrough
+	^emphasis allMask: 8! !
+
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/13/2019 23:38:01'!
+isSubscript
+	^emphasis allMask: 32! !
+
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/13/2019 23:38:05'!
+isSuperscript
+	^emphasis allMask: 16! !
+
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/13/2019 23:38:11'!
+isUnderlined
+	^emphasis allMask: 4! !
+
+!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/13/2019 23:05:01'!
 basicGlyphAt: aCharacter
 
 	| index |
 	index _ aCharacter numericValue + 1.
 	^ (glyphForms at: index) ifNil: [
 		| glyph |
-		glyph _ (ttFontDescription formGlyphFor: aCharacter pixelSize: pointSize) ifNil: [#absentGlyph].
+		glyph _ (ttFontDescription formGlyphFor: aCharacter pixelSize: pointSize)
+			ifNil: [#absentGlyph]
+			ifNotNil: [ :theGlyph |
+				(emphasis allMask: 4) ifTrue: [
+					self makeUnderlinedGlyph: theGlyph ].
+				(emphasis allMask: 8) ifTrue: [
+					self makeStruckThroughGlyph: theGlyph ].
+				theGlyph].
 		glyphForms at: index put: glyph.
 		glyph ]! !
 
@@ -844,17 +871,22 @@ glyphAt: aCharacter
 	answer == #absentGlyph ifFalse: [ ^ answer ].
 	^ self basicGlyphAt: Character null! !
 
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/13/2019 23:42:44'!
+addEmphasis: code
+	"Set the integer code for emphasis. See senders."
+
+	emphasis _ code.
+	(#(4 8) includes: emphasis) ifTrue: [
+		"They need to be recreated"
+		glyphForms _ Array new: 256 ].
+	(emphasis allMask: 64) ifTrue: [
+		self perform: Preferences assignmentGlyphSelector ].! !
+
 !TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/7/2019 08:45:26'!
 emphasis
 	^ emphasis! !
 
-!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/11/2019 17:13:37'!
-emphasis: code 
-	"Set the integer code for emphasis. See senders."
-
-	emphasis _ code! !
-
-!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/11/2019 17:47:37'!
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/13/2019 23:25:18'!
 emphasized: code
 	"Answer a copy of the receiver with emphasis set to include code."
 	| derivative addedEmphasis derivedFrom |
@@ -870,72 +902,65 @@ emphasized: code
 
 	"Order is Bold(B), Italic(i), Underlined(U), StruckThrough(X), Superscript(Sup), Subscript(Sub), WithST80Glyphs(ST80)"
 	derivative _ addedEmphasis caseOf: {
-		[ 1 ] -> [ derivedFrom syntheticBold ].
-		[ 2 ] -> [ derivedFrom syntheticItalic ].
-		[ 4 ] -> [ derivedFrom syntheticUnderlined ].
-		[ 8 ] -> [ derivedFrom syntheticStruckThrough ].
+		[ 1 ] -> [ ^ derivedFrom ].	"No synthetic Bold or Italic. Just use whatever we have."
+		[ 2 ] -> [ ^ derivedFrom ].	"No synthetic Bold or Italic. Just use whatever we have."
+		[ 4 ] -> [ derivedFrom copy ].
+		[ 8 ] -> [ derivedFrom copy ].
 		[ 16 ] -> [ derivedFrom syntheticSuperscript ].
 		[ 32 ] -> [ derivedFrom syntheticSubscript ].
-		[ 64 ] -> [ derivedFrom syntheticST80Glyphs ] }.
-	"If synthetic derivative is not available, just use whatever we have."
-	derivative ifNil: [ ^ self ].
+		[ 64 ] -> [ derivedFrom copy ] }.
 
 	derivative baseFont: self.
-	derivative emphasis: code.
+	derivative addEmphasis: code.
 	derivativeFonts at: code put: derivative.
 	^ derivative! !
 
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:47:03'!
-syntheticBold
-	"Build and answer a derivative that is Bold."
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/13/2019 23:19:51'!
+makeStruckThroughGlyph: aFormGlyph
+	| form |
+	form _ aFormGlyph form.
+	form fillBlack: (0 @ (aFormGlyph topOffset - self descent) extent: form width @ 1)! !
 
-	"Not for now"
-	^ nil! !
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/13/2019 23:17:16'!
+makeUnderlinedGlyph: aFormGlyph
+	| height y oldForm form d |
+	d _ (self descent / 4) ceiling.
+	y _ aFormGlyph topOffset + d.
+	form _ aFormGlyph form.
+	height _ aFormGlyph topOffset + (2*d).
+	height > form height ifTrue: [
+		oldForm _ form.
+		form _ Form extent: oldForm width @ height depth: oldForm depth.
+		form fillWhite.
+		form copyBits: oldForm boundingBox from: oldForm at: `0@0` clippingBox: form boundingBox rule: Form over.
+		aFormGlyph form: form ].
+	form fillBlack: (0 @ y extent: form width @ d).! !
 
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:59'!
-syntheticItalic
-	"Build and answer a derivative that is Italic."
-
-	"Not for now"
-	^ nil! !
-
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:30:36'!
-syntheticST80Glyphs
-	"Build and answer a derivative that includes ST-80 glyphs:
-	a left arrow instead of the underscore, and an up arrow instead of the caret."
-
-	| derivative |
-	derivative _ self copy.
-	derivative perform: Preferences assignmentGlyphSelector.
-	^ derivative! !
-
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:55'!
-syntheticStruckThrough
-	"Build and answer a derivative that is StruckThrough."
-
-	"Not for now"
-	^ nil! !
-
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:52'!
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/13/2019 23:52:56'!
 syntheticSubscript
 	"Build and answer a derivative that is Subscript."
 
-	"Not for now"
-	^ nil! !
+	| derivative |
+	derivative _ ((family atPointSize: pointSize * 0.5) emphasized: emphasis).
+	^ derivative copy
 
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:49'!
+"
+StrikeFont allInstances do: [ :a | a reset ].
+('Hi ', (Text string: 'there' attribute: TextEmphasis superscript), ' how ', (Text string: 'are' attribute: TextEmphasis subscript), ' you?') edit.
+"! !
+
+!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/13/2019 23:52:59'!
 syntheticSuperscript
-	"Build and answer a derivative that is Superscript."
+	"Build and answer a derivative that is Subscript."
 
-	"Not for now"
-	^ nil! !
+	| derivative |
+	derivative _ ((family atPointSize: pointSize * 0.5) emphasized: emphasis).
+	^ derivative copy
 
-!TrueTypeFont methodsFor: 'synthetic derivatives' stamp: 'jmv 5/11/2019 17:46:47'!
-syntheticUnderlined
-	"Build and answer a derivative that is Underlined."
-
-	"Not for now"
-	^ nil! !
+"
+StrikeFont allInstances do: [ :a | a reset ].
+('Hi ', (Text string: 'there' attribute: TextEmphasis superscript), ' how ', (Text string: 'are' attribute: TextEmphasis subscript), ' you?') edit.
+"! !
 
 !TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:31:56'!
 useLeftArrow
@@ -5107,6 +5132,10 @@ antiAliasingWidthForStrokeFonts
 defaultAntiAliasingWidth
 	^1.3. "default for graphics"! !
 
+!FormGlyph methodsFor: 'initialization' stamp: 'jmv 5/13/2019 22:20:59'!
+form: aForm
+	form _ aForm! !
+
 !FormGlyph methodsFor: 'initialization' stamp: 'jmv 4/17/2019 11:03:20'!
 form: aForm leftOffset: aNumber topOffset: otherNumber advanceWidth: deltaX
 	form _ aForm.
@@ -5129,20 +5158,6 @@ leftOffset
 !FormGlyph methodsFor: 'accessing' stamp: 'jmv 4/22/2019 13:40:49'!
 topOffset
 ^topOffset! !
-
-!FormGlyph methodsFor: 'displaying' stamp: 'jmv 4/22/2019 13:42:03'!
-displayOn: aBitBlt at: aPoint
-"borrar"
-"parece que me quedo mal el signo de topOffset... en fin"
-""
-	form displayOn: aBitBlt destForm at: (aPoint x + leftOffset) @ (aPoint y+12-topOffset).
-	"
-	aBitBlt sourceForm: form.
-	aBitBlt destX: (aPoint x + leftOffset) destY: (aPoint y+12-topOffset) width: form width height: form height.
-	aBitBlt sourceX: 0; sourceY: 0.
-	aBitBlt combinationRule: Form over.
-	aBitBlt copyBits
-	"! !
 
 !FormGlyph class methodsFor: 'instance creation' stamp: 'jmv 4/17/2019 11:03:33'!
 form: aForm leftOffset: aNumber topOffset: otherNumber advanceWidth: deltaX
@@ -7283,7 +7298,7 @@ externalizedWith: aMorphicLocation
 
 	^self! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/11/2019 19:18:48'!
+!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/13/2019 23:54:23'!
 basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont
 	"Answer last affected pixel position"
 	| fdestX char glyph maxHeight |
@@ -7297,6 +7312,8 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFo
 		destX _ (fdestX + glyph leftOffset) rounded.
 		self revisar.
 		destY _ aPoint y +aTrueTypeFont pointSize "+ 4" - glyph topOffset.    "parece que me quedo mal el signo de topOffset... en fin"    "Sumar no 4, sino 1/2 del interline-height"
+		aTrueTypeFont isSuperscript ifTrue: [
+			destY _ destY - aTrueTypeFont ascent ].
 		sourceForm _ glyph form.
 		height _ sourceForm height.
 		width _ sourceForm width.
