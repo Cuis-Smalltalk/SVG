@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3745] on 14 May 2019 at 9:32:52 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3745] on 16 May 2019 at 8:28:44 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 65!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'VectorGraphics' 1 66!
 !requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -3561,7 +3561,7 @@ Display forceToScreen
 		abs_QuadraticBezierToX: lastClientX + x2 y: lastClientY + y2
 		controlX: lastClientX + x1 y: lastClientY + y1! !
 
-!VectorEngine methodsFor: 'text' stamp: 'jmv 5/7/2019 16:41:39'!
+!VectorEngine methodsFor: 'text' stamp: 'jmv 5/14/2019 17:42:23'!
 displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aFont color: aColor canvas: aCanvas
 	"geometryTransformation is already set to honor font pointSize
 	Use as little of aFont as possible!!"
@@ -3574,7 +3574,10 @@ displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: a
 		destX _ aPoint x.
 		startIndex to: stopIndex do: [ :charIndex |
 			char _ aString at: charIndex.
-			glyph _ aFont fontDescription at: char.
+			glyph _ char isSeparator
+				ifFalse: [aFont fontDescription at: char]
+				ifTrue: [aFont fontDescription at: Character space ].
+			"glyph _ aFont fontDescription at: char."
 			glyph contours do: [ :contour |
 				contour isEmpty ifFalse: [
 					geometryTransformation _ loc composedWith: (AffineTransformation withTranslation: destX@destY/1.3) withYAxisNegated.
