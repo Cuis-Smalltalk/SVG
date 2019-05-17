@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3746] on 17 May 2019 at 9:10:05 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3747] on 17 May 2019 at 9:54:41 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 68!
+!provides: 'VectorGraphics' 1 69!
 !requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'Color-Extras' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -656,6 +656,17 @@ printOn: aStream
 		space;
 		print: self pointSize;
 		nextPut: $)! !
+
+!TrueTypeFont methodsFor: 'objects from disk' stamp: 'jmv 5/17/2019 09:52:48'!
+objectForDataStream: refStrm
+
+	"I am about to be written on an object file.  Write a textual reference instead.
+	Warning: This saves a lot of space, but might fail if using other fonts than those in AvailableFonts"
+
+	^ DiskProxy
+		global: #FontFamily
+		selector: #familyName:pointSize:
+		args: (Array with: self familyName with: self pointSize)! !
 
 !FormGlyph methodsFor: 'copying' stamp: 'jmv 5/11/2019 21:32:14'!
 postCopy
