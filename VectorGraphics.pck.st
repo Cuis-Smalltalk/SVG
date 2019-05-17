@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3745] on 16 May 2019 at 8:28:44 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3746] on 17 May 2019 at 9:10:05 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 66!
+!provides: 'VectorGraphics' 1 68!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -214,7 +214,7 @@ FormGlyph class
 
 !classDefinition: #TTContourConstruction category: #'VectorGraphics-TrueType'!
 Object subclass: #TTContourConstruction
-	instanceVariableNames: 'points'
+	instanceVariableNames: 'points controlPointFlags'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -274,7 +274,7 @@ TTFontTableDirEntry class
 
 !classDefinition: #TTGlyph category: #'VectorGraphics-TrueType'!
 Object subclass: #TTGlyph
-	instanceVariableNames: 'bounds contours advanceWidth leftSideBearing rightSideBearing glyphIndex'
+	instanceVariableNames: 'boundsLeft boundsRight boundsTop boundsBottom contours advanceWidth leftSideBearing rightSideBearing glyphIndex'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -300,16 +300,6 @@ Object subclass: #TTKernPair
 	category: 'VectorGraphics-TrueType'!
 !classDefinition: 'TTKernPair class' category: #'VectorGraphics-TrueType'!
 TTKernPair class
-	instanceVariableNames: ''!
-
-!classDefinition: #TTPoint category: #'VectorGraphics-TrueType'!
-Object subclass: #TTPoint
-	instanceVariableNames: 'x y type'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'VectorGraphics-TrueType'!
-!classDefinition: 'TTPoint class' category: #'VectorGraphics-TrueType'!
-TTPoint class
 	instanceVariableNames: ''!
 
 !classDefinition: #SVGDefElement category: #'VectorGraphics-SVG'!
@@ -652,9 +642,6 @@ Instance variables:
 	value <Integer>	The amount of kerning.
 	mask <Integer>	An efficient representation for the left and the right value.!
 
-!TTPoint commentStamp: '<historical>' prior: 0!
-A representation of a TrueType point which includes a 'type' flag defining whether this point is an 'on' or an 'off' curve point.!
-
 !TrueTypeFont methodsFor: 'copying' stamp: 'jmv 5/11/2019 18:04:40'!
 postCopy
 	super postCopy.
@@ -706,19 +693,6 @@ printOn: aStream
 		nextPut:$(;
 		print: (contours ifNil: [0] ifNotNil: [contours size]);
 		nextPut:$).! !
-
-!TTPoint methodsFor: 'printing'!
-printOn: aStream
-
-	aStream 
-		nextPutAll: self class name;
-		nextPut:$(;
-		print: x;
-		nextPut:$@;
-		print: y;
-		nextPut:$|;
-		print: type;
-		nextPut:$)! !
 
 !SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
 name
@@ -3561,7 +3535,7 @@ Display forceToScreen
 		abs_QuadraticBezierToX: lastClientX + x2 y: lastClientY + y2
 		controlX: lastClientX + x1 y: lastClientY + y1! !
 
-!VectorEngine methodsFor: 'text' stamp: 'jmv 5/14/2019 17:42:23'!
+!VectorEngine methodsFor: 'text' stamp: 'jmv 5/17/2019 09:07:06'!
 displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aFont color: aColor canvas: aCanvas
 	"geometryTransformation is already set to honor font pointSize
 	Use as little of aFont as possible!!"
@@ -3574,10 +3548,7 @@ displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: a
 		destX _ aPoint x.
 		startIndex to: stopIndex do: [ :charIndex |
 			char _ aString at: charIndex.
-			glyph _ char isSeparator
-				ifFalse: [aFont fontDescription at: char]
-				ifTrue: [aFont fontDescription at: Character space ].
-			"glyph _ aFont fontDescription at: char."
+			glyph _ aFont fontDescription at: char.
 			glyph contours do: [ :contour |
 				contour isEmpty ifFalse: [
 					geometryTransformation _ loc composedWith: (AffineTransformation withTranslation: destX@destY/1.3) withYAxisNegated.
@@ -5166,35 +5137,38 @@ topOffset
 form: aForm leftOffset: aNumber topOffset: otherNumber advanceWidth: deltaX
 	^ self new form: aForm leftOffset: aNumber topOffset: otherNumber advanceWidth: deltaX! !
 
+!TTContourConstruction methodsFor: 'accessing' stamp: 'jmv 5/16/2019 16:35:20'!
+controlPointFlags
+	^controlPointFlags! !
+
 !TTContourConstruction methodsFor: 'accessing'!
 points
 	^points! !
 
-!TTContourConstruction methodsFor: 'accessing' stamp: 'ar 11/1/1998 22:34'!
-points: anArray
-	points := anArray asArray.! !
+!TTContourConstruction methodsFor: 'accessing' stamp: 'jmv 5/16/2019 16:35:10'!
+points: aShortPointArray
+	points _ aShortPointArray.
+	controlPointFlags _ ByteArray newBits: aShortPointArray size! !
 
-!TTContourConstruction methodsFor: 'converting' stamp: 'jmv 4/9/2019 10:36:04'!
+!TTContourConstruction methodsFor: 'converting' stamp: 'jmv 5/16/2019 16:10:02'!
 makePointsAbsolute: aPoint
-	| tx ty |
-	tx := aPoint x.
-	ty := aPoint y.
-	points do: [ :pt |
-		pt x: (tx := tx + pt x).
-		pt y: (ty := ty + pt y)].
-	^tx@ty! !
+	| t |
+	t _ aPoint.
+	1 to: points size do: [ :i |
+		t _ t + (points at: i).
+		points at: i put: t ].
+	^ t! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 4/9/2019 13:37:24'!
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 5/16/2019 16:14:19'!
 initialMoveToCommand
 
-	^ SVGPathMoveToCommand new toPoint: points first asPoint
-	! !
+	^ SVGPathMoveToCommand new toPoint: points first! !
 
 !TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 4/22/2019 20:36:47'!
 isEmpty
 	^points size < 2! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 4/9/2019 13:49:34'!
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 5/17/2019 08:54:36'!
 pathCommand
 	"Answer SVG Path Commands of the receiver. This may either be straight line
 	segments or quadratic bezier curves. The decision is made upon the type flags
@@ -5208,29 +5182,30 @@ pathCommand
 	endPoints _ OrderedCollection new.
 	controlPoints _ OrderedCollection new.
 	previousPoint _ nil.
-	points do: [ :point |
+	1 to: points size do: [ :i | | point |
+		point _ points at: i.
 		previousPoint
-			ifNil: [ firstEndPoint _ point asPoint ]
+			ifNil: [ firstEndPoint _ point ]
 			ifNotNil: [
-				point isControlPoint
+				(controlPointFlags bitBooleanAt: i)
 					ifTrue: [
-						previousPoint isControlPoint
+						(controlPointFlags bitBooleanAt: i-1)
 							ifTrue: [	"Quadratic Bezier"
-								controlPoints add: previousPoint asPoint.
-								endPoints add: point asPoint + previousPoint asPoint / 2.0 ]]
+								controlPoints add: previousPoint.
+								endPoints add: point + previousPoint / 2.0 ]]
 					ifFalse: [
-						previousPoint isControlPoint
+						(controlPointFlags bitBooleanAt: i-1)
 							ifTrue: [	"Quadratic Bezier"
-								controlPoints add: previousPoint asPoint.
-								endPoints add: point asPoint ]
+								controlPoints add: previousPoint.
+								endPoints add: point ]
 							ifFalse: [	"Line segment"
-								controlPoints add: point asPoint.
-								endPoints add: point asPoint ]]].
+								controlPoints add: point.
+								endPoints add: point ]]].
 		previousPoint _ point.
 	].
-	previousPoint isControlPoint
+	(controlPointFlags bitBooleanAt: points size)
 		ifTrue: [
-			controlPoints add: previousPoint asPoint.
+			controlPoints add: previousPoint.
 			endPoints add: firstEndPoint.]
 		ifFalse: [
 			controlPoints add: firstEndPoint.
@@ -5238,7 +5213,7 @@ pathCommand
 	^ SVGPathQuadraticCurveToCommand new toPoints: endPoints controlPoints: controlPoints
 	! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 4/9/2019 12:49:46'!
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 5/17/2019 08:54:43'!
 pathCommandsDo: aBlock
 "
 Usar paths relativos o absolutos?
@@ -5257,24 +5232,25 @@ Usar paths relativos o absolutos?
 	lastEndPoint _ nil.
 	lastControlPoint _ nil.
 	previousEndPoint _ nil.
-	points do: [ :point |
+	1 to: points size do: [ :i | | point |
+		point _ points at: i.
 		previousPoint
-			ifNil: [ firstEndPoint _ lastEndPoint _ point asPoint ]
+			ifNil: [ firstEndPoint _ lastEndPoint _ point ]
 			ifNotNil: [
-				point isControlPoint
+				(controlPointFlags bitBooleanAt: i)
 					ifTrue: [
-						previousPoint isControlPoint
+						(controlPointFlags bitBooleanAt: i-1)
 							ifTrue: [
-								previousEndPoint _ lastEndPoint. lastEndPoint _ point asPoint + previousPoint asPoint / 2.0.
+								previousEndPoint _ lastEndPoint. lastEndPoint _ point + previousPoint / 2.0.
 								{'bezier1'. previousEndPoint. lastControlPoint. lastEndPoint } print.
 								].
-							lastControlPoint _ point asPoint.
+							lastControlPoint _ point.
 							]
 					ifFalse: [
-						previousEndPoint _ lastEndPoint. lastEndPoint _ point asPoint.
-						previousPoint isControlPoint
+						previousEndPoint _ lastEndPoint. lastEndPoint _ point.
+						(controlPointFlags at: i-1) = 1
 							ifTrue: [
-								lastControlPoint _ previousPoint asPoint.
+								lastControlPoint _ previousPoint.
 								{'bezier2'. previousEndPoint. lastControlPoint. lastEndPoint } print.
 								]
 							ifFalse: [
@@ -5284,9 +5260,9 @@ Usar paths relativos o absolutos?
 		previousPoint _ point.
 	].
 	lastEndPoint = firstEndPoint ifFalse: [
-		previousPoint isControlPoint
+		(controlPointFlags bitBooleanAt: points size)
 			ifTrue: [
-				lastControlPoint _ previousPoint asPoint.
+				lastControlPoint _ previousPoint.
 				{'bezier3'. lastEndPoint. lastControlPoint. firstEndPoint } print]
 			ifFalse: [{'recta'. lastEndPoint. firstEndPoint } print]
 		 ]
@@ -5404,12 +5380,6 @@ lineSpacing
 unitsPerEm
 	^unitsPerEm! !
 
-!TTFontDescription methodsFor: 'private-initialization' stamp: 'ar 11/14/1998 20:20'!
-flipAroundY
-	bounds := (bounds origin x @ bounds corner y negated) corner:
-				(bounds corner x @ bounds origin y negated).
-	glyphs do:[:glyph| glyph flipAroundY]! !
-
 !TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 4/24/2019 20:12:58'!
 setAscent: asc descent: desc lineGap: lgap
 	ascent := asc.
@@ -5421,10 +5391,11 @@ setBounds: aRect unitsPerEm: aNumber
 	bounds := aRect.
 	unitsPerEm := aNumber.! !
 
-!TTFontDescription methodsFor: 'private-initialization' stamp: 'ar 11/2/1998 00:27'!
+!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 5/17/2019 09:08:36'!
 setGlyphs: glyphArray mapping: mappingTable
-	glyphs := glyphArray.
-	glyphTable := mappingTable.! !
+	glyphs _ glyphArray.
+	glyphTable _ mappingTable.
+	self blankGlyphForSeparators! !
 
 !TTFontDescription methodsFor: 'private-initialization' stamp: 'ar 11/2/1998 00:48'!
 setKernPairs: array
@@ -5457,20 +5428,18 @@ emphasis
 	('*Italic*' match: subfamilyName) ifTrue: [ emphasis := emphasis bitOr: 2 ].
 	^ emphasis! !
 
-!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/11/2019 19:20:48'!
+!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/17/2019 09:06:48'!
 formGlyphFor: aCharacter pixelSize: pixelSize
 	| glyph toPixelsScale glyphOffsetFromFormLeft formWidth glyphOffsetFromFormTop formHeight scaledGlyphBoundsBottom scaledGlyphBoundsLeft scaledGlyphBoundsRight scaledGlyphBoundsTop leftPixelOffset unPixelDeMasParaAAjmvX unPixelDeMasParaAAjmvY offsetVerticalParaQueY0caigaEnHalfPixel topPixelOffset form canvas |
 	unPixelDeMasParaAAjmvX _ 1.
 	unPixelDeMasParaAAjmvY _ 1.
 	offsetVerticalParaQueY0caigaEnHalfPixel _ 0.5.
-	glyph _ aCharacter isSeparator
-		ifFalse: [self at: aCharacter]
-		ifTrue: [self at: Character space ].
+	glyph _ self at: aCharacter.
 	glyph ifNil: [ ^ nil ].
 	toPixelsScale _ pixelSize * 1.0 / self letterMTopSideBearing.
 
-	scaledGlyphBoundsLeft _ glyph bounds left * toPixelsScale.
-	scaledGlyphBoundsRight _ glyph bounds right * toPixelsScale.
+	scaledGlyphBoundsLeft _ glyph boundsLeft * toPixelsScale.
+	scaledGlyphBoundsRight _ glyph boundsRight * toPixelsScale.
 	leftPixelOffset _ (scaledGlyphBoundsLeft - unPixelDeMasParaAAjmvX) floor. "If positive, pixels we save at the left. if negative, xtra pix needed"
 	"Offset desde el pixel mas a la izquierda del Form hasta el x=0.0 del glyph TrueType"
 	glyphOffsetFromFormLeft _ leftPixelOffset > 0
@@ -5479,8 +5448,8 @@ formGlyphFor: aCharacter pixelSize: pixelSize
 	formWidth _ (scaledGlyphBoundsRight + unPixelDeMasParaAAjmvX - glyphOffsetFromFormLeft) ceiling.
 	"{scaledGlyphBoundsLeft. deltaXForDisplayingForm. glyphOffsetFromFormLeft} print."
 	
-	scaledGlyphBoundsTop _ glyph bounds bottom * toPixelsScale.
-	scaledGlyphBoundsBottom _ glyph bounds top * toPixelsScale.
+	scaledGlyphBoundsTop _ glyph boundsBottom * toPixelsScale.
+	scaledGlyphBoundsBottom _ glyph boundsTop * toPixelsScale.
 	topPixelOffset _ (scaledGlyphBoundsTop + unPixelDeMasParaAAjmvY) ceiling. "Usually positive. Needed pixels above the baseline"
 	"Offset desde el pixel mas a la arriba del Form hasta el y=0.0 del glyph TrueType"
 	glyphOffsetFromFormTop _ topPixelOffset + offsetVerticalParaQueY0caigaEnHalfPixel.
@@ -5577,7 +5546,7 @@ processCharacterMappingTable: entry
 	].
 	^assoc! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'jmv 4/8/2019 12:41:35'!
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 5/16/2019 21:21:08'!
 processCompositeGlyph: glyph contours: nContours from: entry
 	"Read a composite glyph from the font data. The glyph passed into this method contains some state variables that must be copied into the resulting composite glyph."
 	| flags glyphIndex hasInstr cGlyph ofsX ofsY iLen a11 a12 a21 a22 m |
@@ -5585,7 +5554,10 @@ processCompositeGlyph: glyph contours: nContours from: entry
 	a11 := a22 := 16r4000.	"1.0 in F2Dot14"
 	a21 := a12 := 0.		"0.0 in F2Dot14"
 	"Copy state"
-	cGlyph bounds: glyph bounds; glyphIndex: glyph glyphIndex.
+	cGlyph
+		boundsLeft: glyph boundsLeft boundsRight: glyph boundsRight
+			boundsTop: glyph boundsTop boundsBottom: glyph boundsBottom;
+		glyphIndex: glyph glyphIndex.
 	hasInstr := false.
 	[ flags := entry nextUShort.
 	glyphIndex := entry nextUShort + 1.
@@ -5657,39 +5629,41 @@ indexToLocFormat	SHORT       Used when processing the Index To Loc Table."
 	fontDescription setBounds: (origin corner: corner) unitsPerEm: units.
 	^indexToLocFormat! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'jmv 4/8/2019 18:49:16'!
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 5/17/2019 09:01:28'!
 processGlyphDataTable: entry offsets: offsetArray
 	"Read the actual glyph data from the font.
 	offsetArray contains the start offsets in the data for each glyph."
 	| initialOffset |
-	initialOffset := entry offset.
-	glyphs := Array new: nGlyphs.
-	1 to: nGlyphs do:[:i | 
+	initialOffset _ entry offset.
+	glyphs _ Array new: nGlyphs.
+	1 to: nGlyphs do: [ :i | 
 		glyphs at: i put: (TTGlyph new glyphIndex: i-1)].
 	'Reading glyph data' 
 		displayProgressAt: 100@100
 		from: 1 
 		to: nGlyphs 
-		during:[:bar| | numberOfContours glyphOffset origin corner glyphLength glyph nextOffset |
-
-	1 to: nGlyphs do:[:glyphIndex |
-		bar value: glyphIndex.
-		glyph := glyphs at: glyphIndex.
-		glyphOffset := offsetArray at: glyphIndex.
-		nextOffset := offsetArray at: glyphIndex+1.
-		glyphLength := nextOffset - glyphOffset.
-		glyphLength = 0 ifFalse:[
-			entry offset: initialOffset + glyphOffset.
-			numberOfContours := entry nextShort.
-			origin := entry nextShort @ entry nextShort.
-			corner := entry nextShort @ entry nextShort.
-			glyph bounds: (origin corner: corner).
-			numberOfContours >= 0 ifTrue:[
-				self processSimpleGlyph: glyph contours: numberOfContours from: entry
-			] ifFalse:[
-				glyph := self processCompositeGlyph: glyph contours: numberOfContours from: entry.
-				glyphs at: glyphIndex put: glyph]]]
-	].! !
+		during: [ :bar |
+			| glyph glyphOffset nextOffset glyphLength numberOfContours bb bl br bt |
+			1 to: nGlyphs do: [ :glyphIndex |
+				bar value: glyphIndex.
+				glyph _ glyphs at: glyphIndex.
+				glyphOffset _ offsetArray at: glyphIndex.
+				nextOffset _ offsetArray at: glyphIndex+1.
+				glyphLength _ nextOffset - glyphOffset.
+				glyphLength = 0 ifFalse:[
+					entry offset: initialOffset + glyphOffset.
+					numberOfContours _ entry nextShort.
+					bl _ entry nextShort.
+					bt _ entry nextShort.
+					br _ entry nextShort.
+					bb _ entry nextShort.
+					glyph boundsLeft: bl boundsRight: br boundsTop: bt boundsBottom: bb.
+					numberOfContours >= 0
+						ifTrue: [
+							self processSimpleGlyph: glyph contours: numberOfContours from: entry ]
+						ifFalse: [
+							glyph _ self processCompositeGlyph: glyph contours: numberOfContours from: entry.
+							glyphs at: glyphIndex put: glyph ]]]].! !
 
 !TTFontReader methodsFor: 'processing' stamp: 'jmv 4/24/2019 20:12:00'!
 processHorizontalHeaderTable: entry
@@ -6028,65 +6002,65 @@ getTableDirEntry: tagString from: fontData
 macToWin: index
 	^ (index - 1) asCharacter macToSqueak asciiValue + 1! !
 
-!TTFontReader methodsFor: 'private' stamp: 'ar 11/2/1998 01:36'!
+!TTFontReader methodsFor: 'private' stamp: 'jmv 5/16/2019 16:35:47'!
 readGlyphXCoords:entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
 	"Read the x coordinates for the given glyph from the font file."
-	| startPoint endPoint flagBits xValue contour ttPoint |
-	startPoint := 1.
-	1 to: nContours do:[:i|
-		contour := glyph contours at: i.
+	| startPoint endPoint flagBits xValue contour |
+	startPoint _ 1.
+	1 to: nContours do: [ :i |
+		contour _ glyph contours at: i.
 		"Get the end point"
-		endPoint := (endPts at: i) + 1.
+		endPoint _ (endPts at: i) + 1.
 		"Store number of points"
-		startPoint to: endPoint do:[:j|
-			ttPoint := contour points at: (j - startPoint + 1).
-			flagBits := flags at: j.
+		startPoint to: endPoint do: [ :j |
+			flagBits _ flags at: j.
 			"If bit zero in the flag is set then this point is an on-curve
 			point, if not, then it is an off-curve point."
-			(flagBits bitAnd: 1) = 1 
-				ifTrue:[ ttPoint type: #OnCurve]
-				ifFalse:[ttPoint type: #OffCurve].
+			contour controlPointFlags bitAt: (j - startPoint + 1) put: 1-(flagBits bitAnd: 1).
 			"First we check to see if bit one is set.  This would indicate that
 			the corresponding coordinate data in the table is 1 byte long.
 			If the bit is not set, then the coordinate data is 2 bytes long."
-			(flagBits bitAnd: 2) = 2 ifTrue:[ "one byte"
-				xValue := entry nextByte.
-				xValue := (flagBits bitAnd: 16)=16 ifTrue:[xValue] ifFalse:[xValue negated].
-				ttPoint x: xValue.
-			] ifFalse:[ "two byte"
-				"If bit four is set, then this coordinate is the same as the
-				last one, so the relative offset (of zero) is stored.  If bit
-				is not set, then read in two bytes and store it as a signed value."
-				(flagBits bitAnd: 16) = 16 ifTrue:[ ttPoint x: 0 ]
-				ifFalse:[
-					xValue := entry nextShort.
-					ttPoint x: xValue]]].
-		startPoint := endPoint + 1]! !
+			xValue _ (flagBits bitAnd: 2) = 2
+				ifTrue: [ "one byte"
+					(flagBits bitAnd: 16)=16 
+						ifTrue: [entry nextByte]
+						ifFalse: [entry nextByte negated].
+				] ifFalse: [ "two byte"
+					"If bit four is set, then this coordinate is the same as the
+					last one, so the relative offset (of zero) is stored.  If bit
+					is not set, then read in two bytes and store it as a signed value."
+					(flagBits bitAnd: 16) = 16
+						ifTrue: [ 0 ]
+						ifFalse: [ entry nextShort ]].
+			contour points at: (j - startPoint + 1) putX: xValue.
+		].
+		startPoint _ endPoint + 1 ]! !
 
-!TTFontReader methodsFor: 'private' stamp: 'ar 11/2/1998 01:37'!
+!TTFontReader methodsFor: 'private' stamp: 'jmv 5/16/2019 16:32:24'!
 readGlyphYCoords:entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
 	"Read the y coordinates for the given glyph from the font file."
-	| startPoint endPoint flagBits yValue contour ttPoint |
-	startPoint := 1.
-	1 to: nContours do:[:i|
-		contour := glyph contours at: i.
+	| startPoint endPoint flagBits yValue contour |
+	startPoint _ 1.
+	1 to: nContours do: [ :i |
+		contour _ glyph contours at: i.
 		"Get the end point"
-		endPoint := (endPts at: i) + 1.
+		endPoint _ (endPts at: i) + 1.
 		"Store number of points"
-		startPoint to: endPoint do:[:j|
-			ttPoint := contour points at: (j - startPoint + 1).
-			flagBits := flags at: j.
+		startPoint to: endPoint do: [ :j |
+			flagBits _ flags at: j.
 			"Check if this value one or two byte encoded"
-			(flagBits bitAnd: 4) = 4 ifTrue:[ "one byte"
-				yValue := entry nextByte.
-				yValue := (flagBits bitAnd: 32)=32 ifTrue:[yValue] ifFalse:[yValue negated].
-				ttPoint y: yValue.
-			] ifFalse:[ "two byte"
-				(flagBits bitAnd: 32) = 32 ifTrue:[ ttPoint y: 0 ]
-				ifFalse:[
-					yValue := entry nextShort.
-					ttPoint y: yValue]]].
-		startPoint := endPoint + 1]! !
+			yValue _ (flagBits bitAnd: 4) = 4
+				ifTrue: [ "one byte"
+					(flagBits bitAnd: 32)=32
+						ifTrue: [entry nextByte]
+						ifFalse: [entry nextByte negated].
+				] ifFalse: [ "two byte"
+					(flagBits bitAnd: 32) = 32
+						ifTrue: [ 0 ]
+						ifFalse: [ entry nextShort ]].
+			contour points at: (j - startPoint + 1) putY: yValue.
+		].
+		startPoint _ endPoint + 1 ]! !
 
 !TTFontReader class methodsFor: 'class initialization' stamp: 'nk 7/16/2003 15:56'!
 fileReaderServicesForFile: fullName suffix: suffix
@@ -6387,13 +6361,48 @@ advanceWidth
 advanceWidth: aNumber
 	advanceWidth := aNumber.! !
 
-!TTGlyph methodsFor: 'accessing' stamp: 'ar 11/1/1998 22:25'!
-bounds
-	^bounds! !
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:19:48'!
+boundsBottom
+ ^boundsBottom
+"
+	boundsRight
+	boundsTop
+	boundsBottom
+	"! !
 
-!TTGlyph methodsFor: 'accessing' stamp: 'ar 11/1/1998 22:25'!
-bounds: aRectangle
-	bounds := aRectangle! !
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:19:28'!
+boundsLeft
+ ^boundsLeft
+"
+	boundsRight
+	boundsTop
+	boundsBottom
+	"! !
+
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:16:39'!
+boundsLeft: bl boundsRight: br boundsTop: bt boundsBottom: bm
+	boundsLeft _ bl.
+	boundsRight _ br.
+	boundsTop _ bt.
+	boundsBottom _ bm.! !
+
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:19:35'!
+boundsRight
+ ^boundsRight
+"
+	boundsRight
+	boundsTop
+	boundsBottom
+	"! !
+
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:19:43'!
+boundsTop
+ ^boundsTop
+"
+	boundsRight
+	boundsTop
+	boundsBottom
+	"! !
 
 !TTGlyph methodsFor: 'accessing'!
 contours
@@ -6427,17 +6436,17 @@ rightSideBearing
 rightSideBearing: aNumber
 	rightSideBearing := aNumber.! !
 
-!TTGlyph methodsFor: 'accessing' stamp: 'jmv 4/17/2019 09:35:35'!
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 5/16/2019 21:22:54'!
 topSideBearing
 	"
 	https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html
 	"
-	^bounds corner y! !
+	^boundsBottom! !
 
-!TTGlyph methodsFor: 'initialize-release' stamp: 'jmv 4/10/2019 09:41:17'!
+!TTGlyph methodsFor: 'initialize-release' stamp: 'jmv 5/16/2019 21:23:03'!
 initialize
 
-	bounds := 0@0 corner: 0@0.
+	boundsLeft _ boundsRight _ boundsTop _ boundsBottom _ 0.
 	contours := #().
 	advanceWidth := 0.
 	leftSideBearing := 0.
@@ -6447,12 +6456,7 @@ initialize
 isComposite
 	^false! !
 
-!TTGlyph methodsFor: 'private' stamp: 'jmv 4/10/2019 09:39:04'!
-flipAroundY
-	bounds := (bounds origin x @ bounds corner y negated) corner:
-				(bounds corner x @ bounds origin y negated).! !
-
-!TTGlyph methodsFor: 'private-initialization' stamp: 'jmv 4/10/2019 09:41:04'!
+!TTGlyph methodsFor: 'private-initialization' stamp: 'jmv 5/16/2019 16:05:09'!
 initializeContours: numContours with: endPoints
 	"Initialize the contours for creation of the glyph."
 	| startPt pts endPt |
@@ -6460,8 +6464,7 @@ initializeContours: numContours with: endPoints
 	startPt := -1.
 	1 to: numContours do:[:i|
 		endPt := endPoints at: i.
-		pts := Array new: endPt - startPt.
-		1 to: pts size do:[:j| pts at: j put: TTPoint new].
+		pts := ShortPointArray new: endPt - startPt.
 		contours at: i put: (TTContourConstruction on: pts).
 		startPt := endPt].! !
 
@@ -6476,11 +6479,11 @@ makePointsAbsolute
 	contours do: [ :contour | 
 		contourOrigin _ contour makePointsAbsolute: contourOrigin ]! !
 
-!TTGlyph methodsFor: 'private-initialization' stamp: 'ar 11/1/1998 22:27'!
+!TTGlyph methodsFor: 'private-initialization' stamp: 'jmv 5/16/2019 21:21:51'!
 updateRightSideBearing
 	"Update the right side bearing value"
 	"@@: Is the following really correct?!!?!!"
-	rightSideBearing := advanceWidth - leftSideBearing - bounds corner x + bounds origin x! !
+	rightSideBearing := advanceWidth - leftSideBearing - boundsRight + boundsLeft! !
 
 !TTGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:54:15'!
 drawGlyphOn: aVectorCanvas
@@ -6517,11 +6520,6 @@ initialize
 !TTCompositeGlyph methodsFor: 'testing'!
 isComposite
 	^true! !
-
-!TTCompositeGlyph methodsFor: 'private' stamp: 'jmv 4/10/2019 09:41:24'!
-flipAroundY
-	bounds := (bounds origin x @ bounds corner y negated) corner:
-				(bounds corner x @ bounds origin y negated).! !
 
 !TTCompositeGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:59:35'!
 drawGlyphOn: aVectorCanvas
@@ -6565,40 +6563,6 @@ value: aNumber
 !TTKernPair class methodsFor: 'accessing'!
 maskFor: left with: right
 	^(left bitShift: 12) + right! !
-
-!TTPoint methodsFor: 'accessing'!
-type: aSymbol
-
-	type := aSymbol! !
-
-!TTPoint methodsFor: 'accessing'!
-x
-	^x! !
-
-!TTPoint methodsFor: 'accessing'!
-x: aNumber
-
-	x := aNumber! !
-
-!TTPoint methodsFor: 'accessing'!
-y
-	^y! !
-
-!TTPoint methodsFor: 'accessing'!
-y: aNumber
-	y := aNumber! !
-
-!TTPoint methodsFor: 'converting'!
-asPoint
-	^x@y! !
-
-!TTPoint methodsFor: 'testing' stamp: 'jmv 4/9/2019 11:44:20'!
-isControlPoint
-	^ self isEndPoint not! !
-
-!TTPoint methodsFor: 'testing' stamp: 'jmv 4/9/2019 11:44:09'!
-isEndPoint
-	^ type == #OnCurve! !
 
 !SVGDefElement methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:40'!
 def: anSVGDef
