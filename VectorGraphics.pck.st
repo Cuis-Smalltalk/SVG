@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3747] on 17 May 2019 at 9:54:41 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3756] on 20 May 2019 at 10:07:20 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 69!
+!provides: 'VectorGraphics' 1 70!
+!requires: 'Color-Extras' 1 nil nil!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
-!requires: 'Color-Extras' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -760,6 +760,11 @@ familyName
 fontDescription
 	^ ttFontDescription ! !
 
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/20/2019 09:51:32'!
+leftOffsetAt: aCharacter
+	self revisar. "Should not use cached FormGlyph. Better for VectorEngine."
+^(self glyphAt: aCharacter) leftOffset! !
+
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:27:24'!
 lineSpacing
 	"Answer the height of the receiver including any additional line gap."
@@ -774,6 +779,11 @@ scrollbarThickness
 "
 "self forwarding: #pointSize printOneStack: true."
 	^pointSize! !
+
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/20/2019 09:51:27'!
+rightOffsetAt: aCharacter
+	self revisar. "Should not use cached FormGlyph. Better for VectorEngine."
+^(self glyphAt: aCharacter) rightOffset! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/9/2019 09:04:27'!
 widthOf: aCharacter
@@ -5139,6 +5149,10 @@ form
 !FormGlyph methodsFor: 'accessing' stamp: 'jmv 4/22/2019 13:40:41'!
 leftOffset
 ^leftOffset! !
+
+!FormGlyph methodsFor: 'accessing' stamp: 'jmv 5/20/2019 09:47:16'!
+rightOffset
+^form width + leftOffset - advanceWidth! !
 
 !FormGlyph methodsFor: 'accessing' stamp: 'jmv 4/22/2019 13:40:49'!
 topOffset
