@@ -1,9 +1,9 @@
-'From Cuis 5.0 of 7 November 2016 [latest update: #3756] on 20 May 2019 at 10:07:20 am'!
+'From Cuis 5.0 of 7 November 2016 [latest update: #3757] on 21 May 2019 at 11:15:13 am'!
 'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 70!
+!provides: 'VectorGraphics' 1 72!
 !requires: 'Color-Extras' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-SVG'!
@@ -739,9 +739,10 @@ ascent
 baseFont
 	^ baseFont ifNil: [self]! !
 
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:38:06'!
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/21/2019 11:01:04'!
 baseKern
 	"self forwarding: #baseKern printOneStack: true."
+	self revisar.
 ^0 "uh?"! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/22/2019 13:29:21'!
@@ -797,7 +798,7 @@ widthOf: aCharacter
 	glyph _ self glyphAt: aCharacter.
 	^ glyph advanceWidth! !
 
-!TrueTypeFont methodsFor: 'displaying' stamp: 'jmv 4/23/2019 09:14:55'!
+!TrueTypeFont methodsFor: 'displaying' stamp: 'jmv 5/21/2019 10:56:54'!
 on: aGrafPort displayString: aString from: firstIndex to: lastIndex at: p color: color
 
 	^ aGrafPort
@@ -805,7 +806,7 @@ on: aGrafPort displayString: aString from: firstIndex to: lastIndex at: p color:
 		from: firstIndex
 		to: lastIndex
 		at: p
-		TrueTypeFont: self
+		trueTypeFont: self
 		color: color
 
 ! !
@@ -838,14 +839,15 @@ isSuperscript
 isUnderlined
 	^emphasis allMask: 4! !
 
-!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/13/2019 23:05:01'!
-basicGlyphAt: aCharacter
+!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 5/21/2019 10:52:20'!
+glyphAt: aCharacter
 
 	| index |
 	index _ aCharacter numericValue + 1.
 	^ (glyphForms at: index) ifNil: [
-		| glyph |
-		glyph _ (ttFontDescription formGlyphFor: aCharacter pixelSize: pointSize)
+		| ttGlyph formGlyph |
+		ttGlyph _ self ttGlyphAt: aCharacter.
+		formGlyph _ (ttFontDescription formGlyphFor: ttGlyph pixelSize: pointSize)
 			ifNil: [#absentGlyph]
 			ifNotNil: [ :theGlyph |
 				(emphasis allMask: 4) ifTrue: [
@@ -853,25 +855,22 @@ basicGlyphAt: aCharacter
 				(emphasis allMask: 8) ifTrue: [
 					self makeStruckThroughGlyph: theGlyph ].
 				theGlyph].
-		glyphForms at: index put: glyph.
-		glyph ]! !
+		glyphForms at: index put: formGlyph.
+		formGlyph ]! !
 
-!TrueTypeFont methodsFor: 'bitmap glyph caching' stamp: 'jmv 5/11/2019 18:34:25'!
-glyphAt: aCharacter
-	| answer |
+!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 5/21/2019 10:46:47'!
+ttGlyphAt: aCharacter
 	replacedGlyphs at: aCharacter ifPresent: [ :actualCharacter |
-		answer _ self basicGlyphAt: actualCharacter.
-		answer == #absentGlyph ifFalse: [ ^ answer ]].
-	answer _ self basicGlyphAt: aCharacter.
-	answer == #absentGlyph ifFalse: [ ^ answer ].
-	^ self basicGlyphAt: Character null! !
+		(ttFontDescription at: actualCharacter) ifNotNil: [ :found | ^ found ]].
+	(ttFontDescription at: aCharacter) ifNotNil: [ :found | ^ found ].
+	^ ttFontDescription at: Character null! !
 
-!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/13/2019 23:42:44'!
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/21/2019 11:14:05'!
 addEmphasis: code
 	"Set the integer code for emphasis. See senders."
 
 	emphasis _ code.
-	(#(4 8) includes: emphasis) ifTrue: [
+	(emphasis anyMask: 4+8) ifTrue: [
 		"They need to be recreated"
 		glyphForms _ Array new: 256 ].
 	(emphasis allMask: 64) ifTrue: [
@@ -2415,10 +2414,10 @@ multiQuadraticCurveToSmooth: coordinatesAreRelative toPoints: toPoints
 				to _ toPoints at: i.
 				engine rel_QuadraticBezierSmoothToX: to x y: to y ]]! !
 
-!VectorCanvas methodsFor: 'drawing - text' stamp: 'jmv 5/5/2019 16:48:50'!
+!VectorCanvas methodsFor: 'drawing - text' stamp: 'jmv 5/21/2019 11:01:45'!
 drawString: aString from: firstIndex to: lastIndex at: aPoint font: fontOrNil color: aColor
 
-	| font loc ps |
+	| font toPixelsScale loc |
 "	port colorMap: nil."
 	"Slight optimization when there's nothing to do."
 	"
@@ -2427,17 +2426,15 @@ drawString: aString from: firstIndex to: lastIndex at: aPoint font: fontOrNil co
 	"
 	"mhhhhhhhh. Creo que es mejor que venga un font siempre. Y uno de M3!!"
 	font _ fontOrNil ifNil: [ AbstractFont default ].
-	"do it better!!"
-	"Bueno, hacerlo bien despues!!"
-	ps _ font pointSize.
-	loc _ AffineTransformation withScale: ps * 1.3 / 2048.
+	toPixelsScale _ font pointSize * 1.0 / font fontDescription letterMTopSideBearing.
+	loc _ AffineTransformation withScale: toPixelsScale.
 	loc _ currentTransformation composedWith: loc.
 	engine geometryTransformation: loc.
 	engine
 		displayString: aString
 		from: firstIndex
 		to: lastIndex
-		at: aPoint / ps * 2048 + (0@(1.2 * 2048))
+		at: aPoint / toPixelsScale + (0@(font fontDescription ascent + font fontDescription lineGap))
 		trueTypeFont: font
 		color: aColor
 		canvas: self.
@@ -3556,11 +3553,11 @@ Display forceToScreen
 		abs_QuadraticBezierToX: lastClientX + x2 y: lastClientY + y2
 		controlX: lastClientX + x1 y: lastClientY + y1! !
 
-!VectorEngine methodsFor: 'text' stamp: 'jmv 5/17/2019 09:07:06'!
+!VectorEngine methodsFor: 'text' stamp: 'jmv 5/21/2019 10:46:54'!
 displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aFont color: aColor canvas: aCanvas
 	"geometryTransformation is already set to honor font pointSize
 	Use as little of aFont as possible!!"
-	| glyph destX destY displayWidth char loc |
+	| glyph destX destY loc |
 
 	self antiAliasingWidth: VectorEngine antiAliasingWidthForOutlineFonts.
 	loc _ geometryTransformation.
@@ -3568,16 +3565,14 @@ displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: a
 		destY _ aPoint y.
 		destX _ aPoint x.
 		startIndex to: stopIndex do: [ :charIndex |
-			char _ aString at: charIndex.
-			glyph _ aFont fontDescription at: char.
+			glyph _ aFont ttGlyphAt: (aString at: charIndex).
 			glyph contours do: [ :contour |
 				contour isEmpty ifFalse: [
-					geometryTransformation _ loc composedWith: (AffineTransformation withTranslation: destX@destY/1.3) withYAxisNegated.
+					geometryTransformation _ loc composedWith: (AffineTransformation withTranslation: destX@destY) withYAxisNegated.
 					contour initialMoveToCommand runOn: aCanvas .
 					contour pathCommand runOn: aCanvas ].
 			].
-			displayWidth _ glyph advanceWidth * 1.3.
-			destX _ destX + displayWidth.
+			destX _ destX + glyph advanceWidth.
 		]
 	].
 	self antiAliasingWidth: VectorEngine defaultAntiAliasingWidth! !
@@ -5453,18 +5448,16 @@ emphasis
 	('*Italic*' match: subfamilyName) ifTrue: [ emphasis := emphasis bitOr: 2 ].
 	^ emphasis! !
 
-!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/17/2019 09:06:48'!
-formGlyphFor: aCharacter pixelSize: pixelSize
-	| glyph toPixelsScale glyphOffsetFromFormLeft formWidth glyphOffsetFromFormTop formHeight scaledGlyphBoundsBottom scaledGlyphBoundsLeft scaledGlyphBoundsRight scaledGlyphBoundsTop leftPixelOffset unPixelDeMasParaAAjmvX unPixelDeMasParaAAjmvY offsetVerticalParaQueY0caigaEnHalfPixel topPixelOffset form canvas |
+!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/21/2019 10:47:47'!
+formGlyphFor: aTTGlyph pixelSize: pixelSize
+	| toPixelsScale glyphOffsetFromFormLeft formWidth glyphOffsetFromFormTop formHeight scaledGlyphBoundsBottom scaledGlyphBoundsLeft scaledGlyphBoundsRight scaledGlyphBoundsTop leftPixelOffset unPixelDeMasParaAAjmvX unPixelDeMasParaAAjmvY offsetVerticalParaQueY0caigaEnHalfPixel topPixelOffset form canvas |
 	unPixelDeMasParaAAjmvX _ 1.
 	unPixelDeMasParaAAjmvY _ 1.
 	offsetVerticalParaQueY0caigaEnHalfPixel _ 0.5.
-	glyph _ self at: aCharacter.
-	glyph ifNil: [ ^ nil ].
 	toPixelsScale _ pixelSize * 1.0 / self letterMTopSideBearing.
 
-	scaledGlyphBoundsLeft _ glyph boundsLeft * toPixelsScale.
-	scaledGlyphBoundsRight _ glyph boundsRight * toPixelsScale.
+	scaledGlyphBoundsLeft _ aTTGlyph boundsLeft * toPixelsScale.
+	scaledGlyphBoundsRight _ aTTGlyph boundsRight * toPixelsScale.
 	leftPixelOffset _ (scaledGlyphBoundsLeft - unPixelDeMasParaAAjmvX) floor. "If positive, pixels we save at the left. if negative, xtra pix needed"
 	"Offset desde el pixel mas a la izquierda del Form hasta el x=0.0 del glyph TrueType"
 	glyphOffsetFromFormLeft _ leftPixelOffset > 0
@@ -5473,8 +5466,8 @@ formGlyphFor: aCharacter pixelSize: pixelSize
 	formWidth _ (scaledGlyphBoundsRight + unPixelDeMasParaAAjmvX - glyphOffsetFromFormLeft) ceiling.
 	"{scaledGlyphBoundsLeft. deltaXForDisplayingForm. glyphOffsetFromFormLeft} print."
 	
-	scaledGlyphBoundsTop _ glyph boundsBottom * toPixelsScale.
-	scaledGlyphBoundsBottom _ glyph boundsTop * toPixelsScale.
+	scaledGlyphBoundsTop _ aTTGlyph boundsBottom * toPixelsScale.
+	scaledGlyphBoundsBottom _ aTTGlyph boundsTop * toPixelsScale.
 	topPixelOffset _ (scaledGlyphBoundsTop + unPixelDeMasParaAAjmvY) ceiling. "Usually positive. Needed pixels above the baseline"
 	"Offset desde el pixel mas a la arriba del Form hasta el y=0.0 del glyph TrueType"
 	glyphOffsetFromFormTop _ topPixelOffset + offsetVerticalParaQueY0caigaEnHalfPixel.
@@ -5495,12 +5488,12 @@ glyphOffsetFromFormTop _ glyphOffsetFromFormTop ceiling.
 	canvas engine geometryTransformation: (AffineTransformation withRadians: 0 scale: toPixelsScale 
 		position: glyphOffsetFromFormLeft negated@glyphOffsetFromFormTop) withYAxisNegated.
 	canvas fillColor: Color black do: [
-		glyph drawGlyphOn: canvas ].
+		aTTGlyph drawGlyphOn: canvas ].
 	^FormGlyph
 		form: form
 		leftOffset: leftPixelOffset
 		topOffset: topPixelOffset
-		advanceWidth: (glyph advanceWidth * toPixelsScale)"ceiling" "Convertir a entero puede ayudar a que se vea mejor en BitBlt, pero el layout es distinto que en VectorGraphics..."! !
+		advanceWidth: (aTTGlyph advanceWidth * toPixelsScale)"ceiling" "Convertir a entero puede ayudar a que se vea mejor en BitBlt, pero el layout es distinto que en VectorGraphics..."! !
 
 !TTFontDescription class methodsFor: 'instance creation' stamp: 'jmv 5/10/2019 09:42:44'!
 read: aDirectoryEntry
@@ -7290,10 +7283,10 @@ externalizedWith: aMorphicLocation
 
 	^self! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/13/2019 23:54:23'!
-basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont
+!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/21/2019 10:29:34'!
+basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont
 	"Answer last affected pixel position"
-	| fdestX char glyph maxHeight |
+	| fdestX char glyph maxHeight ddy toPixelsScale |
 
 	destY _ aPoint y.
 	fdestX _ aPoint x.
@@ -7303,7 +7296,9 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFo
 		glyph _ aTrueTypeFont glyphAt: char.
 		destX _ (fdestX + glyph leftOffset) rounded.
 		self revisar.
-		destY _ aPoint y +aTrueTypeFont pointSize "+ 4" - glyph topOffset.    "parece que me quedo mal el signo de topOffset... en fin"    "Sumar no 4, sino 1/2 del interline-height"
+		ddy _ aTrueTypeFont fontDescription ascent + aTrueTypeFont fontDescription lineGap.
+		toPixelsScale _ aTrueTypeFont pointSize * 1.0 / aTrueTypeFont fontDescription letterMTopSideBearing.
+		destY _ aPoint y + (ddy * toPixelsScale) - glyph topOffset. 
 		aTrueTypeFont isSuperscript ifTrue: [
 			destY _ destY - aTrueTypeFont ascent ].
 		sourceForm _ glyph form.
@@ -7315,8 +7310,8 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFo
 	].
 	^ destX ceiling@(destY+maxHeight)! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/5/2019 16:34:40'!
-displayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont color: foregroundColor
+!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/21/2019 10:56:45'!
+displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont color: foregroundColor
 	"If required, do a second pass with new rule and colorMap.
 	Answer last affected pixel position
 	Answer nil if nothing was done
@@ -7338,7 +7333,7 @@ displayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: a
 	"If combinationRule is rgbMul, we might need the special two-pass technique for component alpha blending.
 	If not, do it simply"
 	combinationRule = 37 "rgbMul" ifFalse: [
-		^self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont ].
+		^self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont ].
 	
 	"We need to do a second pass. The colormap set is for use in the second pass."
 	secondPassMap _ colorMap.
@@ -7346,12 +7341,12 @@ displayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: a
 	destDepth _ destForm depth.
 	colorMap _ sourceDepth ~= destDepth
 		ifTrue: [ Color cachedColormapFrom: sourceDepth to: destDepth ].
-	answer := self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont.
+	answer := self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont.
 	colorMap := secondPassMap.
 	secondPassMap ifNotNil: [
 		prevRule := combinationRule.
 		combinationRule := 20. "rgbAdd"
-		self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint TrueTypeFont: aTrueTypeFont.
+		self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont.
 		combinationRule := prevRule ].
 	^answer! !
 SVGElementMorph initialize!
