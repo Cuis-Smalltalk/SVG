@@ -1,6 +1,6 @@
 'From Cuis 5.0 of 7 November 2016 [latest update: #3757] on 21 May 2019 at 11:15:13 am'!
-'Description Please enter a description for this package '!
-!provides: 'VectorGraphics' 1 72!
+'Description '!
+!provides: 'VectorGraphics' 1 73!
 !requires: 'Color-Extras' 1 nil nil!
 !requires: 'YAXO' 1 nil nil!
 !requires: 'LinearAlgebra' 1 nil nil!
