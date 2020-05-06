@@ -1,9 +1,10 @@
-'From Cuis 5.0 [latest update: #3826] on 14 July 2019 at 2:32:27 pm'!
+'From Cuis 5.0 [latest update: #4127] on 1 May 2020 at 3:30:36 pm'!
 'Description '!
-!provides: 'SVG' 1 2!
-!requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'VectorGraphics' 1 nil nil!
+!provides: 'SVG' 1 3!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'VectorGraphics' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
