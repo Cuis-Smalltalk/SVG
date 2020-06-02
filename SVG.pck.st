@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4127] on 1 May 2020 at 3:30:36 pm'!
+'From Cuis 5.0 [latest update: #4199] on 2 June 2020 at 4:51:21 pm'!
 'Description '!
-!provides: 'SVG' 1 3!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 4!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
@@ -590,6 +590,27 @@ base _ 'VectorGraphics/SVGSamples/'.
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 6/2/2020 16:48:46'!
+examplesClinton
+"
+SVGElementMorph examplesClinton
+"
+| m base f |
+Transcript clear.
+base _ 'VectorGraphics/SVGSamples/'.
+[
+	m _ SVGMainMorph fromFileNamed: base, 'clinton.svg'
+] on: SVGWarning do: [ :warning | warning print. warning resume ].
+	f _ Form extent: 360@480 depth:32.
+	m privateOwner: self runningWorld.
+	m morphPosition: 0@0.
+	(VectorCanvas onForm: f) fullDraw: m.
+	Display fillColor: Color black.
+	f displayOn: Display at: 0@0.
+	f makeAllPixelsOpaque.
+	f displayOn: Display at: 360@0.
+	Display copy inspect.! !
 
 !SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:08'!
 examplesLion
