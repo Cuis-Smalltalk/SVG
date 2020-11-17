@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4199] on 2 June 2020 at 4:51:21 pm'!
+'From Cuis 5.0 [latest update: #4450] on 12 November 2020 at 5:50:24 pm'!
 'Description '!
-!provides: 'SVG' 1 4!
+!provides: 'SVG' 1 5!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
@@ -20,7 +20,7 @@ SVGWarning class
 	instanceVariableNames: ''!
 
 !classDefinition: #SVGElementMorph category: #'SVG-Elements'!
-Morph subclass: #SVGElementMorph
+MovableMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
