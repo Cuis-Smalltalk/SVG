@@ -1,191 +1,191 @@
-'From Cuis 5.0 [latest update: #4450] on 12 November 2020 at 5:50:24 pm'!
+'From Cuis 5.0 [latest update: #4489] on 18 December 2020 at 3:57:50 pm'!
 'Description '!
-!provides: 'SVG' 1 5!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 6!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
-SystemOrganization addCategory: #'SVG-Elements'!
-SystemOrganization addCategory: #'SVG-Shapes'!
+!requires: 'LinearAlgebra' 1 nil nil!
+SystemOrganization addCategory: 'SVG-Elements'!
+SystemOrganization addCategory: 'SVG-Shapes'!
 
 
-!classDefinition: #SVGWarning category: #'SVG-Elements'!
+!classDefinition: #SVGWarning category: 'SVG-Elements'!
 Warning subclass: #SVGWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGWarning class' category: #'SVG-Elements'!
+!classDefinition: 'SVGWarning class' category: 'SVG-Elements'!
 SVGWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGElementMorph category: #'SVG-Elements'!
+!classDefinition: #SVGElementMorph category: 'SVG-Elements'!
 MovableMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGElementMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGElementMorph class' category: 'SVG-Elements'!
 SVGElementMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGroupMorph category: #'SVG-Elements'!
+!classDefinition: #SVGGroupMorph category: 'SVG-Elements'!
 SVGElementMorph subclass: #SVGGroupMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGroupMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGroupMorph class' category: 'SVG-Elements'!
 SVGGroupMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGMainMorph category: #'SVG-Elements'!
+!classDefinition: #SVGMainMorph category: 'SVG-Elements'!
 SVGGroupMorph subclass: #SVGMainMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGMainMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGMainMorph class' category: 'SVG-Elements'!
 SVGMainMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGCircle category: #'SVG-Shapes'!
+!classDefinition: #SVGCircle category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGCircle
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGCircle class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGCircle class' category: 'SVG-Shapes'!
 SVGCircle class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGEllipse category: #'SVG-Shapes'!
+!classDefinition: #SVGEllipse category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGEllipse
 	instanceVariableNames: 'cx cy rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGEllipse class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGEllipse class' category: 'SVG-Shapes'!
 SVGEllipse class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLine category: #'SVG-Shapes'!
+!classDefinition: #SVGLine category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGLine
 	instanceVariableNames: 'x1 y1 x2 y2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGLine class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGLine class' category: 'SVG-Shapes'!
 SVGLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPath category: #'SVG-Shapes'!
+!classDefinition: #SVGPath category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPath
 	instanceVariableNames: 'commands'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPath class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPath class' category: 'SVG-Shapes'!
 SVGPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolyLine category: #'SVG-Shapes'!
+!classDefinition: #SVGPolyLine category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPolyLine
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolyLine class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPolyLine class' category: 'SVG-Shapes'!
 SVGPolyLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolygon category: #'SVG-Shapes'!
+!classDefinition: #SVGPolygon category: 'SVG-Shapes'!
 SVGPolyLine subclass: #SVGPolygon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolygon class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPolygon class' category: 'SVG-Shapes'!
 SVGPolygon class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRect category: #'SVG-Shapes'!
+!classDefinition: #SVGRect category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGRect
 	instanceVariableNames: 'xMin xMax yMin yMax rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGRect class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGRect class' category: 'SVG-Shapes'!
 SVGRect class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefElement category: #'SVG-Elements'!
+!classDefinition: #SVGDefElement category: 'SVG-Elements'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefElement class' category: #'SVG-Elements'!
+!classDefinition: 'SVGDefElement class' category: 'SVG-Elements'!
 SVGDefElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradient category: #'SVG-Elements'!
+!classDefinition: #SVGGradient category: 'SVG-Elements'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGradient class' category: 'SVG-Elements'!
 SVGGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLinearGradient category: #'SVG-Elements'!
+!classDefinition: #SVGLinearGradient category: 'SVG-Elements'!
 SVGGradient subclass: #SVGLinearGradient
 	instanceVariableNames: 'vectorX1 vectorY1 vectorX2 vectorY2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGLinearGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGLinearGradient class' category: 'SVG-Elements'!
 SVGLinearGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRadialGradient category: #'SVG-Elements'!
+!classDefinition: #SVGRadialGradient category: 'SVG-Elements'!
 SVGGradient subclass: #SVGRadialGradient
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGRadialGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGRadialGradient class' category: 'SVG-Elements'!
 SVGRadialGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradientStop category: #'SVG-Elements'!
+!classDefinition: #SVGGradientStop category: 'SVG-Elements'!
 SVGDefElement subclass: #SVGGradientStop
 	instanceVariableNames: 'offset color'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradientStop class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGradientStop class' category: 'SVG-Elements'!
 SVGGradientStop class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefs category: #'SVG-Elements'!
+!classDefinition: #SVGDefs category: 'SVG-Elements'!
 Object subclass: #SVGDefs
 	instanceVariableNames: 'defs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefs class' category: #'SVG-Elements'!
+!classDefinition: 'SVGDefs class' category: 'SVG-Elements'!
 SVGDefs class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGTransform category: #'SVG-Elements'!
+!classDefinition: #SVGTransform category: 'SVG-Elements'!
 Object subclass: #SVGTransform
 	instanceVariableNames: 'a'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGTransform class' category: #'SVG-Elements'!
+!classDefinition: 'SVGTransform class' category: 'SVG-Elements'!
 SVGTransform class
 	instanceVariableNames: ''!
 
@@ -543,13 +543,13 @@ svgName
 
 	^self subclassResponsibility! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:30:35'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:55:22'!
 examples
 "
 SVGElementMorph examples
 "
 | m base |
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 #('lion' 'lionx' 'tiger1' 'magician' 'beer' 'butterfly' 'picasso' 'Phone' 'baby' 'longhorn' 'cowboy' 'dancer' 'b8' 'clinton' 'pixelCoverageSucks') do: [ :fn |
 Transcript clear.
 "["
@@ -569,14 +569,14 @@ Transcript clear.
 ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:03'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:04'!
 examplesBeer
 "
 SVGElementMorph examplesBeer
 "
 | m base |
 Transcript clear.
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
@@ -591,14 +591,14 @@ base _ 'VectorGraphics/SVGSamples/'.
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 6/2/2020 16:48:46'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:12'!
 examplesClinton
 "
 SVGElementMorph examplesClinton
 "
 | m base f |
 Transcript clear.
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 [
 	m _ SVGMainMorph fromFileNamed: base, 'clinton.svg'
 ] on: SVGWarning do: [ :warning | warning print. warning resume ].
@@ -612,14 +612,14 @@ base _ 'VectorGraphics/SVGSamples/'.
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:08'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:22'!
 examplesLion
 "
 SVGElementMorph examplesLion
 "
 | m base |
 Transcript clear.
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
@@ -635,14 +635,14 @@ base _ 'VectorGraphics/SVGSamples/'.
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:12'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:30'!
 examplesMagician
 "
 SVGElementMorph examplesMagician
 "
 | m base |
 Transcript clear.
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
@@ -657,14 +657,14 @@ base _ 'VectorGraphics/SVGSamples/'.
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:17'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:43'!
 examplesTiger
 "
 SVGElementMorph examplesTiger
 "
 | m base |
 Transcript clear.
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
@@ -691,13 +691,13 @@ base _ 'VectorGraphics/SVGSamples/'.
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 7/14/2019 14:31:22'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:55'!
 phoneExample
 "
 SVGElementMorph phoneExample
 "
 | m base |
-base _ 'VectorGraphics/SVGSamples/'.
+base := self package packageDirectoryName , '/SVGSamples/'.
 Transcript clear.
 "["
 [
