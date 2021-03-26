@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4489] on 18 December 2020 at 3:57:50 pm'!
+'From Cuis 5.0 [latest update: #4545] on 25 March 2021 at 7:42:50 pm'!
 'Description '!
-!provides: 'SVG' 1 6!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 7!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -569,7 +569,7 @@ Transcript clear.
 ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:04'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:26:05'!
 examplesBeer
 "
 SVGElementMorph examplesBeer
@@ -580,13 +580,8 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
-	m _ SVGMainMorph fromFileNamed: base, 'beer.svg'
-		.
-	m privateOwner: self runningWorld.
-	m morphPosition: 800@300.
-	(VectorCanvas onForm: Display) fullDraw: m.
-"	m exportAs: '/Users/juanvuletich/Desktop/Morphic 3/pp.png'"
-	Display copy inspect.
+	m _ SVGMainMorph fromFileNamed: base, 'beer.svg'.
+	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
@@ -612,7 +607,7 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:22'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:20:57'!
 examplesLion
 "
 SVGElementMorph examplesLion
@@ -623,19 +618,13 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
-	m _ SVGMainMorph fromFileNamed: base, 'lionx.svg'
-		.
-	m privateOwner: self runningWorld.
-	m morphPosition: 10@10.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	Display forceToScreen.
-"	m exportAs: '/Users/juanvuletich/Desktop/Morphic 3/pp.png'"
-	Display copy inspect.
+	m _ SVGMainMorph fromFileNamed: base, 'lionx.svg'.
+	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:30'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:25:29'!
 examplesMagician
 "
 SVGElementMorph examplesMagician
@@ -646,18 +635,13 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
-	m _ SVGMainMorph fromFileNamed: base, 'magician.svg'
-		.
-	m privateOwner: self runningWorld.
-	m morphPosition: 100@100.
-	(VectorCanvas onForm: Display) fullDraw: m.
-"	m exportAs: '/Users/juanvuletich/Desktop/Morphic 3/pp.png'"
-	Display copy inspect.
+	m _ SVGMainMorph fromFileNamed: base, 'magician.svg'.
+	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:43'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:16:22'!
 examplesTiger
 "
 SVGElementMorph examplesTiger
@@ -668,30 +652,13 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 "["
 [
 [
-	m _ SVGMainMorph fromFileNamed: base, 'tiger1.svg'
-		.
-	m privateOwner: self runningWorld.
-	m morphPosition: 400@60.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	m scaleBy: 0.6.
-	m morphPosition: 200@00.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	m scaleBy: 0.6.
-	m morphPosition: 700@500.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	m scaleBy: 0.6.
-	m morphPosition: 800@680.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	m scaleBy: 0.6.
-	m morphPosition: 650@700.
-	(VectorCanvas onForm: Display) fullDraw: m.
-"	m exportAs: '/Users/juanvuletich/Desktop/Morphic 3/pp.png'"
-	Display copy inspect.
+	m _ SVGMainMorph fromFileNamed: base, 'tiger1.svg'.
+	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:55'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:25:08'!
 phoneExample
 "
 SVGElementMorph phoneExample
@@ -703,12 +670,7 @@ Transcript clear.
 [
 [
 	m _ SVGMainMorph fromFileNamed: base, 'Phone.svg'.
-	m privateOwner: self runningWorld.
-	m rotation: 0 / 180 * Float pi scale: 0.5; morphPosition: 120.0@100.0.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	m rotation:  -15 / 180 * Float pi scale: 0.75; morphPosition:  500.0@110.0.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	Display copy inspect.
+	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
 ] on: PathCommandError do: [ :error | error print. error return ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
