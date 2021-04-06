@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4545] on 25 March 2021 at 7:42:50 pm'!
+'From Cuis 5.0 [latest update: #4561] on 6 April 2021 at 12:44:38 pm'!
 'Description '!
-!provides: 'SVG' 1 7!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 8!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -364,12 +364,6 @@ strokeWidth
 
 	"nil"
 	^strokeWidth! !
-
-!SVGElementMorph methodsFor: 'geometry' stamp: 'jmv 7/14/2014 11:30'!
-morphBoundsInWorld
-self revisar. "por supuesto que no..."
-"Intentar eliminar, directamente"
-	^Display boundingBox! !
 
 !SVGElementMorph methodsFor: 'private' stamp: 'jmv 6/10/2010 21:50'!
 privatePointsDo: aBlock
