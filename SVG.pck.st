@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4561] on 6 April 2021 at 12:44:38 pm'!
+'From Cuis 5.0 [latest update: #4564] on 8 April 2021 at 7:28:01 pm'!
 'Description '!
-!provides: 'SVG' 1 8!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 9!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -563,7 +563,7 @@ Transcript clear.
 ]
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:26:05'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:05'!
 examplesBeer
 "
 SVGElementMorph examplesBeer
@@ -577,8 +577,9 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	m _ SVGMainMorph fromFileNamed: base, 'beer.svg'.
 	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+] on: PathCommandError do: [ :error | error print. error return ].
+"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
+^m! !
 
 !SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:12'!
 examplesClinton
@@ -601,7 +602,7 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:20:57'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:26:47'!
 examplesLion
 "
 SVGElementMorph examplesLion
@@ -615,10 +616,11 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	m _ SVGMainMorph fromFileNamed: base, 'lionx.svg'.
 	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+] on: PathCommandError do: [ :error | error print. error return ].
+"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
+^m! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:25:29'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:17'!
 examplesMagician
 "
 SVGElementMorph examplesMagician
@@ -632,10 +634,11 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	m _ SVGMainMorph fromFileNamed: base, 'magician.svg'.
 	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+] on: PathCommandError do: [ :error | error print. error return ].
+"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
+^m! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:16:22'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:25'!
 examplesTiger
 "
 SVGElementMorph examplesTiger
@@ -649,10 +652,11 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	m _ SVGMainMorph fromFileNamed: base, 'tiger1.svg'.
 	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+] on: PathCommandError do: [ :error | error print. error return ].
+"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
+^m! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 3/25/2021 19:25:08'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:31'!
 phoneExample
 "
 SVGElementMorph phoneExample
@@ -666,8 +670,9 @@ Transcript clear.
 	m _ SVGMainMorph fromFileNamed: base, 'Phone.svg'.
 	m openInWorld
 ] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
+] on: PathCommandError do: [ :error | error print. error return ].
+"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
+^m! !
 
 !SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 6/16/2010 10:42'!
 initialize
