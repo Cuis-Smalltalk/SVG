@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4564] on 8 April 2021 at 7:28:01 pm'!
+'From Cuis 5.0 [latest update: #4570] on 27 April 2021 at 3:48:09 pm'!
 'Description '!
-!provides: 'SVG' 1 9!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 10!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -1072,14 +1072,14 @@ svgName
 
 	^#polygon! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 6/10/2010 09:22'!
+!SVGRect methodsFor: 'building' stamp: 'jmv 4/27/2021 15:22:34'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	| w h |
 	super buildFromXml: anXMLElement.
-	xMin _ (anXMLElement attributeAt: 'x') asNumber.
-	yMin _ (anXMLElement attributeAt: 'y') asNumber.
+	xMin _ (anXMLElement attributeAt: 'x' ifAbsent: [0]) asNumber.
+	yMin _ (anXMLElement attributeAt: 'y' ifAbsent: [0]) asNumber.
 	w _ (anXMLElement attributeAt: 'width') asNumber.
 	h _ (anXMLElement attributeAt: 'height') asNumber.
 	xMax _  xMin + w.
