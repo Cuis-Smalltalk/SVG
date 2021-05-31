@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4570] on 27 April 2021 at 3:48:09 pm'!
+'From Cuis 5.0 [latest update: #4621] on 31 May 2021 at 7:48:11 pm'!
 'Description '!
-!provides: 'SVG' 1 10!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 11!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -581,7 +581,7 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 "] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
 ^m! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:56:12'!
+!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 5/31/2021 19:45:37'!
 examplesClinton
 "
 SVGElementMorph examplesClinton
@@ -595,7 +595,8 @@ base := self package packageDirectoryName , '/SVGSamples/'.
 	f _ Form extent: 360@480 depth:32.
 	m privateOwner: self runningWorld.
 	m morphPosition: 0@0.
-	(VectorCanvas onForm: f) fullDraw: m.
+	"Translucent target only supported in the SubPixel flavor of the VM Plugin"
+	(VectorCanvas onFormWithSubPixelAntiAliasing: f) fullDraw: m.
 	Display fillColor: Color black.
 	f displayOn: Display at: 0@0.
 	f makeAllPixelsOpaque.
