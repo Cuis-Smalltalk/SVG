@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4621] on 31 May 2021 at 7:48:11 pm'!
+'From Cuis 5.0 [latest update: #4640] on 18 June 2021 at 5:04:38 pm'!
 'Description '!
-!provides: 'SVG' 1 11!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 12!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -279,17 +279,20 @@ defAt: aString
 		(owner isKindOf: SVGElementMorph)
 			ifTrue: [ owner defAt: aString ] ]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:13:52'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/18/2021 12:44:44'!
 fillColor
 	"Answer a Color, even if a gradient was specified. See also #fillColorOrGradient"
-	fillColorOrGradient == #inherit
-		ifTrue: [
-			fillColorOrGradient _ (owner isKindOf: SVGElementMorph)
-				ifTrue: [ owner fillColor ]
-				ifFalse: [ Color black ]]
-		ifFalse: [
-			fillColorOrGradient isString ifTrue: [
-				fillColorOrGradient _ self defAt: fillColorOrGradient ]].
+	fillColorOrGradient == #inherit ifTrue: [
+		fillColorOrGradient _ (owner isKindOf: SVGElementMorph)
+			ifTrue: [ owner fillColor ]
+			ifFalse: [ Color black ]].
+	"The SVG standard defines current color. In Cuis we don't have such concept.
+	Maybe we'll find a better way to set the actual color to use.
+	Just use black for the time being."
+	fillColorOrGradient == #currentColor ifTrue: [
+		fillColorOrGradient _ Color black ].
+	fillColorOrGradient isString ifTrue: [
+		fillColorOrGradient _ self defAt: fillColorOrGradient ].
 	fillColorOrGradient ifNil: [ ^nil ].
 
 	(fillColorOrGradient isKindOf: SVGGradient)
@@ -314,17 +317,20 @@ opacity
 				ifTrue: [ owner opacity ]
 				ifFalse: [ 1.0 ]]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:13:57'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/18/2021 12:44:25'!
 strokeColor
 	"Answer a Color, even if a gradient was specified. See also #strokeColorOrGradient"
-	strokeColorOrGradient == #inherit
-		ifTrue: [
-			strokeColorOrGradient _ (owner isKindOf: SVGElementMorph)
-				ifTrue: [ owner strokeColor ]
-				ifFalse: [ nil ]]
-		ifFalse: [
-			strokeColorOrGradient isString ifTrue: [
-				strokeColorOrGradient _ self defAt: strokeColorOrGradient ]].
+	strokeColorOrGradient == #inherit ifTrue: [
+		strokeColorOrGradient _ (owner isKindOf: SVGElementMorph)
+			ifTrue: [ owner strokeColor ]
+			ifFalse: [ nil ]].
+	"The SVG standard defines current color. In Cuis we don't have such concept.
+	Maybe we'll find a better way to set the actual color to use.
+	Just use black for the time being."
+	strokeColorOrGradient == #currentColor ifTrue: [
+		strokeColorOrGradient _ Color black ].
+	strokeColorOrGradient isString ifTrue: [
+		strokeColorOrGradient _ self defAt: strokeColorOrGradient ].
 	strokeColorOrGradient ifNil: [ ^nil ].
 
 	(strokeColorOrGradient isKindOf: SVGGradient) 
@@ -365,26 +371,22 @@ strokeWidth
 	"nil"
 	^strokeWidth! !
 
-!SVGElementMorph methodsFor: 'private' stamp: 'jmv 6/10/2010 21:50'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	submorphs do: [ :each | each privatePointsDo: aBlock ]! !
-
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:16'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	^anXMLElement attributeAt: attributeName ifAbsent: [
 		styleDictionary ifNotNil: [ styleDictionary at: attributeName ifAbsent: nil ]]! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:17'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/18/2021 12:35:45'!
 colorAttributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	| data |
 	data _ self attributeAt: attributeName in: anXMLElement orIn: styleDictionary.
-	^data
-		ifNil: [ #inherit ]
-		ifNotNil: [ self svgColorOrGradientNameFor: data ]! !
+	data ifNil: [
+		^ #inherit ].
+	data = 'currentColor' ifTrue: [
+		^ #currentColor ].
+	^self svgColorOrGradientNameFor: data! !
 
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/16/2010 09:50'!
 ignoredAttributes
@@ -712,32 +714,18 @@ svgName
 
 	^#g! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 1/12/2015 13:15'!
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 6/18/2021 16:55:58'!
 buildFromXml: anXMLElement
 
 	
-	| viewBox w h xtraViewBoxH wFraction hFraction |
+	| viewBox w h wFraction hFraction |
 
 	super buildFromXml: anXMLElement.
 	wFraction _ (self class svgWidthFractionIn: anXMLElement) ifNil: [1.0].
 	hFraction _ (self class svgHeightFractionIn: anXMLElement) ifNil: [ 1.0 ].
 	w _ self class svgPixelWidthIn: anXMLElement.
 	h _ self class svgPixelHeightIn: anXMLElement.
-	"For some unknown (to me) reason, Inkscape uses 745@1053 if the svg doesn't specify sizes"
-	viewBox _ (self class svgViewBoxIn: anXMLElement) ifNil: [ 0@0 extent: (w ifNil: [(745 / hFraction) rounded])@(h ifNil: [(1053 / hFraction) rounded]) ].
-	xtraViewBoxH _ 0.
-	(w notNil and: [h notNil]) ifTrue: [
-		xtraViewBoxH _ (h / w * viewBox width - viewBox height / 2.0) rounded max: 0 ].
-	w ifNil: [ w _ (viewBox width * wFraction) rounded ].
-	h ifNil: [ h _ (viewBox height * hFraction) rounded ].
-
-	self flag: #revisarM3.
-	"space
-		positionInOwner: (w@h // 2);"
-"		locationExtent: (w@h);"
-		"rotationAngle: 0."
-"		xMin: viewBox left xMax: viewBox right yMin: viewBox top - xtraViewBoxH yMax: viewBox bottom + xtraViewBoxH"
-	self privatePosition: (w@h // 2)! !
+	viewBox _ self class svgViewBoxIn: anXMLElement.! !
 
 !SVGMainMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 08:56'!
 usedAttributeNames
@@ -867,23 +855,11 @@ usedAttributeNames
 	^super usedAttributeNames,
 		#('cx' 'cy' 'r')! !
 
-!SVGCircle methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:37:40'!
+!SVGCircle methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:30'!
 drawOn: aCanvas
-
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
-			ellipseCenterX: cx y: cy rx: r ry: r ]! !
-
-!SVGCircle methodsFor: 'private' stamp: 'jmv 6/10/2010 21:50'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	super privatePointsDo: aBlock.
-	aBlock
-		value: (cx-r) @ cy;
-		value: cx @ (cy-r);
-		value: (cx+r) @ cy;
-		value: cx @ (cy+r)! !
+			ellipseCenter: cx @ cy radius: r @ r ]! !
 
 !SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
@@ -907,24 +883,11 @@ usedAttributeNames
 	^super usedAttributeNames,
 		#('cx' 'cy' 'rx' 'ry')! !
 
-!SVGEllipse methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:37:55'!
+!SVGEllipse methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:38'!
 drawOn: aCanvas
-
-
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
-			ellipseCenterX: cx y: cy rx: rx ry: ry ]! !
-
-!SVGEllipse methodsFor: 'private' stamp: 'jmv 6/10/2010 21:50'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	super privatePointsDo: aBlock.
-	aBlock
-		value: (cx-rx) @ cy;
-		value: cx @ (cy-ry);
-		value: (cx+rx) @ cy;
-		value: cx @ (cy+ry)! !
+			ellipseCenter: cx @ cy radius: rx@ ry ]! !
 
 !SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
@@ -948,25 +911,13 @@ usedAttributeNames
 	^super usedAttributeNames,
 		#('x1' 'y1' 'x2' 'y2')! !
 
-!SVGLine methodsFor: 'drawing' stamp: 'jmv 11/8/2012 19:28'!
+!SVGLine methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:46'!
 drawOn: aCanvas
-	"Se podria hacer alternativamente basado en 
-		line: point1 to: point2 width: width color: c in: aMorph
-		Pensar!!"
 
-	self flag: #revisarM3.
-"	aCanvas line: x1@y1 to: x2@y2 width: borderWidth color: borderColorOrGradient in: self	"
-		
-		"Puedo pasar in owner..."! !
-
-!SVGLine methodsFor: 'private' stamp: 'jmv 6/10/2010 21:51'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	super privatePointsDo: aBlock.
-	aBlock
-		value: x1 @ y1;
-		value: x2 @ y2! !
+	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
+		aCanvas
+			moveTo: x1@y1;
+			lineTo: x2@y2 ]! !
 
 !SVGLine class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
 svgName
@@ -1003,14 +954,6 @@ drawOn: aCanvas
 		commands do: [ :command |
 			command runOn: aCanvas ]]! !
 
-!SVGPath methodsFor: 'private' stamp: 'jmv 6/10/2010 21:51'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	super privatePointsDo: aBlock.
-	commands do:[ :each |
-		each privatePointsDo: aBlock ]! !
-
 !SVGPath class methodsFor: 'instance creation' stamp: 'jmv 5/3/2010 22:25'!
 svgName
 	"Answer the name of the svg elements we can represent"
@@ -1045,13 +988,6 @@ drawOn: aCanvas
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
 			polyLine: points ]! !
-
-!SVGPolyLine methodsFor: 'private' stamp: 'jmv 6/10/2010 21:51'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	super privatePointsDo: aBlock.
-	points do: aBlock! !
 
 !SVGPolyLine class methodsFor: 'instance creation' stamp: 'jmv 4/27/2010 15:53'!
 svgName
@@ -1100,18 +1036,6 @@ drawOn: aCanvas
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
 			roundRectangleMinX: xMin maxX: xMax minY: yMin maxY: yMax rx: rx ry: ry ]! !
-
-!SVGRect methodsFor: 'private' stamp: 'jmv 6/14/2010 10:47'!
-privatePointsDo: aBlock
-	"evaluate aBlock with the x and y coordinates for our defining points."
-
-	"tratar de eliminar"
-	self flag: #revisarM3.
-
-	super privatePointsDo: aBlock.
-	aBlock
-		value: xMin @ yMin;
-		value: xMax @ yMax! !
 
 !SVGRect class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
 svgName
