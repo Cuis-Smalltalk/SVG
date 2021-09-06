@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4640] on 18 June 2021 at 5:04:38 pm'!
+'From Cuis 5.0 [latest update: #4843] on 6 September 2021 at 12:52:43 pm'!
 'Description '!
-!provides: 'SVG' 1 12!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 13!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -190,17 +190,11 @@ SVGTransform class
 	instanceVariableNames: ''!
 
 
-!SVGElementMorph commentStamp: 'jmv 5/2/2011 09:46' prior: 0!
-See class methods in 'examples' category!
+!SVGElementMorph commentStamp: '<historical>' prior: 0!
+See class methods in 'examples' category in SVGMainMorph.!
 
 !SVGMainMorph commentStamp: '<historical>' prior: 0!
-| m |
-m _ SVGMainMorph fromFileNamed: 'Ejemplos/Lionx.svg'.
-m privateOwner: World.
-m fullDrawOn: Display getCanvas.
-Display forceToScreen
-"m exportAs: 'pp.png'"
-!
+See class methods in 'examples' category.!
 
 !SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
 name
@@ -539,144 +533,6 @@ svgName
 
 	^self subclassResponsibility! !
 
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 12/18/2020 15:55:22'!
-examples
-"
-SVGElementMorph examples
-"
-| m base |
-base := self package packageDirectoryName , '/SVGSamples/'.
-#('lion' 'lionx' 'tiger1' 'magician' 'beer' 'butterfly' 'picasso' 'Phone' 'baby' 'longhorn' 'cowboy' 'dancer' 'b8' 'clinton' 'pixelCoverageSucks') do: [ :fn |
-Transcript clear.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, fn, '.svg'.
-	m privateOwner: self runningWorld.
-	m morphPosition: 100@100.
-	(VectorCanvas onForm: Display) fullDraw: m.
-	Display forceToScreen.
-"	m exportAs: '/Users/juanvuletich/Desktop/Morphic 3/pp.png'"
-	"
-	Display copy inspect.
-	"
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ]
-]
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:05'!
-examplesBeer
-"
-SVGElementMorph examplesBeer
-"
-| m base |
-Transcript clear.
-base := self package packageDirectoryName , '/SVGSamples/'.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, 'beer.svg'.
-	m openInWorld
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ].
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
-^m! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 5/31/2021 19:45:37'!
-examplesClinton
-"
-SVGElementMorph examplesClinton
-"
-| m base f |
-Transcript clear.
-base := self package packageDirectoryName , '/SVGSamples/'.
-[
-	m _ SVGMainMorph fromFileNamed: base, 'clinton.svg'
-] on: SVGWarning do: [ :warning | warning print. warning resume ].
-	f _ Form extent: 360@480 depth:32.
-	m privateOwner: self runningWorld.
-	m morphPosition: 0@0.
-	"Translucent target only supported in the SubPixel flavor of the VM Plugin"
-	(VectorCanvas onFormWithSubPixelAntiAliasing: f) fullDraw: m.
-	Display fillColor: Color black.
-	f displayOn: Display at: 0@0.
-	f makeAllPixelsOpaque.
-	f displayOn: Display at: 360@0.
-	Display copy inspect.! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:26:47'!
-examplesLion
-"
-SVGElementMorph examplesLion
-"
-| m base |
-Transcript clear.
-base := self package packageDirectoryName , '/SVGSamples/'.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, 'lionx.svg'.
-	m openInWorld
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ].
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
-^m! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:17'!
-examplesMagician
-"
-SVGElementMorph examplesMagician
-"
-| m base |
-Transcript clear.
-base := self package packageDirectoryName , '/SVGSamples/'.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, 'magician.svg'.
-	m openInWorld
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ].
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
-^m! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:25'!
-examplesTiger
-"
-SVGElementMorph examplesTiger
-"
-| m base |
-Transcript clear.
-base := self package packageDirectoryName , '/SVGSamples/'.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, 'tiger1.svg'.
-	m openInWorld
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ].
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
-^m! !
-
-!SVGElementMorph class methodsFor: 'examples' stamp: 'jmv 4/8/2021 19:27:31'!
-phoneExample
-"
-SVGElementMorph phoneExample
-"
-| m base |
-base := self package packageDirectoryName , '/SVGSamples/'.
-Transcript clear.
-"["
-[
-[
-	m _ SVGMainMorph fromFileNamed: base, 'Phone.svg'.
-	m openInWorld
-] on: SVGWarning do: [ :warning | warning print. warning resume ]
-] on: PathCommandError do: [ :error | error print. error return ].
-"] on: Error do: [ :dnu | ('Server error: ', dnu printString) print. dnu return ]"
-^m! !
-
 !SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 6/16/2010 10:42'!
 initialize
 	"
@@ -821,18 +677,12 @@ svgPixelLengthFor: aString
 		ifTrue: [ ^(data * 15) rounded ].
 	^data rounded! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 6/10/2010 09:31'!
-fromFileNamed: fileName
-	"
-	| m |
-	m _ SVGMorph fromFileNamed: 'pru04.svg'.
-	m privateOwner: World; inspect.
-	m drawOn: Display getCanvas.
-	Display forceToScreen
-	"
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 9/6/2021 12:13:37'!
+fromFile: aFileEntry
+
 	| xmlDocument |
-	xmlDocument _ XMLDOMParser parseDocumentFromFileNamed: fileName readIntoMemory: true.
-	^ self fromXml: xmlDocument elements first! !
+	xmlDocument _ XMLDOMParser parseDocumentFromFile: aFileEntry readIntoMemory: true.
+	^ self fromXml: xmlDocument elements first.! !
 
 !SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:25'!
 svgName
@@ -840,14 +690,243 @@ svgName
 
 	^#svg! !
 
-!SVGCircle methodsFor: 'building' stamp: 'jmv 6/10/2010 09:21'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:32:59'!
+exampleBeer
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleBeer
+	SVGMainMorph exampleBeer openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'beer.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:33:31'!
+exampleButterfly
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleButterfly
+	SVGMainMorph exampleButterfly openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'butterfly.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:33:59'!
+exampleCar
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleCar
+	SVGMainMorph exampleCar openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'car.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:34:24'!
+exampleCowboy
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleCowboy
+	SVGMainMorph exampleCowboy openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'cowboy.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:36:20'!
+exampleGrapes
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleGrapes
+	SVGMainMorph exampleGrapes openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'rg1024_green_grapes.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:00'!
+exampleLion
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleLion
+	SVGMainMorph exampleLion openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'lion.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:31:54'!
+exampleMacaw
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleMacaw
+	SVGMainMorph exampleMacaw openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'arara-caninde-TRACE-BITMAP.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:23'!
+examplePhone
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph examplePhone
+	SVGMainMorph examplePhone openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'Phone.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:47'!
+examplePicasso
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph examplePicasso
+	SVGMainMorph examplePicasso openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'Picasso.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:32:21'!
+examplePlane
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph examplePlane
+	SVGMainMorph examplePlane openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'b8.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:36:45'!
+exampleTiger
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleTiger
+	SVGMainMorph exampleTiger openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'tiger.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:09'!
+exampleWizard
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleWizard
+	SVGMainMorph exampleWizard openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'wizard.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:24'!
+exampleWorld
+	"Read and answer a SVG sample file.
+	Also try 'printIt'!!
+	"
+	"
+	SVGMainMorph exampleWorld
+	SVGMainMorph exampleWorld openInWorld
+	"
+
+	^ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'world.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:52'!
+openAllExamples
+	"Open all svg examples as morphs, in a forked process."
+	"
+	SVGMainMorph openAllExamples
+	
+	SVGMainMorph allInstancesDo: [ :m | m delete ].
+	"
+	| s |
+	s _ Semaphore new signal.
+	[
+		self package packageDirectory 
+			allFilesDo: [ :file |
+				s wait.
+				UISupervisor whenUIinSafeState: [
+					[ (self fromFile: file) openInWorld ]
+						on: SVGWarning
+						do: [ :warning | "warning print. "warning resume ].
+					s signal
+					].
+			]
+			matches: [ :file | '*.svg' match: file name ].
+	] fork! !
+
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:45:07'!
+seamlessRasterizationExample
+	"
+	This example shows that Cuis' VectorGraphics can rasterize seampless SVG.
+	Compare the two images.
+	Also try opening the svg file in, for example, Chrome.
+	SVGMainMorph seamlessRasterizationExample
+	"
+	| m f |
+	m _ [ (self fromFile: self package packageDirectory / 'SVGSamples' // 'clinton.svg') ]
+		on: SVGWarning
+		do: [ :warning | "warning print. "warning resume ].
+	f _ Form extent: 360@480 depth:32.
+	m privateOwner: self runningWorld.
+	m morphPosition: 0@0.
+	"Translucent target only supported in the SubPixel flavor of the VM Plugin"
+	(VectorDrawingCanvas onFormWithSubPixelAntiAliasing: f) fullDraw: m.
+	Display fillColor: Color black.
+	f displayOn: Display at: 0@0.
+	f makeAllPixelsOpaque.
+	f displayOn: Display at: 360@0.
+	Display copy inspect.! !
+
+!SVGCircle methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:07'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	cx _ (anXMLElement attributeAt: 'cx') asNumber.
-	cy _ (anXMLElement attributeAt: 'cy') asNumber.
-	r _ (anXMLElement attributeAt: 'r') asNumber! !
+	cx _ (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
+	cy _ (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
+	r _ (anXMLElement attributeAt: 'r' ifAbsent: 0) asNumber.! !
 
 !SVGCircle methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
 usedAttributeNames
@@ -867,15 +946,15 @@ svgName
 
 	^#circle! !
 
-!SVGEllipse methodsFor: 'building' stamp: 'jmv 6/10/2010 09:21'!
+!SVGEllipse methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:03'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	cx _ (anXMLElement attributeAt: 'cx') asNumber.
-	cy _ (anXMLElement attributeAt: 'cy') asNumber.
-	rx _ (anXMLElement attributeAt: 'rx') asNumber.
-	ry _ (anXMLElement attributeAt: 'ry') asNumber! !
+	cx _ (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
+	cy _ (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
+	rx _ (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber.
+	ry _ (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber.! !
 
 !SVGEllipse methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
 usedAttributeNames
@@ -895,15 +974,15 @@ svgName
 
 	^#ellipse! !
 
-!SVGLine methodsFor: 'building' stamp: 'jmv 6/10/2010 09:21'!
+!SVGLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:22'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	x1 _ (anXMLElement attributeAt: 'x1') asNumber.
-	y1 _ (anXMLElement attributeAt: 'y1') asNumber.
-	x2 _ (anXMLElement attributeAt: 'x2') asNumber.
-	y2 _ (anXMLElement attributeAt: 'y2') asNumber! !
+	x1 _ (anXMLElement attributeAt: 'x1' ifAbsent: 0) asNumber.
+	y1 _ (anXMLElement attributeAt: 'y1' ifAbsent: 0) asNumber.
+	x2 _ (anXMLElement attributeAt: 'x2' ifAbsent: 0) asNumber.
+	y2 _ (anXMLElement attributeAt: 'y2' ifAbsent: 0) asNumber.! !
 
 !SVGLine methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
 usedAttributeNames
@@ -925,7 +1004,7 @@ svgName
 
 	^#line! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 7/14/2019 14:21:56'!
+!SVGPath methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:30'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
@@ -939,7 +1018,7 @@ buildFromXml: anXMLElement
 		commandChar _ commandsDataStream next.
 		commandData _ commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
 		command _ PathCommand from: commandChar stream: commandData readStream.
-		commands add: command. ]! !
+		commands add: command ].! !
 
 !SVGPath methodsFor: 'building' stamp: 'jmv 5/4/2010 05:26'!
 usedAttributeNames
@@ -960,7 +1039,7 @@ svgName
 
 	^#path! !
 
-!SVGPolyLine methodsFor: 'building' stamp: 'jmv 6/10/2010 22:04'!
+!SVGPolyLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:34'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
@@ -974,7 +1053,7 @@ buildFromXml: anXMLElement
 		x _ pointsDataStream nextNumber.
 		y _ pointsDataStream nextNumber.
 		y ifNotNil: [
-			points add: x@y ]]! !
+			points add: x@y ]].! !
 
 !SVGPolyLine methodsFor: 'building' stamp: 'jmv 4/27/2010 15:59'!
 usedAttributeNames
@@ -995,13 +1074,13 @@ svgName
 
 	^#polyline! !
 
-!SVGPolygon methodsFor: 'building' stamp: 'jmv 6/10/2010 09:22'!
+!SVGPolygon methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:38'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
 	points last = points first ifFalse: [
-		points add: points first ]! !
+		points add: points first ].! !
 
 !SVGPolygon class methodsFor: 'instance creation' stamp: 'jmv 4/27/2010 15:54'!
 svgName
@@ -1009,20 +1088,20 @@ svgName
 
 	^#polygon! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 4/27/2021 15:22:34'!
+!SVGRect methodsFor: 'building' stamp: 'jmv 9/6/2021 12:00:04'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
 
 	| w h |
 	super buildFromXml: anXMLElement.
-	xMin _ (anXMLElement attributeAt: 'x' ifAbsent: [0]) asNumber.
-	yMin _ (anXMLElement attributeAt: 'y' ifAbsent: [0]) asNumber.
-	w _ (anXMLElement attributeAt: 'width') asNumber.
-	h _ (anXMLElement attributeAt: 'height') asNumber.
+	xMin _ (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
+	yMin _ (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
+	w _ (anXMLElement attributeAt: 'width' ifAbsent: 0) asNumber.
+	h _ (anXMLElement attributeAt: 'height' ifAbsent: 0) asNumber.
 	xMax _  xMin + w.
 	yMax _ yMin + h.
-	rx _ (anXMLElement attributeAt: 'rx' ifAbsent: '0') asNumber min: w * 0.5.
-	ry _ (anXMLElement attributeAt: 'ry' ifAbsent: '0') asNumber min: h * 0.5.! !
+	rx _ (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber min: w * 0.5.
+	ry _ (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber min: h * 0.5.! !
 
 !SVGRect methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
 usedAttributeNames
