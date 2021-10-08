@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4843] on 6 September 2021 at 12:52:43 pm'!
+'From Cuis 5.0 [latest update: #4904] on 8 October 2021 at 9:53:16 am'!
 'Description '!
-!provides: 'SVG' 1 13!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 14!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -896,7 +896,7 @@ openAllExamples
 			matches: [ :file | '*.svg' match: file name ].
 	] fork! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:45:07'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 10/8/2021 09:52:13'!
 seamlessRasterizationExample
 	"
 	This example shows that Cuis' VectorGraphics can rasterize seampless SVG.
@@ -912,7 +912,7 @@ seamlessRasterizationExample
 	m privateOwner: self runningWorld.
 	m morphPosition: 0@0.
 	"Translucent target only supported in the SubPixel flavor of the VM Plugin"
-	(VectorDrawingCanvas onFormWithSubPixelAntiAliasing: f) fullDraw: m.
+	(VectorCanvas onFormWithSubPixelAntiAliasing: f) fullDraw: m.
 	Display fillColor: Color black.
 	f displayOn: Display at: 0@0.
 	f makeAllPixelsOpaque.
