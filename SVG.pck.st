@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #4904] on 8 October 2021 at 9:53:16 am'!
+'From Cuis 5.0 [latest update: #5000] on 14 December 2021 at 11:28:28 am'!
 'Description '!
-!provides: 'SVG' 1 14!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 15!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -449,15 +449,14 @@ svgHeightFractionIn: anXMLElement
 	string _ anXMLElement attributeAt: 'height' ifAbsent: [ ^ nil ].
 	^self svgLengthFractionFor: string! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 7/30/2012 18:00'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 12/9/2021 19:46:17'!
 svgLengthFractionFor: aString
 
-	| string data |
+	| string |
 	string _ aString withBlanksTrimmed.
-	data _ string asNumber.
 	(string last = $%) ifTrue: [
-		data _ data / 100.0 ].
-	^data! !
+		^ string asNumber / 100.0 ].
+	^nil! !
 
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
 svgPixelHeightIn: anXMLElement
@@ -466,7 +465,7 @@ svgPixelHeightIn: anXMLElement
 	string _ anXMLElement attributeAt: 'height' ifAbsent: [ ^ nil ].
 	^self svgPixelLengthFor: string! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 7/30/2012 18:00'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 12/9/2021 19:53:46'!
 svgPixelLengthFor: aString
 
 	| string data |
@@ -474,16 +473,16 @@ svgPixelLengthFor: aString
 	(string last = $%) ifTrue: [ ^nil ].
 	data _ string asNumber.
 	(string endsWith: 'in')
-		ifTrue: [ ^(data * 90) rounded ].
+		ifTrue: [ ^(data * 90) ].
 	(string endsWith: 'mm')
-		ifTrue: [ ^(data * 3.571429) rounded ].
+		ifTrue: [ ^(data * 3.571429) ].
 	(string endsWith: 'cm')
-		ifTrue: [ ^(data * 35.71429) rounded ].
+		ifTrue: [ ^(data * 35.71429) ].
 	(string endsWith: 'pt')
-		ifTrue: [ ^(data * 1.25) rounded ].
+		ifTrue: [ ^(data * 1.25) ].
 	(string endsWith: 'pc')
-		ifTrue: [ ^(data * 15) rounded ].
-	^data rounded! !
+		ifTrue: [ ^(data * 15) ].
+	^data! !
 
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
 svgPixelWidthIn: anXMLElement
@@ -533,7 +532,7 @@ svgName
 
 	^self subclassResponsibility! !
 
-!SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 6/16/2010 10:42'!
+!SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 12/9/2021 19:16:20'!
 initialize
 	"
 	self initialize
@@ -541,9 +540,11 @@ initialize
 	IgnoredPrefixes _ #('sodipodi:' 'inkscape:' 'xmlns:' 'i:') asSet.
 	IgnoredElements _ #('title' 'metadata' 'foreignObject') asSet.
 	IgnoredAttributes _ #('id' 'stroke-miterlimit') asSet.
+	"Any specified value in an SVG file will be ignored. Only these defaults are supported"
 	DefaultedAtributes _ Dictionary new
 		at: 'fill-rule' put: 'nonzero';
 		at: 'stroke-linecap' put: 'round';
+		at: 'stroke-linejoin' put: 'round';
 		yourself! !
 
 !SVGGroupMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 10:17'!
@@ -570,18 +571,28 @@ svgName
 
 	^#g! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 6/18/2021 16:55:58'!
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 12/14/2021 11:26:30'!
 buildFromXml: anXMLElement
 
 	
-	| viewBox w h wFraction hFraction |
+	| viewBox w h wFraction hFraction s |
 
 	super buildFromXml: anXMLElement.
-	wFraction _ (self class svgWidthFractionIn: anXMLElement) ifNil: [1.0].
-	hFraction _ (self class svgHeightFractionIn: anXMLElement) ifNil: [ 1.0 ].
-	w _ self class svgPixelWidthIn: anXMLElement.
-	h _ self class svgPixelHeightIn: anXMLElement.
-	viewBox _ self class svgViewBoxIn: anXMLElement.! !
+	viewBox _ self class svgViewBoxIn: anXMLElement.
+	viewBox ifNotNil: [
+		w _ self class svgPixelWidthIn: anXMLElement.
+		h _ self class svgPixelHeightIn: anXMLElement.
+		w ifNotNil: [
+			s _ w / viewBox width max: h / viewBox height.
+			self scale: s ]
+		ifNil: [
+			wFraction _ self class svgWidthFractionIn: anXMLElement.
+			hFraction _ self class svgHeightFractionIn: anXMLElement.
+			wFraction ifNotNil: [
+				s _ wFraction max: hFraction.
+				self scale: s ]
+			].
+		].! !
 
 !SVGMainMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 08:56'!
 usedAttributeNames
@@ -647,35 +658,6 @@ self revisar.
 	dataStream _ aString readStream.
 	dataStream upTo: $#.
 	^(dataStream upTo: $) ) withBlanksTrimmed! !
-
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 7/30/2012 18:00'!
-svgLengthFractionFor: aString
-
-	| string data |
-	string _ aString withBlanksTrimmed.
-	data _ string asNumber.
-	(string last = $%) ifTrue: [
-		data _ data / 100.0 ].
-	^data! !
-
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 7/30/2012 18:00'!
-svgPixelLengthFor: aString
-
-	| string data |
-	string _ aString withBlanksTrimmed.
-	(string last = $%) ifTrue: [ ^nil ].
-	data _ string asNumber.
-	(string endsWith: 'in')
-		ifTrue: [ ^(data * 90) rounded ].
-	(string endsWith: 'mm')
-		ifTrue: [ ^(data * 3.571429) rounded ].
-	(string endsWith: 'cm')
-		ifTrue: [ ^(data * 35.71429) rounded ].
-	(string endsWith: 'pt')
-		ifTrue: [ ^(data * 1.25) rounded ].
-	(string endsWith: 'pc')
-		ifTrue: [ ^(data * 15) rounded ].
-	^data rounded! !
 
 !SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 9/6/2021 12:13:37'!
 fromFile: aFileEntry
@@ -934,11 +916,12 @@ usedAttributeNames
 	^super usedAttributeNames,
 		#('cx' 'cy' 'r')! !
 
-!SVGCircle methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:30'!
+!SVGCircle methodsFor: 'drawing' stamp: 'hlsf 12/4/2021 20:05:47'!
 drawOn: aCanvas
+
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
-			ellipseCenter: cx @ cy radius: r @ r ]! !
+			ellipseCenter: cx@cy radius: r@r]! !
 
 !SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
@@ -962,11 +945,13 @@ usedAttributeNames
 	^super usedAttributeNames,
 		#('cx' 'cy' 'rx' 'ry')! !
 
-!SVGEllipse methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:38'!
+!SVGEllipse methodsFor: 'drawing' stamp: 'hlsf 12/4/2021 20:04:52'!
 drawOn: aCanvas
+
+
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
-			ellipseCenter: cx @ cy radius: rx@ ry ]! !
+			ellipseCenter: cx@cy radius: rx@ry ]! !
 
 !SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
