@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #5000] on 14 December 2021 at 11:28:28 am'!
+'From Cuis 5.0 [latest update: #5000] on 14 December 2021 at 11:42:49 am'!
 'Description '!
-!provides: 'SVG' 1 15!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 16!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -41,7 +41,7 @@ SVGGroupMorph class
 
 !classDefinition: #SVGMainMorph category: 'SVG-Elements'!
 SVGGroupMorph subclass: #SVGMainMorph
-	instanceVariableNames: ''
+	instanceVariableNames: 'extent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
@@ -571,7 +571,7 @@ svgName
 
 	^#g! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 12/14/2021 11:26:30'!
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 12/14/2021 11:39:39'!
 buildFromXml: anXMLElement
 
 	
@@ -580,6 +580,7 @@ buildFromXml: anXMLElement
 	super buildFromXml: anXMLElement.
 	viewBox _ self class svgViewBoxIn: anXMLElement.
 	viewBox ifNotNil: [
+		extent _ viewBox extent.
 		w _ self class svgPixelWidthIn: anXMLElement.
 		h _ self class svgPixelHeightIn: anXMLElement.
 		w ifNotNil: [
@@ -598,6 +599,13 @@ buildFromXml: anXMLElement
 usedAttributeNames
 	^super usedAttributeNames, 
 		#('version' 'xmlns' 'xmlns:xlink' 'viewBox' 'width' 'height')! !
+
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/14/2021 11:40:06'!
+morphExtent
+	"In our own coordinates!!
+	nil if unknown."
+
+	^ extent! !
 
 !SVGMainMorph class methodsFor: 'services' stamp: 'jmv 6/9/2010 22:26'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
