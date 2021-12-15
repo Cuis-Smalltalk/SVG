@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #5000] on 14 December 2021 at 11:42:49 am'!
+'From Cuis 5.0 [latest update: #5000] on 15 December 2021 at 3:04:48 pm'!
 'Description '!
-!provides: 'SVG' 1 16!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 17!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -365,6 +365,22 @@ strokeWidth
 	"nil"
 	^strokeWidth! !
 
+!SVGElementMorph methodsFor: 'private' stamp: 'jmv 12/15/2021 14:47:32'!
+fixYAxisDirection
+	"SVG already specifies desired TX. No need to correct it.
+	Also note that we redefine #yAxisPointsUp to agree with the TX we were given."! !
+
+!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 11:30:52'!
+yAxisPointsUp
+	"SVG elements usually define an explicit affine transformation.
+	Give an answer consistent with it.
+	Also note that we redefine #fixYAxisDirection as NOP"
+
+	| answer |
+	answer _ owner ifNil: [false] ifNotNil: [owner yAxisPointsUp].
+	location doesMirror ifTrue: [ answer _ answer not ].
+	^answer! !
+
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:16'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
@@ -600,12 +616,45 @@ usedAttributeNames
 	^super usedAttributeNames, 
 		#('version' 'xmlns' 'xmlns:xlink' 'viewBox' 'width' 'height')! !
 
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:56:35'!
+findFullBoundsInOwner
+	"If extent ivar is defined, answer after it (no need to actually find the bounds)."
+
+	self knowsOwnLocalBounds ifFalse: [ ^super findFullBoundsInOwner ].
+	^self fullBoundsInOwner.! !
+
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:56:26'!
+fullBoundsInOwner
+	"If extent ivar is defined, answer after it."
+
+	self knowsOwnLocalBounds ifFalse: [ ^super fullBoundsInOwner ].
+	^ (self externalizeBoundingRectOf: (`0@0` extent: extent)) encompassingIntegerRectangle.! !
+
 !SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/14/2021 11:40:06'!
 morphExtent
 	"In our own coordinates!!
 	nil if unknown."
 
 	^ extent! !
+
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:58:00'!
+morphLocalBounds
+	"Can only be asked for if #knowsOwnLocalBounds answers true!!"
+
+	^`0@0` extent: extent.! !
+
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:58:46'!
+morphLocalBoundsForError
+	"Only to be used for drawing in an error condition. See senders."
+
+	self knowsOwnLocalBounds ifFalse: [ ^super morphLocalBoundsForError ].
+	^self morphLocalBounds.! !
+
+!SVGMainMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 14:55:29'!
+knowsOwnLocalBounds
+	"Meaning that it doesn't need running #drawOn: and #postDrawOn: to explore affected pixels to deduce actual morph bounds. See senders."
+
+	^extent notNil! !
 
 !SVGMainMorph class methodsFor: 'services' stamp: 'jmv 6/9/2010 22:26'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
@@ -1153,19 +1202,16 @@ stops
 		ifNotNil: [ stops ]
 		ifNil: [ (def defAt: inheritFrom) stops ]! !
 
-!SVGGradient methodsFor: 'building' stamp: 'jmv 7/30/2012 18:00'!
+!SVGGradient methodsFor: 'building' stamp: 'jmv 12/15/2021 10:36:59'!
 buildFromXml: anXMLElement
-	| unsorted stop dataStream usedAttributeNames |
+	| dataStream usedAttributeNames |
 	name _ anXMLElement attributeAt: 'id'.
-	unsorted _ OrderedCollection new.
-	anXMLElement elementsDo: [ :subElement |
-		stop _ SVGDefElement fromXml: subElement.
-		unsorted add: stop].
-	"Esto deberia ser un array de entrada, arreglar (codigo de levente) sortBy: para que ande en array sin crear sorted collection ni nada"
-	unsorted isEmpty
-		ifFalse: [
-			stops _ unsorted sorted: [ :a :b | a offset < b offset ]]
-		ifTrue: [ stops _ nil ].
+	stops _ Array streamContents: [ :strm |
+		anXMLElement elementsDo: [ :subElement |
+			strm nextPut: (SVGDefElement fromXml: subElement) ]].
+	stops notEmpty
+		ifTrue: [ stops sort: [ :a :b | a offset < b offset ]]
+		ifFalse: [ stops _ nil ].
 
 	inheritFrom _ nil.
 	(anXMLElement attributeAt: 'xlink:href') ifNotNil: [ :linkData |
@@ -1269,14 +1315,14 @@ r
 svgName
 	^#radialGradient! !
 
-!SVGGradientStop methodsFor: 'building' stamp: 'jmv 2/15/2013 16:53'!
+!SVGGradientStop methodsFor: 'building' stamp: 'jmv 12/15/2021 10:39:07'!
 buildFromXml: anXMLElement
 	| styleAttributes offsetData stopColorData stopOpacityData usedAttributeNames |
 	styleAttributes _ SVGElementMorph styleAttributesIn: anXMLElement.
 	offsetData _ SVGElementMorph attributeAt: 'offset' in: anXMLElement orIn: styleAttributes.
 	stopColorData _ SVGElementMorph attributeAt: 'stop-color' in: anXMLElement orIn: styleAttributes.
 	stopOpacityData _ SVGElementMorph attributeAt: 'stop-opacity' in: anXMLElement orIn: styleAttributes.
-	offset _ SVGElementMorph svgLengthFractionFor: offsetData.
+	offset _ (SVGElementMorph svgLengthFractionFor: offsetData) ifNil: [ SVGElementMorph svgPixelLengthFor: offsetData ].
 self revisar.
 	color _ Color "fromCSS2String: just hex? Or real CSS2?" fromString:  stopColorData.
 	stopOpacityData ifNotNil: [
