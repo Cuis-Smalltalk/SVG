@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #5000] on 15 December 2021 at 3:04:48 pm'!
+'From Cuis 5.0 [latest update: #5004] on 27 December 2021 at 2:22:16 pm'!
 'Description '!
-!provides: 'SVG' 1 17!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 18!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -562,6 +562,9 @@ initialize
 		at: 'stroke-linecap' put: 'round';
 		at: 'stroke-linejoin' put: 'round';
 		yourself! !
+
+!SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 12/27/2021 14:21:38'!
+revisar! !
 
 !SVGGroupMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 10:17'!
 buildFromXml: anXMLElement
@@ -1315,7 +1318,7 @@ r
 svgName
 	^#radialGradient! !
 
-!SVGGradientStop methodsFor: 'building' stamp: 'jmv 12/15/2021 10:39:07'!
+!SVGGradientStop methodsFor: 'building' stamp: 'jmv 12/27/2021 14:20:44'!
 buildFromXml: anXMLElement
 	| styleAttributes offsetData stopColorData stopOpacityData usedAttributeNames |
 	styleAttributes _ SVGElementMorph styleAttributesIn: anXMLElement.
@@ -1323,7 +1326,6 @@ buildFromXml: anXMLElement
 	stopColorData _ SVGElementMorph attributeAt: 'stop-color' in: anXMLElement orIn: styleAttributes.
 	stopOpacityData _ SVGElementMorph attributeAt: 'stop-opacity' in: anXMLElement orIn: styleAttributes.
 	offset _ (SVGElementMorph svgLengthFractionFor: offsetData) ifNil: [ SVGElementMorph svgPixelLengthFor: offsetData ].
-self revisar.
 	color _ Color "fromCSS2String: just hex? Or real CSS2?" fromString:  stopColorData.
 	stopOpacityData ifNotNil: [
 		color _ color alpha: stopOpacityData asNumber ].
