@@ -20,7 +20,7 @@ SVGWarning class
 	instanceVariableNames: ''!
 
 !classDefinition: #SVGElementMorph category: 'SVG-Elements'!
-MovableMorph subclass: #SVGElementMorph
+PlacedMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
