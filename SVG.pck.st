@@ -1,191 +1,191 @@
-'From Cuis 5.0 [latest update: #5004] on 27 December 2021 at 2:22:16 pm'!
+'From Cuis 6.0 [latest update: #5041] on 11 January 2022 at 3:28:51 pm'!
 'Description '!
-!provides: 'SVG' 1 18!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 19!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
-SystemOrganization addCategory: 'SVG-Elements'!
-SystemOrganization addCategory: 'SVG-Shapes'!
+!requires: 'YAXO' 1 nil nil!
+SystemOrganization addCategory: #'SVG-Elements'!
+SystemOrganization addCategory: #'SVG-Shapes'!
 
 
-!classDefinition: #SVGWarning category: 'SVG-Elements'!
+!classDefinition: #SVGWarning category: #'SVG-Elements'!
 Warning subclass: #SVGWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGWarning class' category: 'SVG-Elements'!
+!classDefinition: 'SVGWarning class' category: #'SVG-Elements'!
 SVGWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGElementMorph category: 'SVG-Elements'!
+!classDefinition: #SVGElementMorph category: #'SVG-Elements'!
 PlacedMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGElementMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGElementMorph class' category: #'SVG-Elements'!
 SVGElementMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGroupMorph category: 'SVG-Elements'!
+!classDefinition: #SVGGroupMorph category: #'SVG-Elements'!
 SVGElementMorph subclass: #SVGGroupMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGroupMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGroupMorph class' category: #'SVG-Elements'!
 SVGGroupMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGMainMorph category: 'SVG-Elements'!
+!classDefinition: #SVGMainMorph category: #'SVG-Elements'!
 SVGGroupMorph subclass: #SVGMainMorph
 	instanceVariableNames: 'extent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGMainMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGMainMorph class' category: #'SVG-Elements'!
 SVGMainMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGCircle category: 'SVG-Shapes'!
+!classDefinition: #SVGCircle category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGCircle
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGCircle class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGCircle class' category: #'SVG-Shapes'!
 SVGCircle class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGEllipse category: 'SVG-Shapes'!
+!classDefinition: #SVGEllipse category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGEllipse
 	instanceVariableNames: 'cx cy rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGEllipse class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGEllipse class' category: #'SVG-Shapes'!
 SVGEllipse class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLine category: 'SVG-Shapes'!
+!classDefinition: #SVGLine category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGLine
 	instanceVariableNames: 'x1 y1 x2 y2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGLine class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGLine class' category: #'SVG-Shapes'!
 SVGLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPath category: 'SVG-Shapes'!
+!classDefinition: #SVGPath category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPath
 	instanceVariableNames: 'commands'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPath class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPath class' category: #'SVG-Shapes'!
 SVGPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolyLine category: 'SVG-Shapes'!
+!classDefinition: #SVGPolyLine category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPolyLine
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolyLine class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPolyLine class' category: #'SVG-Shapes'!
 SVGPolyLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolygon category: 'SVG-Shapes'!
+!classDefinition: #SVGPolygon category: #'SVG-Shapes'!
 SVGPolyLine subclass: #SVGPolygon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolygon class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPolygon class' category: #'SVG-Shapes'!
 SVGPolygon class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRect category: 'SVG-Shapes'!
+!classDefinition: #SVGRect category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGRect
 	instanceVariableNames: 'xMin xMax yMin yMax rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGRect class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGRect class' category: #'SVG-Shapes'!
 SVGRect class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefElement category: 'SVG-Elements'!
+!classDefinition: #SVGDefElement category: #'SVG-Elements'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefElement class' category: 'SVG-Elements'!
+!classDefinition: 'SVGDefElement class' category: #'SVG-Elements'!
 SVGDefElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradient category: 'SVG-Elements'!
+!classDefinition: #SVGGradient category: #'SVG-Elements'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGradient class' category: #'SVG-Elements'!
 SVGGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLinearGradient category: 'SVG-Elements'!
+!classDefinition: #SVGLinearGradient category: #'SVG-Elements'!
 SVGGradient subclass: #SVGLinearGradient
 	instanceVariableNames: 'vectorX1 vectorY1 vectorX2 vectorY2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGLinearGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGLinearGradient class' category: #'SVG-Elements'!
 SVGLinearGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRadialGradient category: 'SVG-Elements'!
+!classDefinition: #SVGRadialGradient category: #'SVG-Elements'!
 SVGGradient subclass: #SVGRadialGradient
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGRadialGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGRadialGradient class' category: #'SVG-Elements'!
 SVGRadialGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradientStop category: 'SVG-Elements'!
+!classDefinition: #SVGGradientStop category: #'SVG-Elements'!
 SVGDefElement subclass: #SVGGradientStop
 	instanceVariableNames: 'offset color'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradientStop class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGradientStop class' category: #'SVG-Elements'!
 SVGGradientStop class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefs category: 'SVG-Elements'!
+!classDefinition: #SVGDefs category: #'SVG-Elements'!
 Object subclass: #SVGDefs
 	instanceVariableNames: 'defs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefs class' category: 'SVG-Elements'!
+!classDefinition: 'SVGDefs class' category: #'SVG-Elements'!
 SVGDefs class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGTransform category: 'SVG-Elements'!
+!classDefinition: #SVGTransform category: #'SVG-Elements'!
 Object subclass: #SVGTransform
 	instanceVariableNames: 'a'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGTransform class' category: 'SVG-Elements'!
+!classDefinition: 'SVGTransform class' category: #'SVG-Elements'!
 SVGTransform class
 	instanceVariableNames: ''!
 
@@ -983,11 +983,60 @@ drawOn: aCanvas
 		aCanvas
 			ellipseCenter: cx@cy radius: r@r]! !
 
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:05:53'!
+center
+
+	^ cx @ cy! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:07:52'!
+center: aPoint
+
+	cx:= aPoint x.
+	cy := aPoint y.! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:06:21'!
+radius
+
+	^ r! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:07:06'!
+radius: positiveNumber
+
+	r := positiveNumber! !
+
 !SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#circle! !
+
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 14:08:41'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 14:15:54'!
+initializeMetaProperties
+"
+	SVGCircle initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGCircle.
+	classDict at: #center put: (propsDict at: #acceptsPoint). 
+	classDict at: #radius put: (propsDict at: #acceptsPositiveNumber). 
+"	classDict at: #strokeColorOrGradient put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+"
+
+	! !
 
 !SVGEllipse methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:03'!
 buildFromXml: anXMLElement
@@ -1019,6 +1068,28 @@ svgName
 
 	^#ellipse! !
 
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:28'!
+endPoint
+
+	^ x2 @ y2! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:37:18'!
+endPoint: aPoint
+
+	x2 := aPoint x.
+	y2 := aPoint y.! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:13'!
+startPoint
+
+	^ x1 @ y1! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:37:02'!
+startPoint: aPoint
+
+	x1 := aPoint x.
+	y1 := aPoint y.! !
+
 !SVGLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:22'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
@@ -1048,6 +1119,34 @@ svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#line! !
+
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 13:42:39'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 13:54:37'!
+initializeMetaProperties
+"
+	SVGLine initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGLine.
+	classDict at: #startPoint put: (propsDict at: #acceptsPoint). 
+	classDict at: #endPoint put: (propsDict at: #acceptsPoint). 
+"	classDict at: #strokeColorOrGradient put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+"
+
+	! !
 
 !SVGPath methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:30'!
 buildFromXml: anXMLElement
@@ -1513,3 +1612,5 @@ initialize
 	"nil means identity, i.e. no transformation"
 	a _ nil.! !
 SVGElementMorph initialize!
+SVGCircle initialize!
+SVGLine initialize!
