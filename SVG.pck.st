@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5041] on 11 January 2022 at 3:28:51 pm'!
-'Description '!
-!provides: 'SVG' 1 19!
+'From Cuis 6.0 [latest update: #5041] on 11 January 2022 at 4:05:45 pm'!
+'Description I display SVG drawing elements'!
+!provides: 'SVG' 1 20!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
@@ -994,6 +994,18 @@ center: aPoint
 	cx:= aPoint x.
 	cy := aPoint y.! !
 
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:45:00'!
+color
+	"See #fillColorOrGradient, but I don't get do gradients."
+	
+	^ self fillColor! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:42:56'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	fillColorOrGradient := aColor! !
+
 !SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:06:21'!
 radius
 
@@ -1017,7 +1029,7 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 14:15:54'!
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 15:45:30'!
 initializeMetaProperties
 "
 	SVGCircle initializeMetaProperties.
@@ -1032,8 +1044,8 @@ initializeMetaProperties
 	classDict := MetaProperty metaPropsDictForClass: SVGCircle.
 	classDict at: #center put: (propsDict at: #acceptsPoint). 
 	classDict at: #radius put: (propsDict at: #acceptsPositiveNumber). 
-"	classDict at: #strokeColorOrGradient put: (propsDict at: #acceptsColor). 
-	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+"	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
 "
 
 	! !
@@ -1068,6 +1080,19 @@ svgName
 
 	^#ellipse! !
 
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 16:02:53'!
+color
+	"I don't yet do gradients"
+	
+	^ self strokeColor ! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 16:01:37'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	strokeColorOrGradient := aColor.
+	self redrawNeeded ! !
+
 !SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:28'!
 endPoint
 
@@ -1078,6 +1103,16 @@ endPoint: aPoint
 
 	x2 := aPoint x.
 	y2 := aPoint y.! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:50:47'!
+lineWidth
+
+	^ self strokeWidth! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:51:15'!
+lineWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
 
 !SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:13'!
 startPoint
@@ -1127,7 +1162,7 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 13:54:37'!
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 15:52:38'!
 initializeMetaProperties
 "
 	SVGLine initializeMetaProperties.
@@ -1142,9 +1177,9 @@ initializeMetaProperties
 	classDict := MetaProperty metaPropsDictForClass: SVGLine.
 	classDict at: #startPoint put: (propsDict at: #acceptsPoint). 
 	classDict at: #endPoint put: (propsDict at: #acceptsPoint). 
-"	classDict at: #strokeColorOrGradient put: (propsDict at: #acceptsColor). 
-	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
-"
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveNumber). 
+
 
 	! !
 
