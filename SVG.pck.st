@@ -1,191 +1,191 @@
-'From Cuis 6.0 [latest update: #5041] on 11 January 2022 at 4:05:45 pm'!
+'From Cuis 6.0 [latest update: #5041] on 12 January 2022 at 4:21:08 pm'!
 'Description I display SVG drawing elements'!
-!provides: 'SVG' 1 20!
-!requires: 'LinearAlgebra' 1 nil nil!
+!provides: 'SVG' 1 21!
+!requires: 'YAXO' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'YAXO' 1 nil nil!
-SystemOrganization addCategory: #'SVG-Elements'!
-SystemOrganization addCategory: #'SVG-Shapes'!
+!requires: 'LinearAlgebra' 1 nil nil!
+SystemOrganization addCategory: 'SVG-Elements'!
+SystemOrganization addCategory: 'SVG-Shapes'!
 
 
-!classDefinition: #SVGWarning category: #'SVG-Elements'!
+!classDefinition: #SVGWarning category: 'SVG-Elements'!
 Warning subclass: #SVGWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGWarning class' category: #'SVG-Elements'!
+!classDefinition: 'SVGWarning class' category: 'SVG-Elements'!
 SVGWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGElementMorph category: #'SVG-Elements'!
+!classDefinition: #SVGElementMorph category: 'SVG-Elements'!
 PlacedMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGElementMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGElementMorph class' category: 'SVG-Elements'!
 SVGElementMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGroupMorph category: #'SVG-Elements'!
+!classDefinition: #SVGGroupMorph category: 'SVG-Elements'!
 SVGElementMorph subclass: #SVGGroupMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGroupMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGroupMorph class' category: 'SVG-Elements'!
 SVGGroupMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGMainMorph category: #'SVG-Elements'!
+!classDefinition: #SVGMainMorph category: 'SVG-Elements'!
 SVGGroupMorph subclass: #SVGMainMorph
 	instanceVariableNames: 'extent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGMainMorph class' category: #'SVG-Elements'!
+!classDefinition: 'SVGMainMorph class' category: 'SVG-Elements'!
 SVGMainMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGCircle category: #'SVG-Shapes'!
+!classDefinition: #SVGCircle category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGCircle
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGCircle class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGCircle class' category: 'SVG-Shapes'!
 SVGCircle class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGEllipse category: #'SVG-Shapes'!
+!classDefinition: #SVGEllipse category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGEllipse
 	instanceVariableNames: 'cx cy rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGEllipse class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGEllipse class' category: 'SVG-Shapes'!
 SVGEllipse class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLine category: #'SVG-Shapes'!
+!classDefinition: #SVGLine category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGLine
 	instanceVariableNames: 'x1 y1 x2 y2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGLine class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGLine class' category: 'SVG-Shapes'!
 SVGLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPath category: #'SVG-Shapes'!
+!classDefinition: #SVGPath category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPath
 	instanceVariableNames: 'commands'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPath class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPath class' category: 'SVG-Shapes'!
 SVGPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolyLine category: #'SVG-Shapes'!
+!classDefinition: #SVGPolyLine category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPolyLine
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolyLine class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPolyLine class' category: 'SVG-Shapes'!
 SVGPolyLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolygon category: #'SVG-Shapes'!
+!classDefinition: #SVGPolygon category: 'SVG-Shapes'!
 SVGPolyLine subclass: #SVGPolygon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolygon class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGPolygon class' category: 'SVG-Shapes'!
 SVGPolygon class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRect category: #'SVG-Shapes'!
+!classDefinition: #SVGRect category: 'SVG-Shapes'!
 SVGElementMorph subclass: #SVGRect
 	instanceVariableNames: 'xMin xMax yMin yMax rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGRect class' category: #'SVG-Shapes'!
+!classDefinition: 'SVGRect class' category: 'SVG-Shapes'!
 SVGRect class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefElement category: #'SVG-Elements'!
+!classDefinition: #SVGDefElement category: 'SVG-Elements'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefElement class' category: #'SVG-Elements'!
+!classDefinition: 'SVGDefElement class' category: 'SVG-Elements'!
 SVGDefElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradient category: #'SVG-Elements'!
+!classDefinition: #SVGGradient category: 'SVG-Elements'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGradient class' category: 'SVG-Elements'!
 SVGGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLinearGradient category: #'SVG-Elements'!
+!classDefinition: #SVGLinearGradient category: 'SVG-Elements'!
 SVGGradient subclass: #SVGLinearGradient
 	instanceVariableNames: 'vectorX1 vectorY1 vectorX2 vectorY2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGLinearGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGLinearGradient class' category: 'SVG-Elements'!
 SVGLinearGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRadialGradient category: #'SVG-Elements'!
+!classDefinition: #SVGRadialGradient category: 'SVG-Elements'!
 SVGGradient subclass: #SVGRadialGradient
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGRadialGradient class' category: #'SVG-Elements'!
+!classDefinition: 'SVGRadialGradient class' category: 'SVG-Elements'!
 SVGRadialGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradientStop category: #'SVG-Elements'!
+!classDefinition: #SVGGradientStop category: 'SVG-Elements'!
 SVGDefElement subclass: #SVGGradientStop
 	instanceVariableNames: 'offset color'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradientStop class' category: #'SVG-Elements'!
+!classDefinition: 'SVGGradientStop class' category: 'SVG-Elements'!
 SVGGradientStop class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefs category: #'SVG-Elements'!
+!classDefinition: #SVGDefs category: 'SVG-Elements'!
 Object subclass: #SVGDefs
 	instanceVariableNames: 'defs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefs class' category: #'SVG-Elements'!
+!classDefinition: 'SVGDefs class' category: 'SVG-Elements'!
 SVGDefs class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGTransform category: #'SVG-Elements'!
+!classDefinition: #SVGTransform category: 'SVG-Elements'!
 Object subclass: #SVGTransform
 	instanceVariableNames: 'a'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGTransform class' category: #'SVG-Elements'!
+!classDefinition: 'SVGTransform class' category: 'SVG-Elements'!
 SVGTransform class
 	instanceVariableNames: ''!
 
@@ -1074,6 +1074,67 @@ drawOn: aCanvas
 		aCanvas
 			ellipseCenter: cx@cy radius: rx@ry ]! !
 
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:53:24'!
+center
+
+	^ cx @ cy! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:53:36'!
+center: aPoint
+
+	cx:= aPoint x.
+	cy := aPoint y.! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:56:21'!
+color
+	"See #fillColorOrGradient, but I don't get do gradients."
+	
+	^ self fillColor! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:56:06'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	fillColorOrGradient := aColor! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:54:55'!
+radix
+
+	^ rx @ ry! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:55:38'!
+radix: aPoint
+
+	rx := aPoint x.
+	ry := aPoint y.! !
+
+!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 15:59:03'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 15:59:24'!
+initializeMetaProperties
+"
+	SVGEllipse initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGEllipse.
+	classDict at: #center put: (propsDict at: #acceptsPoint). 
+	classDict at: #radius put: (propsDict at: #acceptsPoint). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+"	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+"
+! !
+
 !SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
 	"Answer the name of the svg elements we can represent"
@@ -1295,11 +1356,94 @@ drawOn: aCanvas
 		aCanvas
 			roundRectangleMinX: xMin maxX: xMax minY: yMin maxY: yMax rx: rx ry: ry ]! !
 
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:09:25'!
+borderColor
+
+	^ self strokeColor ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:11:32'!
+borderColor: aColor
+	"I do not yet do gradients"
+
+	strokeColorOrGradient := aColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:09:09'!
+borderWidth
+
+	^ self strokeWidth ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:10:31'!
+borderWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:07:00'!
+color
+
+	^self fillColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:08:30'!
+color: aColor
+	"I do not yet deal with gradiants"
+	
+	fillColorOrGradient := aColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:05:07'!
+corner
+
+	^ xMax @ yMax! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:05:44'!
+corner: aPoint
+
+	xMax := aPoint x.
+	yMax := aPoint y.! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:04:48'!
+origin
+
+	^ xMin @ yMin! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:06:09'!
+origin: aPoint
+
+	xMin := aPoint x.
+	yMin := aPoint y.! !
+
 !SVGRect class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#rect! !
+
+!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 16:14:29'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 16:19:48'!
+initializeMetaProperties
+"
+	SVGRect initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGRect.
+	classDict at: #origin put: (propsDict at: #acceptsPoint). 
+	classDict at: #corner put: (propsDict at: #acceptsPoint). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #borderWidth put: (propsDict at: #acceptsPositiveInteger). 
+	classDict at: #borderColor put: (propsDict at: #acceptsColor). 
+
+
+	! !
 
 !SVGDefElement methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:40'!
 def: anSVGDef
@@ -1648,4 +1792,6 @@ initialize
 	a _ nil.! !
 SVGElementMorph initialize!
 SVGCircle initialize!
+SVGEllipse initialize!
 SVGLine initialize!
+SVGRect initialize!
