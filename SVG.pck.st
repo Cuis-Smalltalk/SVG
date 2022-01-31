@@ -1,10 +1,10 @@
-'From Cuis 6.0 [latest update: #5041] on 12 January 2022 at 4:21:08 pm'!
+'From Cuis 6.0 [latest update: #5053] on 31 January 2022 at 12:42:44 pm'!
 'Description I display SVG drawing elements'!
-!provides: 'SVG' 1 21!
-!requires: 'YAXO' 1 nil nil!
+!provides: 'SVG' 1 22!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -1029,9 +1029,10 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 15:45:30'!
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 12:39:15'!
 initializeMetaProperties
 "
+	Feature require: 'Morphic-MetaProperties'.
 	SVGCircle initializeMetaProperties.
 "
 	| classDict propsDict |
@@ -1115,9 +1116,10 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 15:59:24'!
+!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/31/2022 12:39:27'!
 initializeMetaProperties
 "
+	Feature require: 'Morphic-MetaProperties'.
 	SVGEllipse initializeMetaProperties.
 "
 	| classDict propsDict |
@@ -1223,9 +1225,10 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 15:52:38'!
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 12:39:37'!
 initializeMetaProperties
 "
+	Feature require: 'Morphic-MetaProperties'.
 	SVGLine initializeMetaProperties.
 "
 	| classDict propsDict |
@@ -1423,9 +1426,10 @@ initialize
 		ifTrue: [ self initializeMetaProperties ].
 	! !
 
-!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 16:19:48'!
+!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/31/2022 12:39:46'!
 initializeMetaProperties
 "
+	Feature require: 'Morphic-MetaProperties'.
 	SVGRect initializeMetaProperties.
 "
 	| classDict propsDict |
