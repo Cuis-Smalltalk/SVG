@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5053] on 31 January 2022 at 12:42:44 pm'!
+'From Cuis 6.0 [latest update: #5056] on 31 January 2022 at 2:15:55 pm'!
 'Description I display SVG drawing elements'!
-!provides: 'SVG' 1 22!
+!provides: 'SVG' 1 24!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
@@ -1282,6 +1282,29 @@ svgName
 
 	^#path! !
 
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:06'!
+color
+	"I don't yet do gradients"
+	
+	^ self strokeColor ! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:12'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	strokeColorOrGradient := aColor.
+	self redrawNeeded ! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:23'!
+lineWidth
+
+	^ self strokeWidth! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:29'!
+lineWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
+
 !SVGPolyLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:34'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
@@ -1316,6 +1339,34 @@ svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#polyline! !
+
+!SVGPolyLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 14:01:58'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+! !
+
+!SVGPolyLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 14:11:55'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGPolyLine initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGPolyLine.
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveNumber). 
+	"Points"
+
+
+	! !
 
 !SVGPolygon methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:38'!
 buildFromXml: anXMLElement
@@ -1798,4 +1849,5 @@ SVGElementMorph initialize!
 SVGCircle initialize!
 SVGEllipse initialize!
 SVGLine initialize!
+SVGPolyLine initialize!
 SVGRect initialize!
