@@ -1,10 +1,10 @@
-'From Cuis 5.0 [latest update: #5004] on 27 December 2021 at 2:22:16 pm'!
-'Description '!
-!provides: 'SVG' 1 18!
-!requires: 'YAXO' 1 nil nil!
+'From Cuis 6.0 [latest update: #5057] on 2 February 2022 at 7:28:17 am'!
+'Description I display SVG drawing elements'!
+!provides: 'SVG' 1 25!
+!requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -563,6 +563,11 @@ initialize
 		at: 'stroke-linejoin' put: 'round';
 		yourself! !
 
+!SVGElementMorph class methodsFor: 'new-morph participation' stamp: 'KenD 2/2/2022 07:27:09'!
+includeInNewMorphMenu
+	"Return true for all classes that can be instantiated from the menu"
+	^ false! !
+
 !SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 12/27/2021 14:21:38'!
 revisar! !
 
@@ -983,11 +988,73 @@ drawOn: aCanvas
 		aCanvas
 			ellipseCenter: cx@cy radius: r@r]! !
 
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:05:53'!
+center
+
+	^ cx @ cy! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:07:52'!
+center: aPoint
+
+	cx:= aPoint x.
+	cy := aPoint y.! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:45:00'!
+color
+	"See #fillColorOrGradient, but I don't get do gradients."
+	
+	^ self fillColor! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:42:56'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	fillColorOrGradient := aColor! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:06:21'!
+radius
+
+	^ r! !
+
+!SVGCircle methodsFor: 'accessing' stamp: 'KenD 1/11/2022 14:07:06'!
+radius: positiveNumber
+
+	r := positiveNumber! !
+
 !SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#circle! !
+
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 14:08:41'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGCircle class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 12:39:15'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGCircle initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGCircle.
+	classDict at: #center put: (propsDict at: #acceptsPoint). 
+	classDict at: #radius put: (propsDict at: #acceptsPositiveNumber). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+"	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+"
+
+	! !
 
 !SVGEllipse methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:03'!
 buildFromXml: anXMLElement
@@ -1013,11 +1080,118 @@ drawOn: aCanvas
 		aCanvas
 			ellipseCenter: cx@cy radius: rx@ry ]! !
 
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:53:24'!
+center
+
+	^ cx @ cy! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:53:36'!
+center: aPoint
+
+	cx:= aPoint x.
+	cy := aPoint y.! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:56:21'!
+color
+	"See #fillColorOrGradient, but I don't get do gradients."
+	
+	^ self fillColor! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:56:06'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	fillColorOrGradient := aColor! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:54:55'!
+radix
+
+	^ rx @ ry! !
+
+!SVGEllipse methodsFor: 'accessing' stamp: 'KenD 1/12/2022 15:55:38'!
+radix: aPoint
+
+	rx := aPoint x.
+	ry := aPoint y.! !
+
+!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 15:59:03'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGEllipse class methodsFor: 'initialization' stamp: 'KenD 1/31/2022 12:39:27'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGEllipse initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGEllipse.
+	classDict at: #center put: (propsDict at: #acceptsPoint). 
+	classDict at: #radius put: (propsDict at: #acceptsPoint). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+"	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveInteger). 
+"
+! !
+
 !SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#ellipse! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 16:02:53'!
+color
+	"I don't yet do gradients"
+	
+	^ self strokeColor ! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 16:01:37'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	strokeColorOrGradient := aColor.
+	self redrawNeeded ! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:28'!
+endPoint
+
+	^ x2 @ y2! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:37:18'!
+endPoint: aPoint
+
+	x2 := aPoint x.
+	y2 := aPoint y.! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:50:47'!
+lineWidth
+
+	^ self strokeWidth! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 15:51:15'!
+lineWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:36:13'!
+startPoint
+
+	^ x1 @ y1! !
+
+!SVGLine methodsFor: 'accessing' stamp: 'KenD 1/11/2022 13:37:02'!
+startPoint: aPoint
+
+	x1 := aPoint x.
+	y1 := aPoint y.! !
 
 !SVGLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:22'!
 buildFromXml: anXMLElement
@@ -1048,6 +1222,35 @@ svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#line! !
+
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/11/2022 13:42:39'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 12:39:37'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGLine initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGLine.
+	classDict at: #startPoint put: (propsDict at: #acceptsPoint). 
+	classDict at: #endPoint put: (propsDict at: #acceptsPoint). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveNumber). 
+
+
+	! !
 
 !SVGPath methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:30'!
 buildFromXml: anXMLElement
@@ -1084,6 +1287,29 @@ svgName
 
 	^#path! !
 
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:06'!
+color
+	"I don't yet do gradients"
+	
+	^ self strokeColor ! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:12'!
+color: aColor
+	"I do not currently handle gradients"
+	
+	strokeColorOrGradient := aColor.
+	self redrawNeeded ! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:23'!
+lineWidth
+
+	^ self strokeWidth! !
+
+!SVGPolyLine methodsFor: 'accessing' stamp: 'KenD 1/31/2022 14:14:29'!
+lineWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
+
 !SVGPolyLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:34'!
 buildFromXml: anXMLElement
 	"Perhaps some general initialization is in order?"
@@ -1118,6 +1344,34 @@ svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#polyline! !
+
+!SVGPolyLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 14:01:58'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+! !
+
+!SVGPolyLine class methodsFor: 'class initialization' stamp: 'KenD 1/31/2022 14:11:55'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGPolyLine initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGPolyLine.
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #lineWidth put: (propsDict at: #acceptsPositiveNumber). 
+	"Points"
+
+
+	! !
 
 !SVGPolygon methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:38'!
 buildFromXml: anXMLElement
@@ -1161,11 +1415,95 @@ drawOn: aCanvas
 		aCanvas
 			roundRectangleMinX: xMin maxX: xMax minY: yMin maxY: yMax rx: rx ry: ry ]! !
 
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:09:25'!
+borderColor
+
+	^ self strokeColor ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:11:32'!
+borderColor: aColor
+	"I do not yet do gradients"
+
+	strokeColorOrGradient := aColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:09:09'!
+borderWidth
+
+	^ self strokeWidth ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:10:31'!
+borderWidth: positiveNumber
+
+	strokeWidth := positiveNumber ! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:07:00'!
+color
+
+	^self fillColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:08:30'!
+color: aColor
+	"I do not yet deal with gradiants"
+	
+	fillColorOrGradient := aColor! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:05:07'!
+corner
+
+	^ xMax @ yMax! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:05:44'!
+corner: aPoint
+
+	xMax := aPoint x.
+	yMax := aPoint y.! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:04:48'!
+origin
+
+	^ xMin @ yMin! !
+
+!SVGRect methodsFor: 'accessing' stamp: 'KenD 1/12/2022 16:06:09'!
+origin: aPoint
+
+	xMin := aPoint x.
+	yMin := aPoint y.! !
+
 !SVGRect class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#rect! !
+
+!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/12/2022 16:14:29'!
+initialize
+	
+	(Smalltalk includesKey: #MetaProperty )
+		ifTrue: [ self initializeMetaProperties ].
+	! !
+
+!SVGRect class methodsFor: 'initialization' stamp: 'KenD 1/31/2022 12:39:46'!
+initializeMetaProperties
+"
+	Feature require: 'Morphic-MetaProperties'.
+	SVGRect initializeMetaProperties.
+"
+	| classDict propsDict |
+	"Ensure named MetaProperties exist"
+	MetaProperty initializeDictionaries.
+
+	"Seed MetaProperties for known Morphs"
+	propsDict := MetaProperty preDefinedPropsDict.
+	
+	classDict := MetaProperty metaPropsDictForClass: SVGRect.
+	classDict at: #origin put: (propsDict at: #acceptsPoint). 
+	classDict at: #corner put: (propsDict at: #acceptsPoint). 
+	classDict at: #color put: (propsDict at: #acceptsColor). 
+	classDict at: #borderWidth put: (propsDict at: #acceptsPositiveInteger). 
+	classDict at: #borderColor put: (propsDict at: #acceptsColor). 
+
+
+	! !
 
 !SVGDefElement methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:40'!
 def: anSVGDef
@@ -1513,3 +1851,8 @@ initialize
 	"nil means identity, i.e. no transformation"
 	a _ nil.! !
 SVGElementMorph initialize!
+SVGCircle initialize!
+SVGEllipse initialize!
+SVGLine initialize!
+SVGPolyLine initialize!
+SVGRect initialize!
