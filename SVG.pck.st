@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #5056] on 31 January 2022 at 2:15:55 pm'!
+'From Cuis 6.0 [latest update: #5057] on 2 February 2022 at 7:28:17 am'!
 'Description I display SVG drawing elements'!
-!provides: 'SVG' 1 24!
+!provides: 'SVG' 1 25!
 !requires: 'LinearAlgebra' 1 nil nil!
 !requires: 'Color-Extras' 1 7 nil!
 !requires: 'VectorGraphics' 1 nil nil!
@@ -562,6 +562,11 @@ initialize
 		at: 'stroke-linecap' put: 'round';
 		at: 'stroke-linejoin' put: 'round';
 		yourself! !
+
+!SVGElementMorph class methodsFor: 'new-morph participation' stamp: 'KenD 2/2/2022 07:27:09'!
+includeInNewMorphMenu
+	"Return true for all classes that can be instantiated from the menu"
+	^ false! !
 
 !SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 12/27/2021 14:21:38'!
 revisar! !
