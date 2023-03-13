@@ -1,9 +1,9 @@
-'From Cuis 5.0 [latest update: #5004] on 27 December 2021 at 2:22:16 pm'!
+'From Cuis 6.0 [latest update: #5686] on 13 March 2023 at 10:04:40 am'!
 'Description '!
-!provides: 'SVG' 1 19!
-!requires: 'YAXO' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 20!
 !requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: 'SVG-Elements'!
 SystemOrganization addCategory: 'SVG-Shapes'!
 
@@ -118,6 +118,16 @@ SVGElementMorph subclass: #SVGRect
 SVGRect class
 	instanceVariableNames: ''!
 
+!classDefinition: #SVGText category: 'SVG-Shapes'!
+SVGElementMorph subclass: #SVGText
+	instanceVariableNames: 'string pointSize x y'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SVG-Shapes'!
+!classDefinition: 'SVGText class' category: 'SVG-Shapes'!
+SVGText class
+	instanceVariableNames: ''!
+
 !classDefinition: #SVGDefElement category: 'SVG-Elements'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
@@ -194,10 +204,6 @@ See class methods in 'examples' category in SVGMainMorph.!
 
 !SVGMainMorph commentStamp: '<historical>' prior: 0!
 See class methods in 'examples' category.!
-
-!SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
-name
-	^name! !
 
 !SVGElementMorph methodsFor: 'building' stamp: 'jmv 1/21/2015 09:03'!
 buildFromXml: anXMLElement
@@ -960,14 +966,13 @@ seamlessRasterizationExample
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGCircle methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:07'!
+!SVGCircle methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:13'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	cx _ (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
-	cy _ (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
-	r _ (anXMLElement attributeAt: 'r' ifAbsent: 0) asNumber.! !
+	cx := (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
+	cy := (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
+	r := (anXMLElement attributeAt: 'r' ifAbsent: 0) asNumber.! !
 
 !SVGCircle methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
 usedAttributeNames
@@ -988,15 +993,14 @@ svgName
 
 	^#circle! !
 
-!SVGEllipse methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:03'!
+!SVGEllipse methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:19'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	cx _ (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
-	cy _ (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
-	rx _ (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber.
-	ry _ (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber.! !
+	cx := (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
+	cy := (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
+	rx := (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber.
+	ry := (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber.! !
 
 !SVGEllipse methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
 usedAttributeNames
@@ -1018,15 +1022,14 @@ svgName
 
 	^#ellipse! !
 
-!SVGLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:22'!
+!SVGLine methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:26'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
-	x1 _ (anXMLElement attributeAt: 'x1' ifAbsent: 0) asNumber.
-	y1 _ (anXMLElement attributeAt: 'y1' ifAbsent: 0) asNumber.
-	x2 _ (anXMLElement attributeAt: 'x2' ifAbsent: 0) asNumber.
-	y2 _ (anXMLElement attributeAt: 'y2' ifAbsent: 0) asNumber.! !
+	x1 := (anXMLElement attributeAt: 'x1' ifAbsent: 0) asNumber.
+	y1 := (anXMLElement attributeAt: 'y1' ifAbsent: 0) asNumber.
+	x2 := (anXMLElement attributeAt: 'x2' ifAbsent: 0) asNumber.
+	y2 := (anXMLElement attributeAt: 'y2' ifAbsent: 0) asNumber.! !
 
 !SVGLine methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
 usedAttributeNames
@@ -1048,20 +1051,19 @@ svgName
 
 	^#line! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:30'!
+!SVGPath methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:33'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	| commandsData commandsDataStream command commandData commandChar |
 	super buildFromXml: anXMLElement.
-	commands _ OrderedCollection new.
-	commandsData _ anXMLElement attributeAt: 'd'.
-	commandsDataStream _ commandsData readStream.
+	commands := OrderedCollection new.
+	commandsData := anXMLElement attributeAt: 'd'.
+	commandsDataStream := commandsData readStream.
 	commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
 	[ commandsDataStream atEnd ] whileFalse: [
-		commandChar _ commandsDataStream next.
-		commandData _ commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
-		command _ PathCommand from: commandChar stream: commandData readStream.
+		commandChar := commandsDataStream next.
+		commandData := commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
+		command := PathCommand from: commandChar stream: commandData readStream.
 		commands add: command ].! !
 
 !SVGPath methodsFor: 'building' stamp: 'jmv 5/4/2010 05:26'!
@@ -1083,19 +1085,18 @@ svgName
 
 	^#path! !
 
-!SVGPolyLine methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:34'!
+!SVGPolyLine methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:38'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	| pointsData pointsDataStream x y |
 	super buildFromXml: anXMLElement.
 	
-	points _ OrderedCollection new.
-	pointsData _ anXMLElement attributeAt: 'points'.
-	pointsDataStream _ pointsData readStream.
+	points := OrderedCollection new.
+	pointsData := anXMLElement attributeAt: 'points'.
+	pointsDataStream := pointsData readStream.
 	[ pointsDataStream atEnd ] whileFalse: [
-		x _ pointsDataStream nextNumber.
-		y _ pointsDataStream nextNumber.
+		x := pointsDataStream nextNumber.
+		y := pointsDataStream nextNumber.
 		y ifNotNil: [
 			points add: x@y ]].! !
 
@@ -1118,9 +1119,8 @@ svgName
 
 	^#polyline! !
 
-!SVGPolygon methodsFor: 'building' stamp: 'jmv 9/6/2021 12:01:38'!
+!SVGPolygon methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:45'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	super buildFromXml: anXMLElement.
 	points last = points first ifFalse: [
@@ -1132,20 +1132,19 @@ svgName
 
 	^#polygon! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 9/6/2021 12:00:04'!
+!SVGRect methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:53'!
 buildFromXml: anXMLElement
-	"Perhaps some general initialization is in order?"
 
 	| w h |
 	super buildFromXml: anXMLElement.
-	xMin _ (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
-	yMin _ (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
-	w _ (anXMLElement attributeAt: 'width' ifAbsent: 0) asNumber.
-	h _ (anXMLElement attributeAt: 'height' ifAbsent: 0) asNumber.
-	xMax _  xMin + w.
-	yMax _ yMin + h.
-	rx _ (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber min: w * 0.5.
-	ry _ (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber min: h * 0.5.! !
+	xMin := (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
+	yMin := (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
+	w := (anXMLElement attributeAt: 'width' ifAbsent: 0) asNumber.
+	h := (anXMLElement attributeAt: 'height' ifAbsent: 0) asNumber.
+	xMax :=  xMin + w.
+	yMax := yMin + h.
+	rx := (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber min: w * 0.5.
+	ry := (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber min: h * 0.5.! !
 
 !SVGRect methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
 usedAttributeNames
@@ -1165,6 +1164,36 @@ svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#rect! !
+
+!SVGText methodsFor: 'building' stamp: 'jmv 3/13/2023 10:03:27'!
+buildFromXml: anXMLElement
+
+	super buildFromXml: anXMLElement.
+	string := anXMLElement contentString.
+	x := (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
+	y := (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
+	pointSize := (anXMLElement attributeAt: 'font-size' ifAbsent: 14) asNumber.
+	(anXMLElement attributeAt: 'textLength' ifAbsent: nil) ifNotNil: [ :s |
+		pointSize := pointSize asFloat * s asNumber / self findFullBoundsInOwner width ].! !
+
+!SVGText methodsFor: 'building' stamp: 'jmv 3/13/2023 09:55:30'!
+usedAttributeNames
+
+	^super usedAttributeNames,
+		#('string' 'font-size' 'textLength' 'x' 'y')! !
+
+!SVGText methodsFor: 'drawing' stamp: 'jmv 3/13/2023 09:47:49'!
+drawOn: aCanvas
+
+	| font |
+	font := pointSize ifNotNil: [ FontFamily defaultFamilyPointSize: pointSize ].
+	aCanvas drawString: string atBaseline: x@y font: font color: self fillColor.! !
+
+!SVGText class methodsFor: 'instance creation' stamp: 'jmv 3/13/2023 08:59:28'!
+svgName
+	"Answer the name of the svg elements we can represent"
+
+	^#text! !
 
 !SVGDefElement methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:40'!
 def: anSVGDef
@@ -1197,6 +1226,10 @@ averageColor
 	s _ self stops.
 	averageColor _ (s collect: [ :c | c color / s size ]) sum.
 	^ averageColor! !
+
+!SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
+name
+	^name! !
 
 !SVGGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
 stops
