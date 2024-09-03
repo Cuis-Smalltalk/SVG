@@ -1,200 +1,200 @@
-'From Cuis 6.0 [latest update: #5686] on 13 March 2023 at 10:04:40 am'!
+'From Cuis7.1 [latest update: #6669] on 2 September 2024 at 7:30:06 pm'!
 'Description '!
-!provides: 'SVG' 1 20!
-!requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 21!
 !requires: 'YAXO' 1 nil nil!
-SystemOrganization addCategory: 'SVG-Elements'!
-SystemOrganization addCategory: 'SVG-Shapes'!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'LinearAlgebra' 1 nil nil!
+SystemOrganization addCategory: #'SVG-Elements'!
+SystemOrganization addCategory: #'SVG-Shapes'!
 
 
-!classDefinition: #SVGWarning category: 'SVG-Elements'!
+!classDefinition: #SVGWarning category: #'SVG-Elements'!
 Warning subclass: #SVGWarning
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGWarning class' category: 'SVG-Elements'!
+!classDefinition: 'SVGWarning class' category: #'SVG-Elements'!
 SVGWarning class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGElementMorph category: 'SVG-Elements'!
+!classDefinition: #SVGElementMorph category: #'SVG-Elements'!
 PlacedMorph subclass: #SVGElementMorph
 	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGElementMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGElementMorph class' category: #'SVG-Elements'!
 SVGElementMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGroupMorph category: 'SVG-Elements'!
+!classDefinition: #SVGGroupMorph category: #'SVG-Elements'!
 SVGElementMorph subclass: #SVGGroupMorph
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGroupMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGroupMorph class' category: #'SVG-Elements'!
 SVGGroupMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGMainMorph category: 'SVG-Elements'!
+!classDefinition: #SVGMainMorph category: #'SVG-Elements'!
 SVGGroupMorph subclass: #SVGMainMorph
 	instanceVariableNames: 'extent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGMainMorph class' category: 'SVG-Elements'!
+!classDefinition: 'SVGMainMorph class' category: #'SVG-Elements'!
 SVGMainMorph class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGCircle category: 'SVG-Shapes'!
+!classDefinition: #SVGCircle category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGCircle
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGCircle class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGCircle class' category: #'SVG-Shapes'!
 SVGCircle class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGEllipse category: 'SVG-Shapes'!
+!classDefinition: #SVGEllipse category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGEllipse
 	instanceVariableNames: 'cx cy rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGEllipse class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGEllipse class' category: #'SVG-Shapes'!
 SVGEllipse class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLine category: 'SVG-Shapes'!
+!classDefinition: #SVGLine category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGLine
 	instanceVariableNames: 'x1 y1 x2 y2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGLine class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGLine class' category: #'SVG-Shapes'!
 SVGLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPath category: 'SVG-Shapes'!
+!classDefinition: #SVGPath category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPath
 	instanceVariableNames: 'commands'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPath class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPath class' category: #'SVG-Shapes'!
 SVGPath class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolyLine category: 'SVG-Shapes'!
+!classDefinition: #SVGPolyLine category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGPolyLine
 	instanceVariableNames: 'points'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolyLine class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPolyLine class' category: #'SVG-Shapes'!
 SVGPolyLine class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGPolygon category: 'SVG-Shapes'!
+!classDefinition: #SVGPolygon category: #'SVG-Shapes'!
 SVGPolyLine subclass: #SVGPolygon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGPolygon class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGPolygon class' category: #'SVG-Shapes'!
 SVGPolygon class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRect category: 'SVG-Shapes'!
+!classDefinition: #SVGRect category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGRect
 	instanceVariableNames: 'xMin xMax yMin yMax rx ry'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGRect class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGRect class' category: #'SVG-Shapes'!
 SVGRect class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGText category: 'SVG-Shapes'!
+!classDefinition: #SVGText category: #'SVG-Shapes'!
 SVGElementMorph subclass: #SVGText
 	instanceVariableNames: 'string pointSize x y'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Shapes'!
-!classDefinition: 'SVGText class' category: 'SVG-Shapes'!
+!classDefinition: 'SVGText class' category: #'SVG-Shapes'!
 SVGText class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefElement category: 'SVG-Elements'!
+!classDefinition: #SVGDefElement category: #'SVG-Elements'!
 Object subclass: #SVGDefElement
 	instanceVariableNames: 'def'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefElement class' category: 'SVG-Elements'!
+!classDefinition: 'SVGDefElement class' category: #'SVG-Elements'!
 SVGDefElement class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradient category: 'SVG-Elements'!
+!classDefinition: #SVGGradient category: #'SVG-Elements'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGradient class' category: #'SVG-Elements'!
 SVGGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGLinearGradient category: 'SVG-Elements'!
+!classDefinition: #SVGLinearGradient category: #'SVG-Elements'!
 SVGGradient subclass: #SVGLinearGradient
 	instanceVariableNames: 'vectorX1 vectorY1 vectorX2 vectorY2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGLinearGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGLinearGradient class' category: #'SVG-Elements'!
 SVGLinearGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGRadialGradient category: 'SVG-Elements'!
+!classDefinition: #SVGRadialGradient category: #'SVG-Elements'!
 SVGGradient subclass: #SVGRadialGradient
 	instanceVariableNames: 'cx cy r'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGRadialGradient class' category: 'SVG-Elements'!
+!classDefinition: 'SVGRadialGradient class' category: #'SVG-Elements'!
 SVGRadialGradient class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGGradientStop category: 'SVG-Elements'!
+!classDefinition: #SVGGradientStop category: #'SVG-Elements'!
 SVGDefElement subclass: #SVGGradientStop
 	instanceVariableNames: 'offset color'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGGradientStop class' category: 'SVG-Elements'!
+!classDefinition: 'SVGGradientStop class' category: #'SVG-Elements'!
 SVGGradientStop class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGDefs category: 'SVG-Elements'!
+!classDefinition: #SVGDefs category: #'SVG-Elements'!
 Object subclass: #SVGDefs
 	instanceVariableNames: 'defs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGDefs class' category: 'SVG-Elements'!
+!classDefinition: 'SVGDefs class' category: #'SVG-Elements'!
 SVGDefs class
 	instanceVariableNames: ''!
 
-!classDefinition: #SVGTransform category: 'SVG-Elements'!
+!classDefinition: #SVGTransform category: #'SVG-Elements'!
 Object subclass: #SVGTransform
 	instanceVariableNames: 'a'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
-!classDefinition: 'SVGTransform class' category: 'SVG-Elements'!
+!classDefinition: 'SVGTransform class' category: #'SVG-Elements'!
 SVGTransform class
 	instanceVariableNames: ''!
 
@@ -638,25 +638,25 @@ fullBoundsInOwner
 	self knowsOwnLocalBounds ifFalse: [ ^super fullBoundsInOwner ].
 	^ (self externalizeBoundingRectOf: (`0@0` extent: extent)) encompassingIntegerRectangle.! !
 
+!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 9/2/2024 20:48:19'!
+localBounds
+	"Can only be asked for if #knowsOwnLocalBounds answers true!!"
+
+	^`0@0` extent: extent.! !
+
+!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 9/2/2024 20:48:47'!
+localBoundsForError
+	"Only to be used for drawing in an error condition. See senders."
+
+	self knowsOwnLocalBounds ifFalse: [ ^super localBoundsForError ].
+	^self localBounds.! !
+
 !SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/14/2021 11:40:06'!
 morphExtent
 	"In our own coordinates!!
 	nil if unknown."
 
 	^ extent! !
-
-!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:58:00'!
-morphLocalBounds
-	"Can only be asked for if #knowsOwnLocalBounds answers true!!"
-
-	^`0@0` extent: extent.! !
-
-!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:58:46'!
-morphLocalBoundsForError
-	"Only to be used for drawing in an error condition. See senders."
-
-	self knowsOwnLocalBounds ifFalse: [ ^super morphLocalBoundsForError ].
-	^self morphLocalBounds.! !
 
 !SVGMainMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 14:55:29'!
 knowsOwnLocalBounds
