@@ -1,9 +1,9 @@
-'From Cuis7.1 [latest update: #6669] on 2 September 2024 at 7:30:06 pm'!
+'From Cuis7.1 [latest update: #6771] on 14 October 2024 at 11:36:14 am'!
 'Description '!
-!provides: 'SVG' 1 21!
-!requires: 'YAXO' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 22!
 !requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
@@ -298,6 +298,11 @@ fillColor
 		ifTrue: [ fillColorOrGradient _ fillColorOrGradient averageColor ].
 	^fillColorOrGradient alpha: self fillOpacity * self opacity! !
 
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:32:50'!
+fillColor: aColor
+	fillColorOrGradient := aColor.
+	self redrawNeeded.! !
+
 !SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:54'!
 fillOpacity
 	^fillOpacity == #inherit
@@ -307,6 +312,11 @@ fillOpacity
 				ifTrue: [ owner fillOpacity ]
 				ifFalse: [ 1.0 ]]! !
 
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:46'!
+fillOpacity: aNumber
+	fillOpacity := aNumber.
+	self redrawNeeded.! !
+
 !SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:54'!
 opacity
 	^opacity == #inherit
@@ -315,6 +325,11 @@ opacity
 			(owner isKindOf: SVGElementMorph)
 				ifTrue: [ owner opacity ]
 				ifFalse: [ 1.0 ]]! !
+
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:30'!
+opacity: aNumber
+	opacity := aNumber.
+	self redrawNeeded.! !
 
 !SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/18/2021 12:44:25'!
 strokeColor
@@ -335,6 +350,11 @@ strokeColor
 	(strokeColorOrGradient isKindOf: SVGGradient) 
 		ifTrue: [ strokeColorOrGradient _ strokeColorOrGradient averageColor].
 	^strokeColorOrGradient alpha: self strokeOpacity * self opacity! !
+
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:31:43'!
+strokeColor: aColor
+	strokeColorOrGradient := aColor.
+	self redrawNeeded.! !
 
 !SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 4/29/2011 21:55'!
 strokeDashArray
@@ -359,6 +379,11 @@ strokeOpacity
 				ifTrue: [ owner strokeOpacity ]
 				ifFalse: [ 1.0 ]]! !
 
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:53'!
+strokeOpacity: aNumber
+	strokeOpacity := aNumber.
+	self redrawNeeded.! !
+
 !SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:16'!
 strokeWidth
 
@@ -369,6 +394,11 @@ strokeWidth
 
 	"nil"
 	^strokeWidth! !
+
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:31:01'!
+strokeWidth: aNumber
+	strokeWidth := aNumber.
+	self redrawNeeded.! !
 
 !SVGElementMorph methodsFor: 'private' stamp: 'jmv 12/15/2021 14:47:32'!
 fixYAxisDirection
