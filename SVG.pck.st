@@ -1,9 +1,9 @@
-'From Cuis7.1 [latest update: #6771] on 14 October 2024 at 11:36:14 am'!
+'From Cuis7.3 [latest update: #7052] on 26 February 2025 at 3:57:08 pm'!
 'Description '!
-!provides: 'SVG' 1 22!
-!requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 23!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
@@ -759,6 +759,13 @@ fromFile: aFileEntry
 
 	| xmlDocument |
 	xmlDocument _ XMLDOMParser parseDocumentFromFile: aFileEntry readIntoMemory: true.
+	^ self fromXml: xmlDocument elements first.! !
+
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'hlsf 2/20/2025 10:08:42'!
+fromStream: aStream
+
+	| xmlDocument |
+	xmlDocument := XMLDOMParser parseDocumentFrom: aStream.
 	^ self fromXml: xmlDocument elements first.! !
 
 !SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:25'!
