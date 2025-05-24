@@ -1,9 +1,9 @@
-'From Cuis7.3 [latest update: #7052] on 26 February 2025 at 3:57:08 pm'!
+'From Cuis7.3 [latest update: #7236] on 24 May 2025 at 11:55:38 am'!
 'Description '!
-!provides: 'SVG' 1 23!
-!requires: 'YAXO' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 24!
 !requires: 'LinearAlgebra' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'YAXO' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
@@ -20,7 +20,7 @@ SVGWarning class
 
 !classDefinition: #SVGElementMorph category: #'SVG-Elements'!
 PlacedMorph subclass: #SVGElementMorph
-	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset'
+	instanceVariableNames: 'defs opacity strokeWidth strokeColorOrGradient strokeOpacity fillColorOrGradient fillOpacity strokeDashArray strokeDashArrayOffset clipsSubmorphs'
 	classVariableNames: 'DefaultedAtributes IgnoredAttributes IgnoredElements IgnoredPrefixes'
 	poolDictionaries: ''
 	category: 'SVG-Elements'!
@@ -138,6 +138,16 @@ Object subclass: #SVGDefElement
 SVGDefElement class
 	instanceVariableNames: ''!
 
+!classDefinition: #SVGClipPath category: #'SVG-Elements'!
+SVGDefElement subclass: #SVGClipPath
+	instanceVariableNames: 'id paths'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'SVG-Elements'!
+!classDefinition: 'SVGClipPath class' category: #'SVG-Elements'!
+SVGClipPath class
+	instanceVariableNames: ''!
+
 !classDefinition: #SVGGradient category: #'SVG-Elements'!
 SVGDefElement subclass: #SVGGradient
 	instanceVariableNames: 'stops name inheritFrom averageColor'
@@ -205,46 +215,47 @@ See class methods in 'examples' category in SVGMainMorph.!
 !SVGMainMorph commentStamp: '<historical>' prior: 0!
 See class methods in 'examples' category.!
 
-!SVGElementMorph methodsFor: 'building' stamp: 'jmv 1/21/2015 09:03'!
-buildFromXml: anXMLElement
+!SVGElementMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 15:11:47'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	| usedAttributeNames styleAttributes strokeDashArrayData strokeDashArrayOffsetData transformData svgTransform |
-	styleAttributes _ self class styleAttributesIn: anXMLElement.
+	| usedAttributeNames styleAttributes strokeDashArrayData strokeDashArrayOffsetData transformData svgTransform allDefs |
+	styleAttributes := self class styleAttributesIn: anXMLElement.
 	
 	"These are always nested. No need to inherit."
-	svgTransform _ SVGTransform new.
-	transformData _ self class attributeAt: 'transform' in: anXMLElement orIn: styleAttributes.
+	svgTransform := SVGTransform new.
+	transformData := self class attributeAt: 'transform' in: anXMLElement orIn: styleAttributes.
 	transformData ifNotNil: [
 		svgTransform buildFrom: transformData.
-		location _ svgTransform asAffineTransformation ].
+		location := svgTransform asAffineTransformation ].
 
-	strokeWidth _ self class numberAttributeAt: 'stroke-width' in: anXMLElement orIn: styleAttributes.
-	strokeColorOrGradient _ self class colorAttributeAt: 'stroke' in: anXMLElement orIn: styleAttributes.
-	fillColorOrGradient _ self class colorAttributeAt: 'fill' in: anXMLElement orIn: styleAttributes.
-	strokeOpacity _ self class numberAttributeAt: 'stroke-opacity' in: anXMLElement orIn: styleAttributes.
-	fillOpacity _ self class numberAttributeAt: 'fill-opacity' in: anXMLElement orIn: styleAttributes.
-	opacity _ self class numberAttributeAt: 'opacity' in: anXMLElement orIn: styleAttributes.
+	strokeWidth := self class numberAttributeAt: 'stroke-width' in: anXMLElement orIn: styleAttributes.
+	strokeColorOrGradient := self class colorAttributeAt: 'stroke' in: anXMLElement orIn: styleAttributes.
+	fillColorOrGradient := self class colorAttributeAt: 'fill' in: anXMLElement orIn: styleAttributes.
+	strokeOpacity := self class numberAttributeAt: 'stroke-opacity' in: anXMLElement orIn: styleAttributes.
+	fillOpacity := self class numberAttributeAt: 'fill-opacity' in: anXMLElement orIn: styleAttributes.
+	opacity := self class numberAttributeAt: 'opacity' in: anXMLElement orIn: styleAttributes.
 
-	strokeDashArrayData _ self class attributeAt: 'stroke-dasharray' in: anXMLElement orIn: styleAttributes.
-	strokeDashArrayOffsetData _ self class attributeAt: 'stroke-dashoffset' in: anXMLElement orIn: styleAttributes.
+	strokeDashArrayData := self class attributeAt: 'stroke-dasharray' in: anXMLElement orIn: styleAttributes.
+	strokeDashArrayOffsetData := self class attributeAt: 'stroke-dashoffset' in: anXMLElement orIn: styleAttributes.
 	(strokeDashArrayData notNil and: [ strokeDashArrayData ~= 'none' ]) ifTrue: [
-		strokeDashArray _ (self class numbersIn: strokeDashArrayData).
+		strokeDashArray := (self class numbersIn: strokeDashArrayData).
 
 	strokeDashArray size even ifFalse: [
-		strokeDashArray _ strokeDashArray, strokeDashArray ].
+		strokeDashArray := strokeDashArray, strokeDashArray ].
 	strokeDashArrayOffsetData ifNotNil: [
-		strokeDashArrayOffset _ strokeDashArrayOffsetData asNumber ]].
+		strokeDashArrayOffset := strokeDashArrayOffsetData asNumber ]].
 
-	defs _ nil.
+	defs := nil.
 	anXMLElement elementsDo: [ :subElement |
 		"Process def elements first"
 		(subElement name = SVGDefs svgName)
 			ifTrue: [
-				defs ifNil: [ defs _ SVGDefs new ].
-				defs buildFromXml: subElement]].
+				defs ifNil: [ defs := SVGDefs new ].
+				allDefs := aDefsCollection copyWith: defs.
+				defs buildFromXml: subElement parentDefs: allDefs ]].
 
 
-	usedAttributeNames _ self usedAttributeNames asSet.
+	usedAttributeNames := self usedAttributeNames asSet.
 	anXMLElement attributes keysAndValuesDo: [ :attrName :value |
 		((usedAttributeNames includes: attrName) or: [
 			(IgnoredAttributes includes: attrName) or: [
@@ -405,6 +416,10 @@ fixYAxisDirection
 	"SVG already specifies desired TX. No need to correct it.
 	Also note that we redefine #yAxisPointsUp to agree with the TX we were given."! !
 
+!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 4/21/2025 11:59:57'!
+clipsSubmorphs
+	^clipsSubmorphs! !
+
 !SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 11:30:52'!
 yAxisPointsUp
 	"SVG elements usually define an explicit affine transformation.
@@ -415,6 +430,17 @@ yAxisPointsUp
 	answer _ owner ifNil: [false] ifNotNil: [owner yAxisPointsUp].
 	location doesMirror ifTrue: [ answer _ answer not ].
 	^answer! !
+
+!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 4/21/2025 12:00:21'!
+doClipSubmorphs
+	clipsSubmorphs := true! !
+
+!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 4/21/2025 11:59:29'!
+initialize
+	"initialize the state of the receiver"
+
+	super initialize.
+	clipsSubmorphs := false.! !
 
 !SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:16'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
@@ -565,17 +591,17 @@ classFor: anSVGName
 			ifTrue: [ ^cls ] ].
 	^nil! !
 
-!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 6/16/2010 10:32'!
-fromXml: anXMLElement
+!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:31:47'!
+fromXml: anXMLElement defs: aDefsCollection
 	| cls n |
-	n _  anXMLElement name.
-	cls _ SVGElementMorph classFor: n.
+	n :=  anXMLElement name.
+	cls := SVGElementMorph classFor: n.
 	cls ifNil: [
 		((IgnoredElements includes: n) or: [
 			IgnoredPrefixes anySatisfy: [ :prefix | n beginsWith: prefix ]]) ifFalse: [
 			SVGWarning signal: ('Unhandled element: ', n printString) ].
 		^nil ].
-	^ cls new buildFromXml: anXMLElement! !
+	^ cls new buildFromXml: anXMLElement defs: aDefsCollection! !
 
 !SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:28'!
 svgName
@@ -601,17 +627,18 @@ initialize
 !SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 12/27/2021 14:21:38'!
 revisar! !
 
-!SVGGroupMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 10:17'!
-buildFromXml: anXMLElement
-	| m |
+!SVGGroupMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 15:12:16'!
+buildFromXml: anXMLElement defs: aDefsCollection
+	| m allDefs |
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 
 	anXMLElement elementsDo: [ :subElement |
 		"Skip de def elements"
 		(subElement name = SVGDefs svgName)
 			ifFalse: [
-				m _ SVGElementMorph fromXml: subElement.
+				allDefs := defs ifNil: [aDefsCollection] ifNotNil: [aDefsCollection copyWith: defs].
+				m := SVGElementMorph fromXml: subElement defs: allDefs.
 				m ifNotNil: [
 					self addMorph: m ]]].! !
 
@@ -625,26 +652,26 @@ svgName
 
 	^#g! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 12/14/2021 11:39:39'!
-buildFromXml: anXMLElement
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:20'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
 	
 	| viewBox w h wFraction hFraction s |
 
-	super buildFromXml: anXMLElement.
-	viewBox _ self class svgViewBoxIn: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
+	viewBox := self class svgViewBoxIn: anXMLElement.
 	viewBox ifNotNil: [
-		extent _ viewBox extent.
-		w _ self class svgPixelWidthIn: anXMLElement.
-		h _ self class svgPixelHeightIn: anXMLElement.
+		extent := viewBox extent.
+		w := self class svgPixelWidthIn: anXMLElement.
+		h := self class svgPixelHeightIn: anXMLElement.
 		w ifNotNil: [
-			s _ w / viewBox width max: h / viewBox height.
+			s := w / viewBox width max: h / viewBox height.
 			self scale: s ]
 		ifNil: [
-			wFraction _ self class svgWidthFractionIn: anXMLElement.
-			hFraction _ self class svgHeightFractionIn: anXMLElement.
+			wFraction := self class svgWidthFractionIn: anXMLElement.
+			hFraction := self class svgHeightFractionIn: anXMLElement.
 			wFraction ifNotNil: [
-				s _ wFraction max: hFraction.
+				s := wFraction max: hFraction.
 				self scale: s ]
 			].
 		].! !
@@ -754,19 +781,19 @@ self revisar.
 	dataStream upTo: $#.
 	^(dataStream upTo: $) ) withBlanksTrimmed! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 9/6/2021 12:13:37'!
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:32:04'!
 fromFile: aFileEntry
 
 	| xmlDocument |
-	xmlDocument _ XMLDOMParser parseDocumentFromFile: aFileEntry readIntoMemory: true.
-	^ self fromXml: xmlDocument elements first.! !
+	xmlDocument := XMLDOMParser parseDocumentFromFile: aFileEntry readIntoMemory: true.
+	^ self fromXml: xmlDocument elements first defs: #().! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'hlsf 2/20/2025 10:08:42'!
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:32:13'!
 fromStream: aStream
 
 	| xmlDocument |
 	xmlDocument := XMLDOMParser parseDocumentFrom: aStream.
-	^ self fromXml: xmlDocument elements first.! !
+	^ self fromXml: xmlDocument elements first defs: #().! !
 
 !SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:25'!
 svgName
@@ -1003,10 +1030,10 @@ seamlessRasterizationExample
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGCircle methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:13'!
-buildFromXml: anXMLElement
+!SVGCircle methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:25'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	cx := (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
 	cy := (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
 	r := (anXMLElement attributeAt: 'r' ifAbsent: 0) asNumber.! !
@@ -1030,10 +1057,10 @@ svgName
 
 	^#circle! !
 
-!SVGEllipse methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:19'!
-buildFromXml: anXMLElement
+!SVGEllipse methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:30'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	cx := (anXMLElement attributeAt: 'cx' ifAbsent: 0) asNumber.
 	cy := (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
 	rx := (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber.
@@ -1059,10 +1086,10 @@ svgName
 
 	^#ellipse! !
 
-!SVGLine methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:26'!
-buildFromXml: anXMLElement
+!SVGLine methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:34'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	x1 := (anXMLElement attributeAt: 'x1' ifAbsent: 0) asNumber.
 	y1 := (anXMLElement attributeAt: 'y1' ifAbsent: 0) asNumber.
 	x2 := (anXMLElement attributeAt: 'x2' ifAbsent: 0) asNumber.
@@ -1088,26 +1115,40 @@ svgName
 
 	^#line! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:33'!
-buildFromXml: anXMLElement
+!SVGPath methodsFor: 'building' stamp: 'jmv 4/21/2025 15:10:25'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	| commandsData commandsDataStream command commandData commandChar |
-	super buildFromXml: anXMLElement.
+	| commandsData commandsDataStream command commandData commandChar clippingPath ll clippingPathName |
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	commands := OrderedCollection new.
+	(anXMLElement attributeAt: 'clip-path') ifNotNil: [ :s |
+		s = 'none' ifFalse: [
+			clippingPathName := s copyFrom: 6 to: s size - 1.
+			aDefsCollection do: [ :d |
+				(d defAt: clippingPathName) ifNotNil: [ :clippingPathDef |
+					clippingPath :=  clippingPathDef path copy ]]]].
 	commandsData := anXMLElement attributeAt: 'd'.
+
 	commandsDataStream := commandsData readStream.
 	commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
 	[ commandsDataStream atEnd ] whileFalse: [
 		commandChar := commandsDataStream next.
 		commandData := commandsDataStream upToAny: 'MLHVCSQTAZmlhvcsqtaz'.
 		command := PathCommand from: commandChar stream: commandData readStream.
-		commands add: command ].! !
+		commands add: command ].
+	clippingPath notNil ifTrue: [
+		clippingPath addMorph: self.
+		ll := location composedWith: clippingPath location.
+		clippingPath location: ll.
+		location := ll inverseTransformation composedWith: location.
+		^clippingPath ].
+	^self! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 5/4/2010 05:26'!
+!SVGPath methodsFor: 'building' stamp: 'jmv 4/16/2025 15:05:20'!
 usedAttributeNames
 
 	^super usedAttributeNames,
-		#('d')! !
+		#('d' 'clip-Path')! !
 
 !SVGPath methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:38:03'!
 drawOn: aCanvas
@@ -1122,11 +1163,11 @@ svgName
 
 	^#path! !
 
-!SVGPolyLine methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:38'!
-buildFromXml: anXMLElement
+!SVGPolyLine methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:56'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
 	| pointsData pointsDataStream x y |
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	
 	points := OrderedCollection new.
 	pointsData := anXMLElement attributeAt: 'points'.
@@ -1156,10 +1197,10 @@ svgName
 
 	^#polyline! !
 
-!SVGPolygon methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:45'!
-buildFromXml: anXMLElement
+!SVGPolygon methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:01'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	points last = points first ifFalse: [
 		points add: points first ].! !
 
@@ -1169,11 +1210,11 @@ svgName
 
 	^#polygon! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 3/13/2023 10:02:53'!
-buildFromXml: anXMLElement
+!SVGRect methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:05'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
 	| w h |
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	xMin := (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
 	yMin := (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
 	w := (anXMLElement attributeAt: 'width' ifAbsent: 0) asNumber.
@@ -1202,10 +1243,10 @@ svgName
 
 	^#rect! !
 
-!SVGText methodsFor: 'building' stamp: 'jmv 3/13/2023 10:03:27'!
-buildFromXml: anXMLElement
+!SVGText methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:10'!
+buildFromXml: anXMLElement defs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
+	super buildFromXml: anXMLElement defs: aDefsCollection.
 	string := anXMLElement contentString.
 	x := (anXMLElement attributeAt: 'x' ifAbsent: 0) asNumber.
 	y := (anXMLElement attributeAt: 'y' ifAbsent: 0) asNumber.
@@ -1236,6 +1277,10 @@ svgName
 def: anSVGDef
 	def _ anSVGDef! !
 
+!SVGDefElement methodsFor: 'building' stamp: 'jmv 4/21/2025 14:45:40'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
+	self subclassResponsibility! !
+
 !SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 5/7/2010 14:50'!
 classFor: anSVGName
 
@@ -1244,17 +1289,45 @@ classFor: anSVGName
 			ifTrue: [ ^cls ] ].
 	^nil! !
 
-!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 6/16/2010 10:44'!
-fromXml: anXMLElement
+!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:48:25'!
+fromXml: anXMLElement parentDefs: aDefsCollection
 	| cls n |
-	n _ anXMLElement name.
-	cls _ self classFor: n.
+	n := anXMLElement name.
+	cls := self classFor: n.
 	cls ifNil: [
 		((SVGElementMorph ignoredElements includes: n) or: [
 			SVGElementMorph ignoredPrefixes anySatisfy: [ :prefix | n beginsWith: prefix ]]) ifFalse: [
 			SVGWarning signal: ('Unhandled def element: ', n printString) ].
 		^nil ].
-	^ cls new buildFromXml: anXMLElement! !
+	^ cls new buildFromXml: anXMLElement parentDefs: aDefsCollection! !
+
+!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 4/16/2025 15:19:10'!
+name
+	^id! !
+
+!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 4/16/2025 15:30:43'!
+path
+	^paths first! !
+
+!SVGClipPath methodsFor: 'building' stamp: 'jmv 4/21/2025 16:05:36'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
+	| m allDefs |
+	id := anXMLElement attributeAt: 'id'.
+	paths := OrderedCollection new.
+	anXMLElement elementsDo: [ :subElement |
+		allDefs := def ifNil: [aDefsCollection] ifNotNil: [aDefsCollection copyWith: def].
+		m := SVGElementMorph fromXml: subElement defs: allDefs.
+		m ifNotNil: [
+			m doClipSubmorphs.
+			m
+				strokeWidth: 1;
+				strokeColor: Color gray;
+				strokeOpacity: 0.01.
+			paths add: m ]].! !
+
+!SVGClipPath class methodsFor: 'instance creation' stamp: 'jmv 4/16/2025 15:08:56'!
+svgName
+	^#clipPath! !
 
 !SVGGradient methodsFor: 'accessing' stamp: 'jmv 12/12/2017 21:40:16'!
 averageColor
@@ -1274,24 +1347,25 @@ stops
 		ifNotNil: [ stops ]
 		ifNil: [ (def defAt: inheritFrom) stops ]! !
 
-!SVGGradient methodsFor: 'building' stamp: 'jmv 12/15/2021 10:36:59'!
-buildFromXml: anXMLElement
-	| dataStream usedAttributeNames |
-	name _ anXMLElement attributeAt: 'id'.
-	stops _ Array streamContents: [ :strm |
+!SVGGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 15:13:00'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
+	| dataStream usedAttributeNames allDefs |
+	name := anXMLElement attributeAt: 'id'.
+	stops := Array streamContents: [ :strm |
 		anXMLElement elementsDo: [ :subElement |
-			strm nextPut: (SVGDefElement fromXml: subElement) ]].
+			allDefs := def ifNil: [aDefsCollection] ifNotNil: [aDefsCollection copyWith: def].
+			strm nextPut: (SVGDefElement fromXml: subElement parentDefs: allDefs) ]].
 	stops notEmpty
 		ifTrue: [ stops sort: [ :a :b | a offset < b offset ]]
-		ifFalse: [ stops _ nil ].
+		ifFalse: [ stops := nil ].
 
-	inheritFrom _ nil.
+	inheritFrom := nil.
 	(anXMLElement attributeAt: 'xlink:href') ifNotNil: [ :linkData |
-		dataStream _ linkData readStream.
+		dataStream := linkData readStream.
 		dataStream upTo: $#.
-		inheritFrom _ (dataStream upTo: $) ) withBlanksTrimmed ].
+		inheritFrom := (dataStream upTo: $) ) withBlanksTrimmed ].
 
-	usedAttributeNames _ self usedAttributeNames asSet.
+	usedAttributeNames := self usedAttributeNames asSet.
 	anXMLElement attributes keysAndValuesDo: [ :attrName :value |
 		((usedAttributeNames includes: attrName) or: [
 			(SVGElementMorph ignoredAttributes includes: attrName) or: [
@@ -1306,14 +1380,14 @@ usedAttributeNames
 svgName
 	^nil! !
 
-!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 6/14/2010 17:23'!
-buildFromXml: anXMLElement
+!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 14:48:31'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
 
-	super buildFromXml: anXMLElement.
-	vectorX1 _ (anXMLElement attributeAt: 'x1') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ].
-	vectorY1 _ (anXMLElement attributeAt: 'y1') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ].
-	vectorX2 _ (anXMLElement attributeAt: 'x2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 1.0 ].
-	vectorY2 _ (anXMLElement attributeAt: 'y2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ]! !
+	super buildFromXml: anXMLElement parentDefs: aDefsCollection.
+	vectorX1 := (anXMLElement attributeAt: 'x1') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ].
+	vectorY1 := (anXMLElement attributeAt: 'y1') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ].
+	vectorX2 := (anXMLElement attributeAt: 'x2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 1.0 ].
+	vectorY2 := (anXMLElement attributeAt: 'y2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ]! !
 
 !SVGLinearGradient methodsFor: 'building' stamp: 'jmv 6/16/2010 09:53'!
 usedAttributeNames
@@ -1348,17 +1422,17 @@ vectorY2
 svgName
 	^#linearGradient! !
 
-!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 6/14/2010 17:23'!
-buildFromXml: anXMLElement
+!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 14:48:34'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
 
 	| data |
-	super buildFromXml: anXMLElement.
-	data _ anXMLElement attributeAt: 'cx'.
-	cx _ SVGElementMorph svgLengthFractionFor: (data ifNil: ['50%']).
-	data _ anXMLElement attributeAt: 'cy'.
-	cy _ SVGElementMorph svgLengthFractionFor: (data ifNil: ['50%']).
-	data _ anXMLElement attributeAt: 'r'.
-	r _ SVGElementMorph svgLengthFractionFor:(data ifNil: ['50%'])! !
+	super buildFromXml: anXMLElement parentDefs: aDefsCollection.
+	data := anXMLElement attributeAt: 'cx'.
+	cx := SVGElementMorph svgLengthFractionFor: (data ifNil: ['50%']).
+	data := anXMLElement attributeAt: 'cy'.
+	cy := SVGElementMorph svgLengthFractionFor: (data ifNil: ['50%']).
+	data := anXMLElement attributeAt: 'r'.
+	r := SVGElementMorph svgLengthFractionFor:(data ifNil: ['50%'])! !
 
 !SVGRadialGradient methodsFor: 'building' stamp: 'jmv 6/16/2010 09:53'!
 usedAttributeNames
@@ -1387,20 +1461,20 @@ r
 svgName
 	^#radialGradient! !
 
-!SVGGradientStop methodsFor: 'building' stamp: 'jmv 12/27/2021 14:20:44'!
-buildFromXml: anXMLElement
+!SVGGradientStop methodsFor: 'building' stamp: 'jmv 4/21/2025 14:45:14'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
 	| styleAttributes offsetData stopColorData stopOpacityData usedAttributeNames |
-	styleAttributes _ SVGElementMorph styleAttributesIn: anXMLElement.
-	offsetData _ SVGElementMorph attributeAt: 'offset' in: anXMLElement orIn: styleAttributes.
-	stopColorData _ SVGElementMorph attributeAt: 'stop-color' in: anXMLElement orIn: styleAttributes.
-	stopOpacityData _ SVGElementMorph attributeAt: 'stop-opacity' in: anXMLElement orIn: styleAttributes.
-	offset _ (SVGElementMorph svgLengthFractionFor: offsetData) ifNil: [ SVGElementMorph svgPixelLengthFor: offsetData ].
-	color _ Color "fromCSS2String: just hex? Or real CSS2?" fromString:  stopColorData.
+	styleAttributes := SVGElementMorph styleAttributesIn: anXMLElement.
+	offsetData := SVGElementMorph attributeAt: 'offset' in: anXMLElement orIn: styleAttributes.
+	stopColorData := SVGElementMorph attributeAt: 'stop-color' in: anXMLElement orIn: styleAttributes.
+	stopOpacityData := SVGElementMorph attributeAt: 'stop-opacity' in: anXMLElement orIn: styleAttributes.
+	offset := (SVGElementMorph svgLengthFractionFor: offsetData) ifNil: [ SVGElementMorph svgPixelLengthFor: offsetData ].
+	color := Color "fromCSS2String: just hex? Or real CSS2?" fromString:  stopColorData.
 	stopOpacityData ifNotNil: [
-		color _ color alpha: stopOpacityData asNumber ].
+		color := color alpha: stopOpacityData asNumber ].
 	
 
-	usedAttributeNames _ self usedAttributeNames asSet.
+	usedAttributeNames := self usedAttributeNames asSet.
 	anXMLElement attributes keysAndValuesDo: [ :attrName :value |
 		((usedAttributeNames includes: attrName) or: [
 			(SVGElementMorph ignoredAttributes includes: attrName) or: [
@@ -1430,10 +1504,12 @@ offset
 svgName
 	^#stop! !
 
-!SVGDefs methodsFor: 'building' stamp: 'jmv 6/14/2010 09:00'!
-buildFromXml: anXMLElement
+!SVGDefs methodsFor: 'building' stamp: 'jmv 4/21/2025 15:13:31'!
+buildFromXml: anXMLElement parentDefs: aDefsCollection
+	| allDefs |
 	anXMLElement elementsDo: [ :subElement |
-		(SVGDefElement fromXml: subElement) ifNotNil: [ :defElement |
+		allDefs := aDefsCollection copyWith: self.
+		(SVGDefElement fromXml: subElement parentDefs: allDefs) ifNotNil: [ :defElement |
 			defElement def: self.
 			defs at: defElement name put: defElement]]! !
 
