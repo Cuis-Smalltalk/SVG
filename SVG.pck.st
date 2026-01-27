@@ -1,9 +1,9 @@
-'From Cuis7.3 [latest update: #7236] on 24 May 2025 at 11:55:38 am'!
+'From Cuis7.7 [latest update: #7815] on 27 January 2026 at 10:45:14 am'!
 'Description '!
-!provides: 'SVG' 1 24!
-!requires: 'LinearAlgebra' 1 nil nil!
-!requires: 'Color-Extras' 1 7 nil!
+!provides: 'SVG' 1 25!
 !requires: 'YAXO' 1 nil nil!
+!requires: 'Color-Extras' 1 7 nil!
+!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'SVG-Elements'!
 SystemOrganization addCategory: #'SVG-Shapes'!
 
@@ -215,7 +215,7 @@ See class methods in 'examples' category in SVGMainMorph.!
 !SVGMainMorph commentStamp: '<historical>' prior: 0!
 See class methods in 'examples' category.!
 
-!SVGElementMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 15:11:47'!
+!SVGElementMorph methodsFor: 'building' stamp: 'jmv 21/Apr/2025 15:11:47'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	| usedAttributeNames styleAttributes strokeDashArrayData strokeDashArrayOffsetData transformData svgTransform allDefs |
@@ -276,11 +276,11 @@ buildFromXml: anXMLElement defs: aDefsCollection
 			SVGWarning signal: 'Unexpected element: ', subElement name printString, ' in: ', self class name ]
 		]! !
 
-!SVGElementMorph methodsFor: 'building' stamp: 'jmv 6/16/2010 10:01'!
+!SVGElementMorph methodsFor: 'building' stamp: 'jmv 16/Jun/2010 10:01:00'!
 usedAttributeNames
 	^#('style' 'fill' 'fill-opacity' 'opacity' 'stroke' 'stroke-opacity' 'stroke-width' 'transform' 'stroke-dasharray' 'stroke-dashoffset')! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 14:17'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/Jun/2010 14:17:00'!
 defAt: aString
 
 	| answer |
@@ -289,7 +289,7 @@ defAt: aString
 		(owner isKindOf: SVGElementMorph)
 			ifTrue: [ owner defAt: aString ] ]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/18/2021 12:44:44'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 18/Jun/2021 12:44:44'!
 fillColor
 	"Answer a Color, even if a gradient was specified. See also #fillColorOrGradient"
 	fillColorOrGradient == #inherit ifTrue: [
@@ -309,12 +309,12 @@ fillColor
 		ifTrue: [ fillColorOrGradient _ fillColorOrGradient averageColor ].
 	^fillColorOrGradient alpha: self fillOpacity * self opacity! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:32:50'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:32:50'!
 fillColor: aColor
 	fillColorOrGradient := aColor.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:54'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/Jun/2010 15:54:00'!
 fillOpacity
 	^fillOpacity == #inherit
 		ifFalse: [ fillOpacity ]
@@ -323,12 +323,12 @@ fillOpacity
 				ifTrue: [ owner fillOpacity ]
 				ifFalse: [ 1.0 ]]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:46'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:35:46'!
 fillOpacity: aNumber
 	fillOpacity := aNumber.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:54'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/Jun/2010 15:54:00'!
 opacity
 	^opacity == #inherit
 		ifFalse: [ opacity ]
@@ -337,12 +337,12 @@ opacity
 				ifTrue: [ owner opacity ]
 				ifFalse: [ 1.0 ]]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:30'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:35:30'!
 opacity: aNumber
 	opacity := aNumber.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/18/2021 12:44:25'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 18/Jun/2021 12:44:25'!
 strokeColor
 	"Answer a Color, even if a gradient was specified. See also #strokeColorOrGradient"
 	strokeColorOrGradient == #inherit ifTrue: [
@@ -362,12 +362,12 @@ strokeColor
 		ifTrue: [ strokeColorOrGradient _ strokeColorOrGradient averageColor].
 	^strokeColorOrGradient alpha: self strokeOpacity * self opacity! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:31:43'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:31:43'!
 strokeColor: aColor
 	strokeColorOrGradient := aColor.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 4/29/2011 21:55'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 29/Apr/2011 21:55:00'!
 strokeDashArray
 
 	| s |
@@ -377,11 +377,11 @@ strokeDashArray
 			s _ s + d. 
 			s]]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 4/29/2011 21:54'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 29/Apr/2011 21:54:00'!
 strokeDashArrayOffset
 	^ strokeDashArrayOffset! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:54'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/Jun/2010 15:54:00'!
 strokeOpacity
 	^strokeOpacity == #inherit
 		ifFalse: [ strokeOpacity ]
@@ -390,12 +390,12 @@ strokeOpacity
 				ifTrue: [ owner strokeOpacity ]
 				ifFalse: [ 1.0 ]]! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:35:53'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:35:53'!
 strokeOpacity: aNumber
 	strokeOpacity := aNumber.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 6/10/2010 15:16'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/Jun/2010 15:16:00'!
 strokeWidth
 
 	strokeWidth == #inherit ifTrue: [
@@ -406,21 +406,21 @@ strokeWidth
 	"nil"
 	^strokeWidth! !
 
-!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 10/14/2024 11:31:01'!
+!SVGElementMorph methodsFor: 'accessing' stamp: 'jmv 14/Oct/2024 11:31:01'!
 strokeWidth: aNumber
 	strokeWidth := aNumber.
 	self redrawNeeded.! !
 
-!SVGElementMorph methodsFor: 'private' stamp: 'jmv 12/15/2021 14:47:32'!
+!SVGElementMorph methodsFor: 'private' stamp: 'jmv 15/Dec/2021 14:47:32'!
 fixYAxisDirection
 	"SVG already specifies desired TX. No need to correct it.
 	Also note that we redefine #yAxisPointsUp to agree with the TX we were given."! !
 
-!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 4/21/2025 11:59:57'!
+!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 21/Apr/2025 11:59:57'!
 clipsSubmorphs
 	^clipsSubmorphs! !
 
-!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 11:30:52'!
+!SVGElementMorph methodsFor: 'geometry testing' stamp: 'jmv 15/Dec/2021 11:30:52'!
 yAxisPointsUp
 	"SVG elements usually define an explicit affine transformation.
 	Give an answer consistent with it.
@@ -431,24 +431,24 @@ yAxisPointsUp
 	location doesMirror ifTrue: [ answer _ answer not ].
 	^answer! !
 
-!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 4/21/2025 12:00:21'!
+!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 21/Apr/2025 12:00:21'!
 doClipSubmorphs
 	clipsSubmorphs := true! !
 
-!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 4/21/2025 11:59:29'!
+!SVGElementMorph methodsFor: 'initialization' stamp: 'jmv 21/Apr/2025 11:59:29'!
 initialize
 	"initialize the state of the receiver"
 
 	super initialize.
 	clipsSubmorphs := false.! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:16'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:16:00'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	^anXMLElement attributeAt: attributeName ifAbsent: [
 		styleDictionary ifNotNil: [ styleDictionary at: attributeName ifAbsent: nil ]]! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/18/2021 12:35:45'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 18/Jun/2021 12:35:45'!
 colorAttributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	| data |
@@ -459,22 +459,22 @@ colorAttributeAt: attributeName in: anXMLElement orIn: styleDictionary
 		^ #currentColor ].
 	^self svgColorOrGradientNameFor: data! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/16/2010 09:50'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 16/Jun/2010 09:50:00'!
 ignoredAttributes
 
 	^IgnoredAttributes! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/16/2010 10:44'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 16/Jun/2010 10:44:00'!
 ignoredElements
 
 	^IgnoredElements! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/16/2010 10:08'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 16/Jun/2010 10:08:00'!
 ignoredPrefixes
 
 	^IgnoredPrefixes! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:17'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:17:00'!
 numberAttributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	| data |
@@ -483,7 +483,7 @@ numberAttributeAt: attributeName in: anXMLElement orIn: styleDictionary
 		ifNil: [ #inherit ]
 		ifNotNil: [ data asNumber ]! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:18'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:18:00'!
 numbersIn: aString
 
 	| rs |
@@ -493,7 +493,7 @@ numbersIn: aString
 			rs nextNumber ifNotNil: [ :n |
 				strm nextPut: n ]]]! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 7/30/2012 18:00'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 30/Jul/2012 18:00:00'!
 styleAttributesIn: anXMLElement
 	| styleDict styleData pair |
 	styleData _ anXMLElement attributeAt: 'style'.
@@ -506,7 +506,7 @@ styleAttributesIn: anXMLElement
 			styleDict at: pair first withBlanksTrimmed put: pair second withBlanksTrimmed ]].
 	^styleDict! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 2/15/2013 16:53'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 15/Feb/2013 16:53:00'!
 svgColorOrGradientNameFor: aString
 
 	| dataStream |
@@ -519,14 +519,14 @@ self revisar.
 	dataStream upTo: $#.
 	^(dataStream upTo: $) ) withBlanksTrimmed! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:20'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:20:00'!
 svgHeightFractionIn: anXMLElement
 
 	| string |
 	string _ anXMLElement attributeAt: 'height' ifAbsent: [ ^ nil ].
 	^self svgLengthFractionFor: string! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 12/9/2021 19:46:17'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 9/Dec/2021 19:46:17'!
 svgLengthFractionFor: aString
 
 	| string |
@@ -535,14 +535,14 @@ svgLengthFractionFor: aString
 		^ string asNumber / 100.0 ].
 	^nil! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:21:00'!
 svgPixelHeightIn: anXMLElement
 
 	| string |
 	string _ anXMLElement attributeAt: 'height' ifAbsent: [ ^ nil ].
 	^self svgPixelLengthFor: string! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 12/9/2021 19:53:46'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 9/Dec/2021 19:53:46'!
 svgPixelLengthFor: aString
 
 	| string data |
@@ -561,14 +561,14 @@ svgPixelLengthFor: aString
 		ifTrue: [ ^(data * 15) ].
 	^data! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:21:00'!
 svgPixelWidthIn: anXMLElement
 
 	| string |
 	string _ anXMLElement attributeAt: 'width' ifAbsent: [ ^ nil ].
 	^self svgPixelLengthFor: string! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:21:00'!
 svgViewBoxIn: anXMLElement
 
 	| string data |
@@ -576,14 +576,14 @@ svgViewBoxIn: anXMLElement
 	data _ string substrings collect: [ :str | str asNumber].
 	^Rectangle origin: (data first @ data second) extent: (data third @ data fourth)! !
 
-!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 6/14/2010 17:21'!
+!SVGElementMorph class methodsFor: 'building - aux' stamp: 'jmv 14/Jun/2010 17:21:00'!
 svgWidthFractionIn: anXMLElement
 
 	| string |
 	string _ anXMLElement attributeAt: 'width' ifAbsent: [ ^ nil ].
 	^self svgLengthFractionFor: string! !
 
-!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:25'!
+!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 9/Jun/2010 22:25:00'!
 classFor: anSVGName
 
 	self allSubclassesDo: [ :cls |
@@ -591,7 +591,7 @@ classFor: anSVGName
 			ifTrue: [ ^cls ] ].
 	^nil! !
 
-!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:31:47'!
+!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 21/Apr/2025 14:31:47'!
 fromXml: anXMLElement defs: aDefsCollection
 	| cls n |
 	n :=  anXMLElement name.
@@ -603,13 +603,13 @@ fromXml: anXMLElement defs: aDefsCollection
 		^nil ].
 	^ cls new buildFromXml: anXMLElement defs: aDefsCollection! !
 
-!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:28'!
+!SVGElementMorph class methodsFor: 'instance creation' stamp: 'jmv 9/Jun/2010 22:28:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^self subclassResponsibility! !
 
-!SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 12/9/2021 19:16:20'!
+!SVGElementMorph class methodsFor: 'class initialization' stamp: 'jmv 9/Dec/2021 19:16:20'!
 initialize
 	"
 	self initialize
@@ -624,10 +624,15 @@ initialize
 		at: 'stroke-linejoin' put: 'round';
 		yourself! !
 
-!SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 12/27/2021 14:21:38'!
+!SVGElementMorph class methodsFor: 'please remove' stamp: 'jmv 27/Dec/2021 14:21:38'!
 revisar! !
 
-!SVGGroupMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 15:12:16'!
+!SVGElementMorph class methodsFor: 'new-morph participation' stamp: 'jmv 27/Jan/2026 10:41:11'!
+includeInNewMorphMenu
+	"Return true for all classes that can be instantiated from the menu"
+	^ false! !
+
+!SVGGroupMorph methodsFor: 'building' stamp: 'jmv 21/Apr/2025 15:12:16'!
 buildFromXml: anXMLElement defs: aDefsCollection
 	| m allDefs |
 
@@ -642,17 +647,17 @@ buildFromXml: anXMLElement defs: aDefsCollection
 				m ifNotNil: [
 					self addMorph: m ]]].! !
 
-!SVGGroupMorph methodsFor: 'drawing' stamp: 'jmv 11/8/2012 19:28'!
+!SVGGroupMorph methodsFor: 'drawing' stamp: 'jmv 8/Nov/2012 19:28:00'!
 drawOn: aCanvas
 	"Nothing to do here..."! !
 
-!SVGGroupMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:35'!
+!SVGGroupMorph class methodsFor: 'instance creation' stamp: 'jmv 9/Jun/2010 22:35:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#g! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:20'!
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:26:20'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	
@@ -676,58 +681,58 @@ buildFromXml: anXMLElement defs: aDefsCollection
 			].
 		].! !
 
-!SVGMainMorph methodsFor: 'building' stamp: 'jmv 6/10/2010 08:56'!
+!SVGMainMorph methodsFor: 'building' stamp: 'jmv 10/Jun/2010 08:56:00'!
 usedAttributeNames
 	^super usedAttributeNames, 
 		#('version' 'xmlns' 'xmlns:xlink' 'viewBox' 'width' 'height')! !
 
-!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:56:35'!
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 15/Dec/2021 14:56:35'!
 findFullBoundsInOwner
 	"If extent ivar is defined, answer after it (no need to actually find the bounds)."
 
 	self knowsOwnLocalBounds ifFalse: [ ^super findFullBoundsInOwner ].
 	^self fullBoundsInOwner.! !
 
-!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/15/2021 14:56:26'!
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 15/Dec/2021 14:56:26'!
 fullBoundsInOwner
 	"If extent ivar is defined, answer after it."
 
 	self knowsOwnLocalBounds ifFalse: [ ^super fullBoundsInOwner ].
 	^ (self externalizeBoundingRectOf: (`0@0` extent: extent)) encompassingIntegerRectangle.! !
 
-!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 9/2/2024 20:48:19'!
+!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 2/Sep/2024 20:48:19'!
 localBounds
 	"Can only be asked for if #knowsOwnLocalBounds answers true!!"
 
 	^`0@0` extent: extent.! !
 
-!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 9/2/2024 20:48:47'!
+!SVGMainMorph methodsFor: 'geometry' stamp: 'hlsf 2/Sep/2024 20:48:47'!
 localBoundsForError
 	"Only to be used for drawing in an error condition. See senders."
 
 	self knowsOwnLocalBounds ifFalse: [ ^super localBoundsForError ].
 	^self localBounds.! !
 
-!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 12/14/2021 11:40:06'!
+!SVGMainMorph methodsFor: 'geometry' stamp: 'jmv 14/Dec/2021 11:40:06'!
 morphExtent
 	"In our own coordinates!!
 	nil if unknown."
 
 	^ extent! !
 
-!SVGMainMorph methodsFor: 'geometry testing' stamp: 'jmv 12/15/2021 14:55:29'!
+!SVGMainMorph methodsFor: 'geometry testing' stamp: 'jmv 15/Dec/2021 14:55:29'!
 knowsOwnLocalBounds
 	"Meaning that it doesn't need running #drawOn: and #postDrawOn: to explore affected pixels to deduce actual morph bounds. See senders."
 
 	^extent notNil! !
 
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 6/9/2010 22:26'!
+!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 9/Jun/2010 22:26:00'!
 attributeAt: attributeName in: anXMLElement orIn: styleDictionary
 
 	^anXMLElement attributeAt: attributeName ifAbsent: [
 		styleDictionary ifNotNil: [ styleDictionary at: attributeName ifAbsent: nil ]]! !
 
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 6/9/2010 22:26'!
+!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 9/Jun/2010 22:26:00'!
 numbersIn: aString
 
 	| rs |
@@ -736,7 +741,7 @@ numbersIn: aString
 		[ rs atEnd ] whileFalse: [
 			strm nextPut: rs nextNumber ]]! !
 
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 7/30/2012 18:00'!
+!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 30/Jul/2012 18:00:00'!
 styleAttributesIn: anXMLElement
 	| styleDict styleData pair |
 	styleData _ anXMLElement attributeAt: 'style'.
@@ -749,7 +754,7 @@ styleAttributesIn: anXMLElement
 			styleDict at: pair first withBlanksTrimmed put: pair second withBlanksTrimmed ]].
 	^styleDict! !
 
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 2/15/2013 16:53'!
+!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 15/Feb/2013 16:53:00'!
 svgColorOrGradientNameFor: aString
 
 	| dataStream |
@@ -763,7 +768,7 @@ self revisar.
 	dataStream upTo: $#.
 	^(dataStream upTo: $) ) withBlanksTrimmed! !
 
-!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 2/15/2013 16:53'!
+!SVGMainMorph class methodsFor: 'services' stamp: 'jmv 15/Feb/2013 16:53:00'!
 svgColorOrGradientNameFor: aString opacity: opacityString
 
 	| dataStream c |
@@ -781,27 +786,27 @@ self revisar.
 	dataStream upTo: $#.
 	^(dataStream upTo: $) ) withBlanksTrimmed! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:32:04'!
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 21/Apr/2025 14:32:04'!
 fromFile: aFileEntry
 
 	| xmlDocument |
 	xmlDocument := XMLDOMParser parseDocumentFromFile: aFileEntry readIntoMemory: true.
 	^ self fromXml: xmlDocument elements first defs: #().! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:32:13'!
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 21/Apr/2025 14:32:13'!
 fromStream: aStream
 
 	| xmlDocument |
 	xmlDocument := XMLDOMParser parseDocumentFrom: aStream.
 	^ self fromXml: xmlDocument elements first defs: #().! !
 
-!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 6/9/2010 22:25'!
+!SVGMainMorph class methodsFor: 'instance creation' stamp: 'jmv 9/Jun/2010 22:25:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#svg! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:32:59'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:32:59'!
 exampleBeer
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -815,7 +820,7 @@ exampleBeer
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:33:31'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:33:31'!
 exampleButterfly
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -829,7 +834,7 @@ exampleButterfly
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:33:59'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:33:59'!
 exampleCar
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -843,7 +848,7 @@ exampleCar
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:34:24'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:34:24'!
 exampleCowboy
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -857,7 +862,7 @@ exampleCowboy
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:36:20'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:36:20'!
 exampleGrapes
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -871,7 +876,7 @@ exampleGrapes
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:00'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:35:00'!
 exampleLion
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -885,7 +890,7 @@ exampleLion
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:31:54'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:31:54'!
 exampleMacaw
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -899,7 +904,7 @@ exampleMacaw
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:23'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:35:23'!
 examplePhone
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -913,7 +918,7 @@ examplePhone
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:35:47'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:35:47'!
 examplePicasso
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -927,7 +932,7 @@ examplePicasso
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:32:21'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:32:21'!
 examplePlane
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -941,7 +946,7 @@ examplePlane
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:36:45'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:36:45'!
 exampleTiger
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -955,7 +960,7 @@ exampleTiger
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:09'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:37:09'!
 exampleWizard
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -969,7 +974,7 @@ exampleWizard
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:24'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:37:24'!
 exampleWorld
 	"Read and answer a SVG sample file.
 	Also try 'printIt'!!
@@ -983,7 +988,7 @@ exampleWorld
 		on: SVGWarning
 		do: [ :warning | "warning print. "warning resume ].! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 9/6/2021 12:37:52'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 6/Sep/2021 12:37:52'!
 openAllExamples
 	"Open all svg examples as morphs, in a forked process."
 	"
@@ -1007,7 +1012,7 @@ openAllExamples
 			matches: [ :file | '*.svg' match: file name ].
 	] fork! !
 
-!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 10/8/2021 09:52:13'!
+!SVGMainMorph class methodsFor: 'examples' stamp: 'jmv 8/Oct/2021 09:52:13'!
 seamlessRasterizationExample
 	"
 	This example shows that Cuis' VectorGraphics can rasterize seampless SVG.
@@ -1030,7 +1035,16 @@ seamlessRasterizationExample
 	f displayOn: Display at: 360@0.
 	Display copy inspect.! !
 
-!SVGCircle methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:25'!
+!SVGMainMorph class methodsFor: 'new-morph participation' stamp: 'jmv 27/Jan/2026 10:42:26'!
+includeInNewMorphMenu
+	"Return true for all classes that can be instantiated from the menu"
+	^ true! !
+
+!SVGMainMorph class methodsFor: 'new-morph participation' stamp: 'jmv 27/Jan/2026 10:44:50'!
+initializedInstance
+	^SVGMainMorph exampleLion! !
+
+!SVGCircle methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:26:25'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	super buildFromXml: anXMLElement defs: aDefsCollection.
@@ -1038,26 +1052,26 @@ buildFromXml: anXMLElement defs: aDefsCollection
 	cy := (anXMLElement attributeAt: 'cy' ifAbsent: 0) asNumber.
 	r := (anXMLElement attributeAt: 'r' ifAbsent: 0) asNumber.! !
 
-!SVGCircle methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
+!SVGCircle methodsFor: 'building' stamp: 'jmv 14/May/2010 22:21:00'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('cx' 'cy' 'r')! !
 
-!SVGCircle methodsFor: 'drawing' stamp: 'hlsf 12/4/2021 20:05:47'!
+!SVGCircle methodsFor: 'drawing' stamp: 'hlsf 4/Dec/2021 20:05:47'!
 drawOn: aCanvas
 
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
 			ellipseCenter: cx@cy radius: r@r]! !
 
-!SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
+!SVGCircle class methodsFor: 'instance creation' stamp: 'jmv 14/May/2010 22:25:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#circle! !
 
-!SVGEllipse methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:30'!
+!SVGEllipse methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:26:30'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	super buildFromXml: anXMLElement defs: aDefsCollection.
@@ -1066,13 +1080,13 @@ buildFromXml: anXMLElement defs: aDefsCollection
 	rx := (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber.
 	ry := (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber.! !
 
-!SVGEllipse methodsFor: 'building' stamp: 'jmv 5/14/2010 22:21'!
+!SVGEllipse methodsFor: 'building' stamp: 'jmv 14/May/2010 22:21:00'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('cx' 'cy' 'rx' 'ry')! !
 
-!SVGEllipse methodsFor: 'drawing' stamp: 'hlsf 12/4/2021 20:04:52'!
+!SVGEllipse methodsFor: 'drawing' stamp: 'hlsf 4/Dec/2021 20:04:52'!
 drawOn: aCanvas
 
 
@@ -1080,13 +1094,13 @@ drawOn: aCanvas
 		aCanvas
 			ellipseCenter: cx@cy radius: rx@ry ]! !
 
-!SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:25'!
+!SVGEllipse class methodsFor: 'instance creation' stamp: 'jmv 14/May/2010 22:25:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#ellipse! !
 
-!SVGLine methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:34'!
+!SVGLine methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:26:34'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	super buildFromXml: anXMLElement defs: aDefsCollection.
@@ -1095,13 +1109,13 @@ buildFromXml: anXMLElement defs: aDefsCollection
 	x2 := (anXMLElement attributeAt: 'x2' ifAbsent: 0) asNumber.
 	y2 := (anXMLElement attributeAt: 'y2' ifAbsent: 0) asNumber.! !
 
-!SVGLine methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
+!SVGLine methodsFor: 'building' stamp: 'jmv 14/May/2010 22:17:00'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('x1' 'y1' 'x2' 'y2')! !
 
-!SVGLine methodsFor: 'drawing' stamp: 'jmv 6/17/2021 17:20:46'!
+!SVGLine methodsFor: 'drawing' stamp: 'jmv 17/Jun/2021 17:20:46'!
 drawOn: aCanvas
 
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
@@ -1109,13 +1123,13 @@ drawOn: aCanvas
 			moveTo: x1@y1;
 			lineTo: x2@y2 ]! !
 
-!SVGLine class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
+!SVGLine class methodsFor: 'instance creation' stamp: 'jmv 14/May/2010 22:17:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#line! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 4/21/2025 15:10:25'!
+!SVGPath methodsFor: 'building' stamp: 'jmv 21/Apr/2025 15:10:25'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	| commandsData commandsDataStream command commandData commandChar clippingPath ll clippingPathName |
@@ -1144,26 +1158,26 @@ buildFromXml: anXMLElement defs: aDefsCollection
 		^clippingPath ].
 	^self! !
 
-!SVGPath methodsFor: 'building' stamp: 'jmv 4/16/2025 15:05:20'!
+!SVGPath methodsFor: 'building' stamp: 'jmv 16/Apr/2025 15:05:20'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('d' 'clip-Path')! !
 
-!SVGPath methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:38:03'!
+!SVGPath methodsFor: 'drawing' stamp: 'jmv 12/Dec/2017 21:38:03'!
 drawOn: aCanvas
 
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		commands do: [ :command |
 			command runOn: aCanvas ]]! !
 
-!SVGPath class methodsFor: 'instance creation' stamp: 'jmv 5/3/2010 22:25'!
+!SVGPath class methodsFor: 'instance creation' stamp: 'jmv 3/May/2010 22:25:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#path! !
 
-!SVGPolyLine methodsFor: 'building' stamp: 'jmv 4/21/2025 14:26:56'!
+!SVGPolyLine methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:26:56'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	| pointsData pointsDataStream x y |
@@ -1178,39 +1192,39 @@ buildFromXml: anXMLElement defs: aDefsCollection
 		y ifNotNil: [
 			points add: x@y ]].! !
 
-!SVGPolyLine methodsFor: 'building' stamp: 'jmv 4/27/2010 15:59'!
+!SVGPolyLine methodsFor: 'building' stamp: 'jmv 27/Apr/2010 15:59:00'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('points')! !
 
-!SVGPolyLine methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:38:14'!
+!SVGPolyLine methodsFor: 'drawing' stamp: 'jmv 12/Dec/2017 21:38:14'!
 drawOn: aCanvas
 
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
 			polyLine: points ]! !
 
-!SVGPolyLine class methodsFor: 'instance creation' stamp: 'jmv 4/27/2010 15:53'!
+!SVGPolyLine class methodsFor: 'instance creation' stamp: 'jmv 27/Apr/2010 15:53:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#polyline! !
 
-!SVGPolygon methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:01'!
+!SVGPolygon methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:27:01'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	super buildFromXml: anXMLElement defs: aDefsCollection.
 	points last = points first ifFalse: [
 		points add: points first ].! !
 
-!SVGPolygon class methodsFor: 'instance creation' stamp: 'jmv 4/27/2010 15:54'!
+!SVGPolygon class methodsFor: 'instance creation' stamp: 'jmv 27/Apr/2010 15:54:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#polygon! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:05'!
+!SVGRect methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:27:05'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	| w h |
@@ -1224,26 +1238,26 @@ buildFromXml: anXMLElement defs: aDefsCollection
 	rx := (anXMLElement attributeAt: 'rx' ifAbsent: 0) asNumber min: w * 0.5.
 	ry := (anXMLElement attributeAt: 'ry' ifAbsent: 0) asNumber min: h * 0.5.! !
 
-!SVGRect methodsFor: 'building' stamp: 'jmv 5/14/2010 22:17'!
+!SVGRect methodsFor: 'building' stamp: 'jmv 14/May/2010 22:17:00'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('x' 'y' 'width' 'height' 'rx' 'ry')! !
 
-!SVGRect methodsFor: 'drawing' stamp: 'jmv 12/12/2017 21:38:22'!
+!SVGRect methodsFor: 'drawing' stamp: 'jmv 12/Dec/2017 21:38:22'!
 drawOn: aCanvas
 
 	aCanvas strokeWidth: self strokeWidth color: self strokeColor fillColor: self fillColor do: [
 		aCanvas
 			roundRectangleMinX: xMin maxX: xMax minY: yMin maxY: yMax rx: rx ry: ry ]! !
 
-!SVGRect class methodsFor: 'instance creation' stamp: 'jmv 5/14/2010 22:17'!
+!SVGRect class methodsFor: 'instance creation' stamp: 'jmv 14/May/2010 22:17:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#rect! !
 
-!SVGText methodsFor: 'building' stamp: 'jmv 4/21/2025 14:27:10'!
+!SVGText methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:27:10'!
 buildFromXml: anXMLElement defs: aDefsCollection
 
 	super buildFromXml: anXMLElement defs: aDefsCollection.
@@ -1254,34 +1268,34 @@ buildFromXml: anXMLElement defs: aDefsCollection
 	(anXMLElement attributeAt: 'textLength' ifAbsent: nil) ifNotNil: [ :s |
 		pointSize := pointSize asFloat * s asNumber / self findFullBoundsInOwner width ].! !
 
-!SVGText methodsFor: 'building' stamp: 'jmv 3/13/2023 09:55:30'!
+!SVGText methodsFor: 'building' stamp: 'jmv 13/Mar/2023 09:55:30'!
 usedAttributeNames
 
 	^super usedAttributeNames,
 		#('string' 'font-size' 'textLength' 'x' 'y')! !
 
-!SVGText methodsFor: 'drawing' stamp: 'jmv 3/13/2023 09:47:49'!
+!SVGText methodsFor: 'drawing' stamp: 'jmv 13/Mar/2023 09:47:49'!
 drawOn: aCanvas
 
 	| font |
 	font := pointSize ifNotNil: [ FontFamily defaultFamilyPointSize: pointSize ].
 	aCanvas drawString: string atBaseline: x@y font: font color: self fillColor.! !
 
-!SVGText class methodsFor: 'instance creation' stamp: 'jmv 3/13/2023 08:59:28'!
+!SVGText class methodsFor: 'instance creation' stamp: 'jmv 13/Mar/2023 08:59:28'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#text! !
 
-!SVGDefElement methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:40'!
+!SVGDefElement methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:40:00'!
 def: anSVGDef
 	def _ anSVGDef! !
 
-!SVGDefElement methodsFor: 'building' stamp: 'jmv 4/21/2025 14:45:40'!
+!SVGDefElement methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:45:40'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 	self subclassResponsibility! !
 
-!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 5/7/2010 14:50'!
+!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 7/May/2010 14:50:00'!
 classFor: anSVGName
 
 	self allSubclassesDo: [ :cls |
@@ -1289,7 +1303,7 @@ classFor: anSVGName
 			ifTrue: [ ^cls ] ].
 	^nil! !
 
-!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 4/21/2025 14:48:25'!
+!SVGDefElement class methodsFor: 'instance creation' stamp: 'jmv 21/Apr/2025 14:48:25'!
 fromXml: anXMLElement parentDefs: aDefsCollection
 	| cls n |
 	n := anXMLElement name.
@@ -1301,15 +1315,15 @@ fromXml: anXMLElement parentDefs: aDefsCollection
 		^nil ].
 	^ cls new buildFromXml: anXMLElement parentDefs: aDefsCollection! !
 
-!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 4/16/2025 15:19:10'!
+!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 16/Apr/2025 15:19:10'!
 name
 	^id! !
 
-!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 4/16/2025 15:30:43'!
+!SVGClipPath methodsFor: 'accessing' stamp: 'jmv 16/Apr/2025 15:30:43'!
 path
 	^paths first! !
 
-!SVGClipPath methodsFor: 'building' stamp: 'jmv 4/21/2025 16:05:36'!
+!SVGClipPath methodsFor: 'building' stamp: 'jmv 21/Apr/2025 16:05:36'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 	| m allDefs |
 	id := anXMLElement attributeAt: 'id'.
@@ -1325,11 +1339,11 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 				strokeOpacity: 0.01.
 			paths add: m ]].! !
 
-!SVGClipPath class methodsFor: 'instance creation' stamp: 'jmv 4/16/2025 15:08:56'!
+!SVGClipPath class methodsFor: 'instance creation' stamp: 'jmv 16/Apr/2025 15:08:56'!
 svgName
 	^#clipPath! !
 
-!SVGGradient methodsFor: 'accessing' stamp: 'jmv 12/12/2017 21:40:16'!
+!SVGGradient methodsFor: 'accessing' stamp: 'jmv 12/Dec/2017 21:40:16'!
 averageColor
 	| s |
 	averageColor ifNotNil: [ ^ averageColor ].
@@ -1337,17 +1351,17 @@ averageColor
 	averageColor _ (s collect: [ :c | c color / s size ]) sum.
 	^ averageColor! !
 
-!SVGGradient methodsFor: 'accessing' stamp: 'jmv 5/13/2010 09:56'!
+!SVGGradient methodsFor: 'accessing' stamp: 'jmv 13/May/2010 09:56:00'!
 name
 	^name! !
 
-!SVGGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
+!SVGGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:54:00'!
 stops
 	^stops
 		ifNotNil: [ stops ]
 		ifNil: [ (def defAt: inheritFrom) stops ]! !
 
-!SVGGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 15:13:00'!
+!SVGGradient methodsFor: 'building' stamp: 'jmv 21/Apr/2025 15:13:00'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 	| dataStream usedAttributeNames allDefs |
 	name := anXMLElement attributeAt: 'id'.
@@ -1372,15 +1386,15 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 				SVGElementMorph ignoredPrefixes anySatisfy: [ :prefix | attrName beginsWith: prefix ]]])  ifFalse: [
 			SVGWarning signal: 'Unhandled attribute: ', attrName printString, ' in: ', self class name, ' value: ', value printString ]]! !
 
-!SVGGradient methodsFor: 'building' stamp: 'jmv 6/16/2010 09:52'!
+!SVGGradient methodsFor: 'building' stamp: 'jmv 16/Jun/2010 09:52:00'!
 usedAttributeNames
 	^#('xlink:href' 'id')! !
 
-!SVGGradient class methodsFor: 'instance creation' stamp: 'jmv 5/13/2010 10:02'!
+!SVGGradient class methodsFor: 'instance creation' stamp: 'jmv 13/May/2010 10:02:00'!
 svgName
 	^nil! !
 
-!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 14:48:31'!
+!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:48:31'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 
 	super buildFromXml: anXMLElement parentDefs: aDefsCollection.
@@ -1389,40 +1403,40 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 	vectorX2 := (anXMLElement attributeAt: 'x2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 1.0 ].
 	vectorY2 := (anXMLElement attributeAt: 'y2') ifNotNil: [ :data | SVGElementMorph svgLengthFractionFor: data ] ifNil: [ 0.0 ]! !
 
-!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 6/16/2010 09:53'!
+!SVGLinearGradient methodsFor: 'building' stamp: 'jmv 16/Jun/2010 09:53:00'!
 usedAttributeNames
 	^super usedAttributeNames,
 		#('x1' 'y1' 'x2' 'y2')! !
 
-!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
+!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:54:00'!
 vectorX1
 	^vectorX1
 		ifNotNil: [ vectorX1 ]
 		ifNil: [ (def defAt: inheritFrom) vectorX1 ]! !
 
-!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
+!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:54:00'!
 vectorX2
 	^vectorX2
 		ifNotNil: [ vectorX2 ]
 		ifNil: [ (def defAt: inheritFrom) vectorX2 ]! !
 
-!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
+!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:54:00'!
 vectorY1
 	^vectorY1
 		ifNotNil: [ vectorY1 ]
 		ifNil: [ (def defAt: inheritFrom) vectorY1 ]! !
 
-!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 08:54'!
+!SVGLinearGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 08:54:00'!
 vectorY2
 	^vectorY2
 		ifNotNil: [ vectorY2 ]
 		ifNil: [ (def defAt: inheritFrom) vectorY2 ]! !
 
-!SVGLinearGradient class methodsFor: 'instance creation' stamp: 'jmv 5/7/2010 14:51'!
+!SVGLinearGradient class methodsFor: 'instance creation' stamp: 'jmv 7/May/2010 14:51:00'!
 svgName
 	^#linearGradient! !
 
-!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 4/21/2025 14:48:34'!
+!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:48:34'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 
 	| data |
@@ -1434,34 +1448,34 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 	data := anXMLElement attributeAt: 'r'.
 	r := SVGElementMorph svgLengthFractionFor:(data ifNil: ['50%'])! !
 
-!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 6/16/2010 09:53'!
+!SVGRadialGradient methodsFor: 'building' stamp: 'jmv 16/Jun/2010 09:53:00'!
 usedAttributeNames
 	^super usedAttributeNames,
 		#('cx' 'cy' 'r')! !
 
-!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 09:04'!
+!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 09:04:00'!
 cx
 	^cx
 		ifNotNil: [ cx ]
 		ifNil: [ (def defAt: inheritFrom) cx ]! !
 
-!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 09:04'!
+!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 09:04:00'!
 cy
 	^cy
 		ifNotNil: [ cy ]
 		ifNil: [ (def defAt: inheritFrom) cy ]! !
 
-!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 6/14/2010 09:04'!
+!SVGRadialGradient methodsFor: 'accessing' stamp: 'jmv 14/Jun/2010 09:04:00'!
 r
 	^r
 		ifNotNil: [ r ]
 		ifNil: [ (def defAt: inheritFrom) r ]! !
 
-!SVGRadialGradient class methodsFor: 'instance creation' stamp: 'jmv 5/13/2010 14:46'!
+!SVGRadialGradient class methodsFor: 'instance creation' stamp: 'jmv 13/May/2010 14:46:00'!
 svgName
 	^#radialGradient! !
 
-!SVGGradientStop methodsFor: 'building' stamp: 'jmv 4/21/2025 14:45:14'!
+!SVGGradientStop methodsFor: 'building' stamp: 'jmv 21/Apr/2025 14:45:14'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 	| styleAttributes offsetData stopColorData stopOpacityData usedAttributeNames |
 	styleAttributes := SVGElementMorph styleAttributesIn: anXMLElement.
@@ -1488,23 +1502,23 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 					SVGElementMorph ignoredPrefixes anySatisfy: [ :prefix | attrName beginsWith: prefix ]]])  ifFalse: [
 				SVGWarning signal: 'Unhandled style token: ', attrName printString, ' in: ', self class name, ' value: ', value printString ]]].! !
 
-!SVGGradientStop methodsFor: 'building' stamp: 'jmv 6/16/2010 10:02'!
+!SVGGradientStop methodsFor: 'building' stamp: 'jmv 16/Jun/2010 10:02:00'!
 usedAttributeNames
 	^#('style' 'offset' 'stop-color' 'stop-opacity')! !
 
-!SVGGradientStop methodsFor: 'accessing' stamp: 'jmv 5/10/2010 11:07'!
+!SVGGradientStop methodsFor: 'accessing' stamp: 'jmv 10/May/2010 11:07:00'!
 color
 	^color! !
 
-!SVGGradientStop methodsFor: 'accessing' stamp: 'jmv 5/7/2010 17:27'!
+!SVGGradientStop methodsFor: 'accessing' stamp: 'jmv 7/May/2010 17:27:00'!
 offset
 	^offset! !
 
-!SVGGradientStop class methodsFor: 'instance creation' stamp: 'jmv 5/7/2010 15:14'!
+!SVGGradientStop class methodsFor: 'instance creation' stamp: 'jmv 7/May/2010 15:14:00'!
 svgName
 	^#stop! !
 
-!SVGDefs methodsFor: 'building' stamp: 'jmv 4/21/2025 15:13:31'!
+!SVGDefs methodsFor: 'building' stamp: 'jmv 21/Apr/2025 15:13:31'!
 buildFromXml: anXMLElement parentDefs: aDefsCollection
 	| allDefs |
 	anXMLElement elementsDo: [ :subElement |
@@ -1513,22 +1527,22 @@ buildFromXml: anXMLElement parentDefs: aDefsCollection
 			defElement def: self.
 			defs at: defElement name put: defElement]]! !
 
-!SVGDefs methodsFor: 'accessing' stamp: 'jmv 5/10/2010 10:16'!
+!SVGDefs methodsFor: 'accessing' stamp: 'jmv 10/May/2010 10:16:00'!
 defAt: aString
 
 	^defs at: aString ifAbsent: nil! !
 
-!SVGDefs methodsFor: 'initialize-release' stamp: 'jmv 5/10/2010 09:42'!
+!SVGDefs methodsFor: 'initialize-release' stamp: 'jmv 10/May/2010 09:42:00'!
 initialize
 	defs _ Dictionary new! !
 
-!SVGDefs class methodsFor: 'instance creation' stamp: 'jmv 5/7/2010 14:42'!
+!SVGDefs class methodsFor: 'instance creation' stamp: 'jmv 7/May/2010 14:42:00'!
 svgName
 	"Answer the name of the svg elements we can represent"
 
 	^#defs! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 applyMatrixWith: dataStream
 
 	| b |
@@ -1544,7 +1558,7 @@ applyMatrixWith: dataStream
 		ifNil: [b]
 		ifNotNil: [a * b]! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 7/30/2012 18:00'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 30/Jul/2012 18:00:00'!
 buildFrom: transformData
 
 	| dataStream type |
@@ -1566,7 +1580,7 @@ buildFrom: transformData
 			self skewYWith: dataStream ]
 	].! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 rotateWith: dataStream
 
 	| b b1 b2 angle angleCos angleSin |
@@ -1592,7 +1606,7 @@ rotateWith: dataStream
 		ifNil: [ b1 * b * b2 ]
 		ifNotNil: [ a * b1 * b * b2]! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 scaleWith: dataStream
 
 	| b sx sy |
@@ -1605,7 +1619,7 @@ scaleWith: dataStream
 		ifNil: [b]
 		ifNotNil: [a * b]! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 skewXWith: dataStream
 
 	| b skewAngle |
@@ -1616,7 +1630,7 @@ skewXWith: dataStream
 		ifNil: [b]
 		ifNotNil:[a * b]! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 skewYWith: dataStream
 
 	| b skewAngle |
@@ -1627,7 +1641,7 @@ skewYWith: dataStream
 		ifNil: [b]
 		ifNotNil: [a * b]! !
 
-!SVGTransform methodsFor: 'building' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'building' stamp: 'jmv 29/Apr/2011 22:03:00'!
 translateWith: dataStream
 
 	| b |
@@ -1639,7 +1653,7 @@ translateWith: dataStream
 		ifNil: [b]
 		ifNotNil: [a * b]! !
 
-!SVGTransform methodsFor: 'conversion' stamp: 'jmv 1/21/2015 09:03'!
+!SVGTransform methodsFor: 'conversion' stamp: 'jmv 21/Jan/2015 09:03:00'!
 asAffineTransformation
 	| answer |
 	a ifNil: [ ^nil ].
@@ -1652,7 +1666,7 @@ asAffineTransformation
 	answer a23: (a i: 2 j: 3).
 	^answer! !
 
-!SVGTransform methodsFor: 'initialize-release' stamp: 'jmv 4/29/2011 22:03'!
+!SVGTransform methodsFor: 'initialize-release' stamp: 'jmv 29/Apr/2011 22:03:00'!
 initialize
 "	a _ FloatMatrix identity: 3."
 	"nil means identity, i.e. no transformation"
